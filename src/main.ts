@@ -5,7 +5,7 @@ import 'element-plus/theme-chalk/index.css'
 import App from './App.vue'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://8.130.32.230:1123/'
+// axios.defaults.baseURL = 'http://8.130.32.230:1123/'
 
 const app = createApp(App)
 app.use(ElementPlus)

@@ -1,5 +1,5 @@
 <template>
-    <el-upload class="upload-demo" drag action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple
+    <el-upload class="upload-demo" drag action="http://8.130.32.230:1123/offline_mysql_curve/earthquake/upload" multiple
         :on-success="uploadSuccess" :on-error="uploadError">
         <el-icon class="el-icon--upload">
             <upload-filled />
