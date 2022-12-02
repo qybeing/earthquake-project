@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData2" style="width: 100%">
         <el-table-column label="台网" width="80">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column label="图表">
             <template #default="scope">
-                <CurveGraph :curveData=scope.row.curve_data></CurveGraph>
+                <CurveGraph :curveData=scope.row.curve_data :rowId=scope.row.id></CurveGraph>
             </template>
         </el-table-column>
     </el-table>
@@ -53,9 +53,17 @@
 <script lang="ts" setup>
 import { Timer } from '@element-plus/icons-vue'
 
-import { seismicData } from '../testData'
+// import { seismicData } from '../testData'
 import CurveGraph from './CurveGraph.vue'
-
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
+import { computed, watch, reactive } from 'vue'
+const store = useStore<GlobalDataProps>()
+const tableData = computed(() => store.state.data)
+const tableData2 = reactive(tableData)
+watch(tableData2, (newVal) => {
+    console.log(newVal)
+}, { immediate: true, deep: true })
 // const handleEdit = (index: number, row: User) => {
 //     console.log(index, row)
 // }
@@ -63,5 +71,5 @@ import CurveGraph from './CurveGraph.vue'
 //     console.log(index, row)
 // }
 
-const tableData = seismicData
+// const tableData = seismicData
 </script>

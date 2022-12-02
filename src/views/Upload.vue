@@ -10,7 +10,7 @@
                     <Uploader></Uploader>
                 </el-header>
                 <el-footer class="uploader_buttom">
-                    <el-button types="success">离线分析</el-button>
+                    <el-button types="success" @click.prevent="onAnalysis">离线分析</el-button>
                 </el-footer>
             </el-container>
 
@@ -21,7 +21,12 @@
 <script setup lang="ts">
 import Uploader from '@/components/Uploader.vue'
 import FilesForm from '@/components/FilesForm.vue'
-
+import router from '@/router'
+import store from '@/store'
+const onAnalysis = () => {
+    router.push('/offline/offlineAnalysis')
+    store.commit('getCurveData')
+}
 </script>
 
 <style scoped>
