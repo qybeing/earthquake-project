@@ -52,8 +52,12 @@ const store = createStore<GlobalDataProps>({
                     console.log(error)
                 })
         },
-        addFile(state, name: FileProps) {
-            state.files.push(name)
+        addFile(state, name: string) {
+            const file: FileProps = {
+                fileName: name
+            }
+            console.log('file', file)
+            state.files.push(file)
         },
         deleteFile(state, name: FileProps) {
             state.files.filter(x => x.fileName !== name.fileName)

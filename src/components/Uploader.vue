@@ -27,7 +27,8 @@ interface Response {
 }
 const uploadSuccess = (response: Response) => {
     console.log('response: ', response)
-    const filename = response.msg.split(' ')[1]
+    const filename = response.msg.trim().split(' ')[2]
+    console.log('filename :', filename)
     store.commit('addFile', filename)
 
     // return true
