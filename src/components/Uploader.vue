@@ -1,6 +1,6 @@
 <template>
     <el-upload class="upload-demo" drag action="http://8.130.32.230:1123/offline_mysql_curve/upload" multiple
-        :on-success="uploadSuccess" :on-error="uploadError">
+        :on-success="uploadSuccess" :on-error="uploadError" accept=".mseed">
         <el-icon class="el-icon--upload">
             <upload-filled />
         </el-icon>
@@ -9,7 +9,7 @@
         </div>
         <template #tip>
             <div class="el-upload__tip">
-                jpg/png files with a size less than 500kb
+                仅支持上传mseed文件
             </div>
         </template>
     </el-upload>
@@ -37,6 +37,8 @@ const uploadError = (_error: Error, uploadFile: UploadFile, uploadFiles: UploadF
     console.log('uploadFile: ', uploadFile)
     console.log('uploadFiles: ', uploadFiles)
 }
+
+// const beforeUpload =
 
 </script>
 

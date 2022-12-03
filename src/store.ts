@@ -11,15 +11,18 @@ export interface DataProps {
     end_time: string
     curve_data: Array<number>
 }
+export interface FileProps {
+    fileName: string
+}
 
 export interface GlobalDataProps {
     data: DataProps[];
-    files: string[];
+    files: FileProps[];
 }
 
 const store = createStore<GlobalDataProps>({
     state: {
-        data: seismicData,
+        data: [],
         files: []
     },
     mutations: {
@@ -49,11 +52,11 @@ const store = createStore<GlobalDataProps>({
                     console.log(error)
                 })
         },
-        addFile(state, name: string) {
+        addFile(state, name: FileProps) {
             state.files.push(name)
         },
-        deleteFile(state, name: string) {
-            state.files.filter(x => x !== name)
+        deleteFile(state, name: FileProps) {
+            state.files.filter(x => x.fileName !== name.fileName)
         }
     },
     getters: {

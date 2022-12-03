@@ -1,41 +1,41 @@
 <template>
-    <el-table :data="tableData2" style="width: 100%">
-        <el-table-column label="台网" width="80">
+    <el-table :data="tableData2" style="width: 100%" :header-cell-style="{ 'text-align': 'center' }" border>
+        <el-table-column label="台网" width="65">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.network }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="台站" width="80">
+        <el-table-column label="台站" width="70">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.station }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="位置" width="80">
+        <el-table-column label="位置" width="60">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.location }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="频道" width="80">
+        <el-table-column label="频道" width="70">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.channel }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="开始时间" width="200">
+        <el-table-column label="开始时间" width="175">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.start_time }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="结束时间" width="200">
+        <el-table-column label="结束时间" width="175">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.end_time }}</span>
