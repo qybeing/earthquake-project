@@ -1,5 +1,5 @@
 <template>
-    <el-menu active-text-color="#ffd04b" background-color="#022944" class="el-menu-vertical-demo" text-color="#fff"
+    <el-menu active-text-color="#83abfa" background-color="#ffff" class="el-menu-vertical-demo" text-color="#000000"
         @open="handleOpen" @close="handleClose" style="height: 100%;" :router="true">
         <el-sub-menu index="/offline">
             <template #title>

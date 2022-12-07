@@ -1,5 +1,6 @@
 <template>
-    <el-table :data="tableData2" style="width: 100%" :header-cell-style="{ 'text-align': 'center' }" border>
+    <el-table :data="tableData" style="width: 100%" :header-cell-style="{ 'text-align': 'center' }" border
+        v-loading="loading">
         <el-table-column label="台网" width="65">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
@@ -57,11 +58,15 @@ import { Timer } from '@element-plus/icons-vue'
 import CurveGraph from './CurveGraph.vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
-import { computed, watch, reactive } from 'vue'
+import { computed, watch, reactive, ref } from 'vue'
 const store = useStore<GlobalDataProps>()
 const tableData = computed(() => store.state.data)
-const tableData2 = reactive(tableData)
-watch(tableData2, (newVal) => {
+const loading = computed(() => store.state.loading)
+watch(loading, (newVal) => {
+    console.log(newVal)
+})
+// const tableData2 = reactive(tableData)
+watch(tableData, (newVal) => {
     console.log(newVal)
 }, { immediate: true, deep: true })
 // const handleEdit = (index: number, row: User) => {

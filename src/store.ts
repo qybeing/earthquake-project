@@ -18,12 +18,14 @@ export interface FileProps {
 export interface GlobalDataProps {
     data: DataProps[];
     files: FileProps[];
+    loading: boolean;
 }
 
 const store = createStore<GlobalDataProps>({
     state: {
         data: [],
-        files: []
+        files: [],
+        loading: false
     },
     mutations: {
         getCurveData(state) {
@@ -59,8 +61,11 @@ const store = createStore<GlobalDataProps>({
             console.log('file', file)
             state.files.push(file)
         },
-        deleteFile(state, name: FileProps) {
-            state.files.filter(x => x.fileName !== name.fileName)
+        deleteFile(state, name: string) {
+            state.files.filter(x => x.fileName !== name)
+        },
+        setLoading(state, status) {
+            state.loading = status
         }
     },
     getters: {

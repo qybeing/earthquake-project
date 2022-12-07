@@ -1,10 +1,10 @@
 <template>
-    <el-container>
+    <el-container class="upload_container">
         <el-aside class="file_form">
             <FilesForm></FilesForm>
         </el-aside>
         <el-main class="uploader">
-            <el-card class="box-card">
+            <el-card class="box-card" shadow="never">
                 <el-container>
                     <el-header class="uploader_top">
                         <Uploader class="uploader_item"></Uploader>
@@ -33,19 +33,20 @@ const onAnalysis = () => {
 
 <style scoped>
 .file_form {
+    /* width: 800px !important; */
     width: 800px !important;
     padding: 20px;
     /* overflow: auto; */
-    background-color: rgb(247, 246, 246);
+    background-color: #ffffff;
 }
 
 .uploader {
-    background-color: rgb(247, 246, 246);
+    background-color: #ffffff;
 }
 
 .uploader_top {
-    height: 400px;
-    background-color: rgb(237, 243, 247);
+    height: 470px;
+    background-color: #f6f8fa;
     overflow: hidden;
 }
 
@@ -58,18 +59,22 @@ const onAnalysis = () => {
     justify-content: center;
     /*水平方向的居中*/
     align-items: center;
+    overflow: hidden;
+    padding: 0;
+    background-color: rgb(61, 42, 42);
     /*垂直方向的居中*/
 }
 
 .btn_card {
-    height: 100px;
-    width: 170px;
+    flex: 1;
+    /* height: 100px;
+    width: 170px; */
     text-align: center;
     line-height: 50px;
     font-size: large;
     font-weight: 2px;
     color: white;
     background-color: rgb(155, 207, 223);
-    margin-top: 100px;
+    /* margin-top: 100px; */
 }
 </style>

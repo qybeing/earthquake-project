@@ -2,7 +2,9 @@
   <div class="layout">
     <el-container class="container">
       <el-header class="header">
-        <span>地震大数据可视化分析系统</span>
+        <div>
+          <span class="title">地震大数据可视化系统</span>
+        </div>
       </el-header>
       <el-container>
         <el-aside class="aside" width="200px">
@@ -46,7 +48,7 @@ body,
 
 .layout {
   min-height: 100vh;
-  background-color: #d9e5eb;
+  background-color: #f5f5fc;
 }
 
 .container {
@@ -54,19 +56,34 @@ body,
 }
 
 .header {
+  /* align-items: center;
+  justify-content: center; */
+  display: flex;
   align-items: center;
-  justify-content: center;
-  height: 25px;
-  background-color: #011620;
+  /* justify-content: center; */
+  height: 50px;
+  background-color: #fff;
+  padding: 10px;
 }
 
-.header span {
-  display: block;
-  text-align: center;
+.head>div {
+  display: flex;
   align-items: center;
-  font-size: 15px;
-  color: #ffffff;
 }
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+}
+
+/* .header span { */
+/* display: block; */
+/* text-align: center;
+  align-items: center; */
+/* font-size: 18px;
+  color: #000000; */
+/* } */
 
 .aside {
   background-color: rgb(234, 237, 169);
@@ -74,12 +91,9 @@ body,
 }
 
 .el-aside {
-  height: 100%;
+  margin-top: 2px;
+  height: 99.5%;
   /* overflow-x: hidden;
   overflow-y: scroll; */
-}
-
-.main {
-  background-color: #d9e5eb;
 }
 </style>

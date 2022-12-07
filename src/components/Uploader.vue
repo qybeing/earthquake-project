@@ -1,6 +1,6 @@
 <template>
     <el-upload class="upload-demo" drag action="http://8.130.32.230:1123/offline_mysql_curve/upload" multiple
-        :on-success="uploadSuccess" :on-error="uploadError" accept=".mseed">
+        :on-success="uploadSuccess" :on-error="uploadError" accept=".mseed" show-file-list=false>
         <el-icon class="el-icon--upload">
             <upload-filled />
         </el-icon>
@@ -43,6 +43,16 @@ const uploadError = (_error: Error, uploadFile: UploadFile, uploadFiles: UploadF
 
 </script>
 
-<style scoped>
+<style>
+/* .upload-demo {
+    width: 90%;
+    height: 90%;
+} */
+.el-upload-dragger {
+    height: 400px;
+}
 
+.el-icon--upload {
+    margin-top: 100px;
+}
 </style>
