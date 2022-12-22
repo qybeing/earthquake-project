@@ -2,7 +2,7 @@
     <el-container class="chart_container">
         <el-header class="header">
             <div class="icon">
-                <el-button size="small" color="#efeded" @click="onReturn">
+                <el-button size="small" color="#f6f8fa" @click="onReturn">
                     <svg t="1670845384676" class="icon" viewBox="0 0 1024 1024" version="1.1"
                         xmlns="http://www.w3.org/2000/svg" p-id="10057" width="20" height="20">
                         <path
@@ -12,7 +12,7 @@
                 </el-button>
             </div>
             <div class="icon">
-                <el-button size="small" color="#efeded">
+                <el-button size="small" color="#f6f8fa">
                     <svg t="1670845258386" class="icon" viewBox="0 0 1024 1024" version="1.1"
                         xmlns="http://www.w3.org/2000/svg" p-id="6686" width="20" height="20">
                         <path
@@ -23,11 +23,12 @@
             </div>
         </el-header>
         <div class="chart_body">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table v-loading="loading" :data="tableData" style="width: 100%" :show-header=false>
                 <el-table-column label="图表">
                     <template #default="scope">
                         <CurveGraph :curveData=scope.row.curve_points :ts_list=scope.row.ts_list
-                            :rowId=scope.row.id.toString()>
+                            :network=scope.row.network :station=scope.row.station :location=scope.row.location
+                            :channel=scope.row.channel :rowId=scope.row.id.toString()>
                         </CurveGraph>
                     </template>
                 </el-table-column>
@@ -46,6 +47,14 @@ const tableData = computed(() => store.state.detailedChartData)
 const onReturn = () => {
     router.push('/offline/ViewChart')
 }
+const loading = computed(() => store.state.loading)
+watch(loading, (newVal) => {
+    console.log(newVal)
+})
+// const tableData2 = reactive(tableData)
+watch(tableData, (newVal) => {
+    console.log(newVal)
+}, { immediate: true, deep: true })
 
 </script>
 <style scoped>
@@ -58,7 +67,7 @@ const onReturn = () => {
     height: 25px;
     display: flex;
     align-items: center;
-    background-color: #efeded;
+    background-color: #f6f8fa;
 }
 
 .chart_body {

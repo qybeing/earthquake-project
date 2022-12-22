@@ -1,17 +1,33 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" :style="{ width: '1350px', height: '200px' }"></div>
+        <div :id="rowId" :style="{ width: '1300px', height: '200px' }"></div>
+        <!-- <div :id="rowId"></div> -->
     </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, onMounted, PropType, watch, ref, computed } from 'vue'
+import { defineProps, onMounted, PropType, watch, ref, computed, ComputedRef } from 'vue'
 import axios from 'axios'
 import * as echarts from 'echarts'
 type arrProp = number[]
 const props = defineProps({
-
+    network: {
+        type: String,
+        required: true
+    },
+    station: {
+        type: String,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
+    channel: {
+        type: String,
+        required: true
+    },
     curveData: {
         type: Array as PropType<arrProp>,
         required: true
@@ -25,26 +41,35 @@ const props = defineProps({
         required: true
     }
 })
-const datax = props.ts_list.map(x => timestampToTime(x))
+const datax = props.ts_list.map(x => timestampToTimeHMS(x))
+const date = timestampToTimeYMD(props.ts_list[0])
+const title = props.network + '/' + props.station + '/' + props.location + '/' + props.channel + '  ' + date
 
-onMounted(() => initChart(props.curveData, datax))
-watch(props.curveData, () => initChart(props.curveData, datax))
+onMounted(() => initChart(props.curveData, datax, title))
+watch(props.curveData, () => initChart(props.curveData, datax, title))
 // const refId = 'echarts' + props.rowId
 // const refId = computed(() => 'echarts' + props.rowId)
 
 // 时间戳转时间
-function timestampToTime(timestamp: number) {
-    const date = new Date(timestamp)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+function timestampToTimeHMS(timestamp: number) {
+    const date = new Date(timestamp * 1000)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
     // const Y = date.getFullYear() + '-'
     // const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
     // const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
     const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
     const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-    const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() + ':'
-    const ms = date.getMilliseconds() < 10 ? '0' + date.getMilliseconds() : date.getMilliseconds()
-    return h + m + s + ms
+    const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+    // const ms = date.getMilliseconds() < 10 ? '0' + date.getMilliseconds() : date.getMilliseconds()
+    return h + m + s
 }
-function initChart(listy: Array<number>, listx: Array<string>) {
+function timestampToTimeYMD(timestamp: number) {
+    const date = new Date(timestamp * 1000)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    const Y = date.getFullYear() + '-'
+    const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+    const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+    return Y + M + D
+}
+function initChart(listy: Array<number>, listx: Array<string>, title: string) {
     console.log('props.rowId: ', props.rowId)
     console.log('props.curveData: ', props.curveData)
 
@@ -53,7 +78,13 @@ function initChart(listy: Array<number>, listx: Array<string>) {
     // 把配置和数据放这里
     chart.setOption({
         title: {
-            text: '第一个 ECharts 实例'
+            text: title
+        },
+        grid: {
+            left: '2%',
+            right: '3%',
+            bottom: '3%',
+            containLabel: true
         },
         xAxis: {
             type: 'category',
@@ -69,7 +100,9 @@ function initChart(listy: Array<number>, listx: Array<string>) {
             },
             axisLabel: {
                 formatter: '{value} ',
-                color: '#666669'
+                color: '#666669',
+                // interval: 0,
+                rotate: 40
             },
             data: listx
         },
@@ -86,6 +119,7 @@ function initChart(listy: Array<number>, listx: Array<string>) {
             {
                 data: listy,
                 type: 'line',
+                symbol: 'none',
                 smooth: true
             }
         ]
