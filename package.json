@@ -13,6 +13,7 @@
     "echarts": "^5.4.0",
     "element-plus": "^2.2.23",
     "element-ui": "^2.15.12",
+    "mockjs": "^1.1.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.13",
     "vuex": "^4.0.2"

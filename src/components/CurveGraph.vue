@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" :style="{ width: '600px', height: '200px' }"></div>
+        <div :id="rowId" :style="{ width: '1350px', height: '200px' }"></div>
     </div>
 </template>
 
@@ -11,7 +11,12 @@ import axios from 'axios'
 import * as echarts from 'echarts'
 type arrProp = number[]
 const props = defineProps({
+
     curveData: {
+        type: Array as PropType<arrProp>,
+        required: true
+    },
+    ts_list: {
         type: Array as PropType<arrProp>,
         required: true
     },
@@ -20,13 +25,26 @@ const props = defineProps({
         required: true
     }
 })
+const datax = props.ts_list.map(x => timestampToTime(x))
 
-onMounted(() => initChart(props.curveData))
-watch(props.curveData, () => initChart(props.curveData))
+onMounted(() => initChart(props.curveData, datax))
+watch(props.curveData, () => initChart(props.curveData, datax))
 // const refId = 'echarts' + props.rowId
 // const refId = computed(() => 'echarts' + props.rowId)
-// 基础配置一下Echarts
-function initChart(listy: Array<number>) {
+
+// 时间戳转时间
+function timestampToTime(timestamp: number) {
+    const date = new Date(timestamp)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    // const Y = date.getFullYear() + '-'
+    // const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+    // const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+    const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+    const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+    const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() + ':'
+    const ms = date.getMilliseconds() < 10 ? '0' + date.getMilliseconds() : date.getMilliseconds()
+    return h + m + s + ms
+}
+function initChart(listy: Array<number>, listx: Array<string>) {
     console.log('props.rowId: ', props.rowId)
     console.log('props.curveData: ', props.curveData)
 
@@ -34,6 +52,9 @@ function initChart(listy: Array<number>) {
     // const chart = echarts.init(this.$refs[`echarts${props.rowId}`], 'white')
     // 把配置和数据放这里
     chart.setOption({
+        title: {
+            text: '第一个 ECharts 实例'
+        },
         xAxis: {
             type: 'category',
             boundaryGap: false,
@@ -49,8 +70,8 @@ function initChart(listy: Array<number>) {
             axisLabel: {
                 formatter: '{value} ',
                 color: '#666669'
-            }
-            // data: listx
+            },
+            data: listx
         },
         tooltip: {
             trigger: 'axis',

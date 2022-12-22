@@ -1,53 +1,54 @@
 <template>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{ 'text-align': 'center' }" border
-        v-loading="loading">
-        <el-table-column label="台网" width="65">
+        v-loading="loading" empty-text="暂无数据">
+        <el-table-column type="selection" width="40" />
+        <el-table-column label="台网" width="145">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
-                    <span style="margin-left: 10px">{{ scope.row.network }}</span>
+                    <span>{{ scope.row.network }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="台站" width="70">
+        <el-table-column label="台站" width="150">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.station }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="位置" width="60">
+        <el-table-column label="位置" width="140">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.location }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="频道" width="70">
+        <el-table-column label="频道" width="150">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.channel }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="开始时间" width="175">
+        <el-table-column label="开始时间" width="305">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.start_time }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="结束时间" width="175">
+        <el-table-column label="结束时间">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <span style="margin-left: 10px">{{ scope.row.end_time }}</span>
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="图表">
+        <!-- <el-table-column label="图表">
             <template #default="scope">
                 <CurveGraph :curveData=scope.row.curve_data :rowId=scope.row.id></CurveGraph>
             </template>
-        </el-table-column>
+        </el-table-column> -->
     </el-table>
 </template>
 

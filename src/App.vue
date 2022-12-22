@@ -5,6 +5,9 @@
         <div>
           <span class="title">地震大数据可视化系统</span>
         </div>
+        <div>
+          <Switch></Switch>
+        </div>
       </el-header>
       <el-container>
         <el-aside class="aside" width="200px">
@@ -18,17 +21,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import Navigator from './components/Navigator.vue'
+import Switch from './components/Switch.vue'
 // import HelloWorld from './components/HelloWorld.vue'
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    Navigator
-  }
-})
 </script>
 
 <style>
@@ -60,10 +57,15 @@ body,
   justify-content: center; */
   display: flex;
   align-items: center;
+  justify-content: space-between;
   /* justify-content: center; */
   height: 50px;
   background-color: #fff;
   padding: 10px;
+}
+
+.main {
+  overflow: hidden;
 }
 
 .head>div {
