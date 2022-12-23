@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" :style="{ width: '1300px', height: '200px' }"></div>
+        <div :id="rowId" :style="{ width: '1280px', height: '150px' }"></div>
         <!-- <div :id="rowId"></div> -->
     </div>
 </template>
@@ -78,31 +78,56 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string) {
     // 把配置和数据放这里
     chart.setOption({
         title: {
-            text: title
+            text: title,
+            textStyle: {
+                // 文字颜色
+                color: '#be7a8a',
+                // 字体风格,'normal','italic','oblique'
+                fontStyle: 'normal',
+                // 字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
+                fontWeight: 'normal',
+                // 字体系列
+                fontFamily: 'sans-serif',
+                // 字体大小
+                fontSize: 16
+            }
         },
         grid: {
+            top: '0%',
             left: '2%',
             right: '3%',
-            bottom: '3%',
+            bottom: '1%',
             containLabel: true
         },
         xAxis: {
             type: 'category',
             boundaryGap: false,
+            // axisLine: {
+            //     onZero: false,
+            //     color: '#666669',
+            //     lineStyle: {
+            //         type: 'solid',
+            //         color: '#666669', // 左边线的颜色
+            //         width: '1'// 坐标线的宽度
+            //     }
+            // },
+            // axisLabel: {
+            //     formatter: '{value} ',
+            //     color: '#666669',
+            //     // interval: 0,
+            //     rotate: 40
+            // },
+            // 坐标轴轴线
             axisLine: {
-                onZero: false,
-                color: '#666669',
-                lineStyle: {
-                    type: 'solid',
-                    color: '#666669', // 左边线的颜色
-                    width: '1'// 坐标线的宽度
-                }
+                show: false
             },
+            // 坐标轴刻度
+            axisTick: {
+                show: false
+            },
+            // 刻度标签
             axisLabel: {
-                formatter: '{value} ',
-                color: '#666669',
-                // interval: 0,
-                rotate: 40
+                show: false
             },
             data: listx
         },
@@ -113,7 +138,19 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string) {
             }
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            splitLine: { show: false },
+            axisLine: {
+                show: false
+            },
+            // 坐标轴刻度
+            axisTick: {
+                show: false
+            },
+            // 刻度标签
+            axisLabel: {
+                show: false
+            }
         },
         series: [
             {

@@ -10,7 +10,7 @@
             </template>
             <el-menu-item-group>
                 <el-menu-item index="/offline/upload">上传文件</el-menu-item>
-                <el-menu-item index="/offline/offlineAnalysis">离线分析</el-menu-item>
+                <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item>
             </el-menu-item-group>
         </el-sub-menu>
     </el-menu>
@@ -23,10 +23,15 @@ import {
     Location,
     Setting
 } from '@element-plus/icons-vue'
+import store from '@/store'
+const onAnalysis = () => {
+    store.commit('getCurveData')
+}
 const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
+
 </script>
