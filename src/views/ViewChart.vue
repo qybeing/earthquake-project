@@ -19,9 +19,10 @@
             <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
                 <el-table-column>
                     <template #default="scope">
-                        <CurveGraph :curveData=scope.row.curve_points :ts_list=scope.row.ts_list
-                            :network=scope.row.network :station=scope.row.station :location=scope.row.location
-                            :channel=scope.row.channel :rowId=scope.row.id.toString()>
+                        <CurveGraph :curveData=scope.row.points_info.raw_datas :ts_list=scope.row.points_info.ts
+                            :network=scope.row.curve_info.network :station=scope.row.curve_info.station
+                            :location=scope.row.curve_info.location :channel=scope.row.curve_info.channel
+                            :rowId=scope.row.id.toString()>
                         </CurveGraph>
                     </template>
                 </el-table-column>
