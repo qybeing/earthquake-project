@@ -1,33 +1,48 @@
 <template>
     <el-container class="chart_container">
-        <el-header class="header">
-            <div class="icon">
-                <el-button size="small" color="#f6f8fa" @click="onReturn">
-                    <svg t="1670845384676" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="10057" width="20" height="20">
-                        <path
-                            d="M61.727867 365.421831S301.780326 127.048061 457.079486-0.040944l1.760576 218.92555s495.9501 0 502.992403 459.018953c0 0 10.604398 229.570892-91.754658 346.055497 0 0 77.629108-275.427749 3.521151-413.121151 0 0-74.107957-233.0511-414.758896-141.255498l1.760576 215.404398c-28.210156 0-398.872771-319.564974-398.872771-319.564974z"
-                            fill="" p-id="10058"></path>
-                    </svg>
-                </el-button>
+        <el-card class="box-card" shadow="never">
+            <template #header>
+                <div class="card-header">
+                    <div class="icon">
+                        <el-button size="small" color="#f6f8fa" @click="onReturn">
+                            <svg t="1670845384676" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="10057" width="20" height="20">
+                                <path
+                                    d="M61.727867 365.421831S301.780326 127.048061 457.079486-0.040944l1.760576 218.92555s495.9501 0 502.992403 459.018953c0 0 10.604398 229.570892-91.754658 346.055497 0 0 77.629108-275.427749 3.521151-413.121151 0 0-74.107957-233.0511-414.758896-141.255498l1.760576 215.404398c-28.210156 0-398.872771-319.564974-398.872771-319.564974z"
+                                    fill="" p-id="10058"></path>
+                            </svg>
+                        </el-button>
+                    </div>
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                        <div>
+                            <el-form-item label="开窗条件 window_len">
+                                <el-input v-model="formInline.window_len" />
+                            </el-form-item>
+                            <el-form-item label="开窗范围 fn">
+                                <el-input v-model="formInline.fn" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="success" @click="onDetailedChart" size="small">查看详细情况</el-button>
+                            </el-form-item>
+                        </div>
+                    </el-form>
+                </div>
+            </template>
+            <div class="chart_body" :key="itemKey">
+                <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
+                    <el-table-column>
+                        <template #default="scope">
+                            <!-- <el-button @click="change(scope.row)">看一看</el-button> -->
+                            <CurveGraph :curveData=scope.row.points_info.raw_datas :ts_list=scope.row.points_info.ts
+                                :network=scope.row.curve_info.network :station=scope.row.curve_info.station
+                                :location=scope.row.curve_info.location :channel=scope.row.curve_info.channel
+                                :rowId=changeID()>
+                            </CurveGraph>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
-            <div class="icon">
-                <el-button type="success" @click="onDetailedChart" size="small">查看详细情况</el-button>
-            </div>
-        </el-header>
-        <div class="chart_body">
-            <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
-                <el-table-column>
-                    <template #default="scope">
-                        <CurveGraph :curveData=scope.row.points_info.raw_datas :ts_list=scope.row.points_info.ts
-                            :network=scope.row.curve_info.network :station=scope.row.curve_info.station
-                            :location=scope.row.curve_info.location :channel=scope.row.curve_info.channel
-                            :rowId=scope.row.id.toString()>
-                        </CurveGraph>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
+        </el-card>
     </el-container>
 </template>
 <script setup lang="ts">
@@ -38,13 +53,21 @@ import { GlobalDataProps } from '../store'
 import CurveGraph from '../components/CurveGraph.vue'
 const store = useStore<GlobalDataProps>()
 const tableData = computed(() => store.state.viewChartData)
+const numID = ref()
+const itemKey = ref()
+numID.value = 0
+itemKey.value = Math.random()
+const formInline = reactive(computed(() => store.state.window))
 const onReturn = () => {
     router.push('/offline/offlineAnalysis')
 }
 
 const onDetailedChart = () => {
-    router.push('/offline/DetailedChart')
-    store.commit('getDetailedChartData')
+    // router.push('/offline/DetailedChart')
+    // store.commit('getDetailedChartData')
+    console.log('formInline', formInline.value)
+    store.commit('getWindow', formInline.value)
+    store.commit('getViewChartDataWithWindow')
 }
 
 const loading = computed(() => store.state.loading)
@@ -54,7 +77,17 @@ watch(loading, (newVal) => {
 // const tableData2 = reactive(tableData)
 watch(tableData, (newVal) => {
     console.log(newVal)
+    itemKey.value = Math.random()
 }, { immediate: true, deep: true })
+
+const changeID = () => {
+    const id: string = Math.random() + ''
+    console.log('rowId: ', id)
+    return id
+}
+const onFilter = () => {
+    console.log('过滤')
+}
 </script>
 <style scoped>
 .chart_container {
@@ -80,5 +113,10 @@ watch(tableData, (newVal) => {
     /* background-color: #fff; */
     display: flex;
     align-items: center;
+}
+
+.box-card {
+    width: 100%;
+    overflow: hidden scroll;
 }
 </style>

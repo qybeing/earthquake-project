@@ -11,6 +11,10 @@ export interface Conditions {
     conditions: QueryProps
     conjunction: string
 }
+export interface WindowProp {
+    window_len: string
+    fn: string
+}
 export interface DataProps {
     network: string
     station: string
@@ -38,6 +42,7 @@ export interface GlobalDataProps {
     detailedChartData: PointProps[];
     files: FileProps[];
     chooses: string[];
+    window: WindowProp;
     loading: boolean;
 }
 
@@ -57,11 +62,19 @@ const store = createStore<GlobalDataProps>({
         chooses: [],
         viewChartData: [],
         detailedChartData: [],
+        window: {
+            window_len: '',
+            fn: ''
+        },
         loading: false
     },
     mutations: {
         getChooese(state, val) {
             state.chooses = val
+        },
+        getWindow(state, newWindow: WindowProp) {
+            console.log('newWindow: ', newWindow)
+            state.window = newWindow
         },
         changeConditions(state, newConditions) {
             console.log('newConditions: ', newConditions)
@@ -92,6 +105,30 @@ const store = createStore<GlobalDataProps>({
             const formData = new FormData()
             const obj = {
                 curve_ids: state.chooses
+            }
+            formData.append('args', JSON.stringify(obj))
+            axios
+                .post(url, formData)
+                .then((res) => {
+                    console.log('res: ', res)
+                    console.log('obj: ', res.data.res)
+                    state.viewChartData = Object.values(res.data.res)
+                    console.log('state.viewChartData : ', state.viewChartData)
+                    console.log('~~~~~ ')
+                    // console.log('curve_data: ', obj.curve_data)
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error)
+                })
+        },
+        getViewChartDataWithWindow(state) {
+            console.log('开始获取 getViewChartDataWithWindow')
+            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            // const url = '/mock/get_curve_with_part_points'
+            const formData = new FormData()
+            const obj = {
+                curve_ids: state.chooses,
+                window: state.window
             }
             formData.append('args', JSON.stringify(obj))
             axios

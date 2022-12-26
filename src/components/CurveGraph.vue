@@ -160,7 +160,7 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string) {
                 smooth: true
             }
         ]
-    })
+    }, true)
     window.onresize = function () {
         // 自适应大小
         chart.resize()
