@@ -43,6 +43,7 @@ export interface GlobalDataProps {
     files: FileProps[];
     chooses: string[];
     window: WindowProp;
+    filter: QueryProps;
     loading: boolean;
 }
 
@@ -63,12 +64,21 @@ const store = createStore<GlobalDataProps>({
         viewChartData: [],
         detailedChartData: [],
         window: {
-            window_len: '',
+            window_len: '5s',
             fn: ''
+        },
+        filter: {
+            network: '',
+            station: '',
+            location: '',
+            channel: ''
         },
         loading: false
     },
     mutations: {
+        changeFilter(state, newFilter: QueryProps) {
+            state.filter = newFilter
+        },
         getChooese(state, val) {
             state.chooses = val
         },
@@ -80,31 +90,14 @@ const store = createStore<GlobalDataProps>({
             console.log('newConditions: ', newConditions)
             state.querydata = newConditions
         },
-        getDetailedChartData(state) {
-            console.log('开始获取 getDetailedChartData')
-            // const url = 'http://8.130.32.230:1123/offline_mysql_curve/searchAll'
-            const url = '/mock/get_curve_with_all_points'
-            axios
-                .get(url)
-                .then((res) => {
-                    console.log('res: ', res)
-                    console.log('obj: ', res.data.data.curve_infos)
-                    state.detailedChartData = res.data.data.curve_infos
-                    console.log('state.detailedChartData : ', state.detailedChartData)
-                    console.log('~~~~~ ')
-                    // console.log('curve_data: ', obj.curve_data)
-                })
-                .catch(function (error) { // 请求失败处理
-                    console.log(error)
-                })
-        },
         getViewChartData(state) {
             console.log('开始获取 getViewChartData')
             const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
-                curve_ids: state.chooses
+                curve_ids: state.chooses,
+                window: state.window
             }
             formData.append('args', JSON.stringify(obj))
             axios
@@ -128,7 +121,33 @@ const store = createStore<GlobalDataProps>({
             const formData = new FormData()
             const obj = {
                 curve_ids: state.chooses,
-                window: state.window
+                window: state.window,
+                filters: state.filter
+            }
+            formData.append('args', JSON.stringify(obj))
+            axios
+                .post(url, formData)
+                .then((res) => {
+                    console.log('res: ', res)
+                    console.log('obj: ', res.data.res)
+                    state.viewChartData = Object.values(res.data.res)
+                    console.log('state.viewChartData : ', state.viewChartData)
+                    console.log('~~~~~ ')
+                    // console.log('curve_data: ', obj.curve_data)
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error)
+                })
+        },
+        getViewChartDataWithFilter(state) {
+            console.log('开始获取 getViewChartDataWithFilte')
+            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            // const url = '/mock/get_curve_with_part_points'
+            const formData = new FormData()
+            const obj = {
+                curve_ids: state.chooses,
+                window: state.window,
+                filters: state.filter
             }
             formData.append('args', JSON.stringify(obj))
             axios

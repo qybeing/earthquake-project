@@ -13,19 +13,47 @@
                             </svg>
                         </el-button>
                     </div>
-                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                        <div>
-                            <el-form-item label="开窗条件 window_len">
-                                <el-input v-model="formInline.window_len" />
-                            </el-form-item>
-                            <el-form-item label="开窗范围 fn">
-                                <el-input v-model="formInline.fn" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="success" @click="onDetailedChart" size="small">查看详细情况</el-button>
-                            </el-form-item>
-                        </div>
-                    </el-form>
+                    <div class="filter_style">
+                        <el-form :inline="true" :model="querydataform" class="demo-form-inline">
+                            <div class="wrapper">
+                                <el-form-item label="台网">
+                                    <el-input v-model="querydataform.network" />
+                                </el-form-item>
+                                <el-form-item label="台站">
+                                    <el-input v-model="querydataform.station" />
+                                </el-form-item>
+                                <el-form-item label="位置">
+                                    <el-input v-model="querydataform.location" />
+                                </el-form-item>
+                                <el-form-item label="频道">
+                                    <el-input v-model="querydataform.channel" />
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="success" @click="onFilter">过滤</el-button>
+                                </el-form-item>
+                            </div>
+                        </el-form>
+                        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                            <div class="wrapper">
+                                <el-form-item label="开窗条件 window_len">
+                                    <el-input v-model="formInline.window_len" />
+                                </el-form-item>
+                                <el-form-item label="开窗范围 fn">
+                                    <!-- <el-input v-model="formInline.fn" /> -->
+                                    <el-select v-model="formInline.fn" class="m-2" placeholder="Select">
+                                        <el-option v-for="item in options" :key="item.value" :label="item.label"
+                                            :value="item.value" />
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="success" @click="onDetailedChart">查看</el-button>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="success" @click="onFullChart">查看所有点位</el-button>
+                                </el-form-item>
+                            </div>
+                        </el-form>
+                    </div>
                 </div>
             </template>
             <div class="chart_body" :key="itemKey">
@@ -49,7 +77,7 @@
 import { computed, watch, reactive, ref } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
-import { GlobalDataProps } from '../store'
+import { GlobalDataProps, WindowProp } from '../store'
 import CurveGraph from '../components/CurveGraph.vue'
 const store = useStore<GlobalDataProps>()
 const tableData = computed(() => store.state.viewChartData)
@@ -57,16 +85,41 @@ const numID = ref()
 const itemKey = ref()
 numID.value = 0
 itemKey.value = Math.random()
+const querydataform = reactive(computed(() => store.state.filter))
 const formInline = reactive(computed(() => store.state.window))
 const onReturn = () => {
     router.push('/offline/offlineAnalysis')
 }
+
+const options = [
+    {
+        value: 'max',
+        label: 'max'
+    },
+    {
+        value: 'mean',
+        label: 'mean'
+    },
+    {
+        value: 'min',
+        label: 'min'
+    }
+]
 
 const onDetailedChart = () => {
     // router.push('/offline/DetailedChart')
     // store.commit('getDetailedChartData')
     console.log('formInline', formInline.value)
     store.commit('getWindow', formInline.value)
+    store.commit('getViewChartDataWithWindow')
+}
+
+const onFullChart = () => {
+    const defaultWindow: WindowProp = {
+        window_len: '',
+        fn: ''
+    }
+    store.commit('getWindow', defaultWindow)
     store.commit('getViewChartDataWithWindow')
 }
 
@@ -87,6 +140,8 @@ const changeID = () => {
 }
 const onFilter = () => {
     console.log('过滤')
+    store.commit('changeFilter', querydataform.value)
+    store.commit('getViewChartDataWithFilter')
 }
 </script>
 <style scoped>
@@ -118,5 +173,22 @@ const onFilter = () => {
 .box-card {
     width: 100%;
     overflow: hidden scroll;
+}
+
+.filter_style {
+    width: 1300px;
+    margin-left: 30px;
+}
+
+.wrapper {
+    /* margin: 60px; */
+    /* 声明一个容器 */
+    display: grid;
+    /*  声明列的宽度  */
+    grid-template-columns: repeat(5, 250px);
+    /*  声明行间距和列间距  */
+    grid-gap: 10px;
+    /*  声明行的高度  */
+    /* grid-template-rows: 100px 200px; */
 }
 </style>

@@ -111,9 +111,9 @@ const onViewChart = () => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(3, 300px);
+    grid-template-columns: repeat(6, 170px);
     /*  声明行间距和列间距  */
-    grid-gap: 20px;
+    grid-gap: 5px;
     /*  声明行的高度  */
     /* grid-template-rows: 100px 200px; */
 }
