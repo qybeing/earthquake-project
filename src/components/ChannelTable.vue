@@ -1,8 +1,12 @@
 <template>
-    <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" />
-        <el-table-column property="channel" label="频道" width="120" />
-    </el-table>
+    <div class="my_table">
+        <el-table ref="multipleTableRef" :data="tableData" style="width: 100%"
+            @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55" />
+            <el-table-column property="channel" label="频道" width="120" />
+        </el-table>
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -31,3 +35,20 @@ const tableData: Curve[] = [
     }
 ]
 </script>
+
+<style>
+/* 去掉中间数据的分割线 */
+.el-table__row>td {
+    border: none;
+}
+
+/* 去掉上面的线 */
+.el-table th.is-leaf {
+    border: none;
+}
+
+/* 去掉最下面的那一条线 */
+.el-table::before {
+    height: 0px;
+}
+</style>

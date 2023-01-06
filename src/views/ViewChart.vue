@@ -194,4 +194,12 @@ const onFilter = () => {
     /*  声明行的高度  */
     /* grid-template-rows: 100px 200px; */
 }
+
+.el-form-item {
+    margin-bottom: 0px
+}
+
+.demo-form-inline {
+    margin-top: 0px;
+}
 </style>

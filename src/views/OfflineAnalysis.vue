@@ -68,6 +68,7 @@ const onViewChart = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 40px;
 }
 
 .demo-form-inline {
@@ -82,11 +83,20 @@ const onViewChart = () => {
     /* margin: 60px; */
     /* 声明一个容器 */
     display: grid;
+    place-items: center;
     /*  声明列的宽度  */
     grid-template-columns: repeat(6, 140px);
     /*  声明行间距和列间距  */
     grid-gap: 5px;
     /*  声明行的高度  */
     /* grid-template-rows: 100px 200px; */
+}
+
+.el-form-item {
+    margin-bottom: 0px
+}
+
+.demo-form-inline {
+    margin-top: 0px;
 }
 </style>

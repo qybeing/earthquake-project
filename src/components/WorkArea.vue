@@ -1,9 +1,10 @@
 <template>
     <div>工作区</div>
     <el-divider />
-    <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange"
+        :show-header=false>
         <el-table-column type="selection" width="55" />
-        <el-table-column property="channel" label="频道" width="120" />
+        <el-table-column property="channel" label="操作" width="120" />
         <el-table-column fixed="right" label="设置" width="50">
             <template #default>
                 <el-popover placement="right" title="Title" :width="200" trigger="click"
@@ -36,13 +37,13 @@ const handleSelectionChange = (val: Curve[]) => {
 
 const tableData: Curve[] = [
     {
-        channel: 'BHE'
+        channel: '降采样1'
     },
     {
-        channel: 'BHN'
+        channel: '降采样2'
     },
     {
-        channel: 'BHZ'
+        channel: '降采样3'
     }
 ]
 </script>
