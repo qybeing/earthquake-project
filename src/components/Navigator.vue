@@ -1,37 +1,42 @@
 <template>
-    <el-menu active-text-color="#83abfa" background-color="#ffff" class="el-menu-vertical-demo" text-color="#000000"
-        @open="handleOpen" @close="handleClose" style="height: 100%;" :router="true">
-        <el-sub-menu index="/offline">
-            <template #title>
-                <el-icon>
-                    <location />
-                </el-icon>
-                <span>离线操作</span>
-            </template>
-            <el-menu-item-group>
-                <el-menu-item index="/offline/upload">上传文件</el-menu-item>
-                <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item>
-            </el-menu-item-group>
-        </el-sub-menu>
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false"
+        @select="handleSelect" :router="true" style='height: 100%;'>
+        <el-menu-item index="0">
+            <span class="title">
+                地震大数据可视化分析平台
+            </span></el-menu-item>
+        <div class="flex-grow" />
+        <el-menu-item index="/offline/upload">上传文件</el-menu-item>
+        <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item>
+        <el-menu-item index="/offline/DetailedChart">详细分析</el-menu-item>
     </el-menu>
 </template>
 
 <script lang="ts" setup>
 import {
-    Document,
-    Menu as IconMenu,
-    Location,
-    Setting
+    Menu,
+    Location
 } from '@element-plus/icons-vue'
 import store from '@/store'
-const onAnalysis = () => {
-    store.commit('getCurveData')
-}
-const handleOpen = (key: string, keyPath: string[]) => {
-    console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
+import { ref } from 'vue'
+const activeIndex = ref('/offline/upload')
+const handleSelect = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
 
+const onAnalysis = () => {
+    store.commit('getCurveData')
+}
 </script>
+
+<style>
+.flex-grow {
+    flex-grow: 1;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+}
+</style>

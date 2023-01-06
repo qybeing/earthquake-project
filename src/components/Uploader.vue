@@ -6,12 +6,9 @@
         </el-icon>
         <div class="el-upload__text">
             拖拽上传 或 <em>点击上传</em>
+            <br />
+            (仅支持上传mseed文件)
         </div>
-        <template #tip>
-            <div class="el-upload__tip">
-                仅支持上传mseed文件
-            </div>
-        </template>
     </el-upload>
 </template>
 
@@ -50,6 +47,8 @@ const uploadError = (_error: Error, uploadFile: UploadFile, uploadFiles: UploadF
 } */
 .el-upload-dragger {
     height: 400px;
+    width: 90%;
+    margin: 5%;
 }
 
 .el-icon--upload {

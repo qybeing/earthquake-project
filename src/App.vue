@@ -1,30 +1,22 @@
 <template>
   <div class="layout">
     <el-container class="container">
-      <el-header class="header">
-        <div>
-          <span class="title">地震大数据可视化系统</span>
-        </div>
-        <div>
-          <Switch></Switch>
+      <el-header height="30px" class="header">
+        <div style="width: 100%;height: 100%;">
+          <Navigator></Navigator>
         </div>
       </el-header>
-      <el-container>
-        <el-aside class="aside" width="200px">
-          <Navigator></Navigator>
-        </el-aside>
-        <el-main class="main">
-          <router-view></router-view>
-        </el-main>
-      </el-container>
+
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
+
     </el-container>
   </div>
 </template>
 
 <script setup lang="ts">
 import Navigator from './components/Navigator.vue'
-import Switch from './components/Switch.vue'
-// import HelloWorld from './components/HelloWorld.vue'
 
 </script>
 
@@ -59,12 +51,14 @@ body,
   align-items: center;
   justify-content: space-between;
   /* justify-content: center; */
-  height: 50px;
+  height: 35px;
+  padding: 0px;
   background-color: #fff;
-  padding: 10px;
+  /* padding: 5px; */
 }
 
 .main {
+  padding: 5px !important;
   overflow: hidden;
 }
 
@@ -77,25 +71,5 @@ body,
   font-size: 18px;
   font-weight: 700;
   color: #000000;
-}
-
-/* .header span { */
-/* display: block; */
-/* text-align: center;
-  align-items: center; */
-/* font-size: 18px;
-  color: #000000; */
-/* } */
-
-.aside {
-  background-color: rgb(234, 237, 169);
-  overflow: hidden;
-}
-
-.el-aside {
-  margin-top: 2px;
-  height: 99.5%;
-  /* overflow-x: hidden;
-  overflow-y: scroll; */
 }
 </style>

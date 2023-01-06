@@ -35,10 +35,10 @@
                         </el-form>
                         <el-form :inline="true" :model="formInline" class="demo-form-inline">
                             <div class="wrapper">
-                                <el-form-item label="开窗条件 window_len">
+                                <el-form-item label="开窗条件">
                                     <el-input v-model="formInline.window_len" />
                                 </el-form-item>
-                                <el-form-item label="开窗范围 fn">
+                                <el-form-item label="开窗范围">
                                     <!-- <el-input v-model="formInline.fn" /> -->
                                     <el-select v-model="formInline.fn" class="m-2" placeholder="Select">
                                         <el-option v-for="item in options" :key="item.value" :label="item.label"
@@ -176,8 +176,11 @@ const onFilter = () => {
 }
 
 .filter_style {
-    width: 1300px;
+    /* width: 100%; */
     margin-left: 30px;
+    display: grid;
+    grid-template-columns: 4fr 3fr;
+    grid-template-rows: 1fr;
 }
 
 .wrapper {
@@ -185,9 +188,9 @@ const onFilter = () => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(5, 250px);
+    grid-template-columns: repeat(5, 150px);
     /*  声明行间距和列间距  */
-    grid-gap: 10px;
+    /* grid-gap: 10px; */
     /*  声明行的高度  */
     /* grid-template-rows: 100px 200px; */
 }
