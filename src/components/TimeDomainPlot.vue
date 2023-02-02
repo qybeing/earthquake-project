@@ -2,7 +2,7 @@
 <template>
     <div class="echarts-box">
         <div :id="rowId" style=" width: 1280px;height: 300px;"></div>
-        <!-- <div :id="rowId"></div> -->
+
     </div>
 </template>
 
