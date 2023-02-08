@@ -20,6 +20,7 @@
         <el-main>
             <div class="chart_body" :key="itemKey">
                 <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
+                <FrequencyGraph :rowId=changeID()></FrequencyGraph>
                 <!-- <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
                     <el-table-column>
                         <template>
@@ -39,6 +40,7 @@ import { GlobalDataProps } from '@/store'
 import { computed, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import TimeDomainPlot from '@/components/TimeDomainPlot.vue'
+import FrequencyGraph from '@/components/FrequencyGraph.vue'
 const store = useStore<GlobalDataProps>()
 const loading = computed(() => store.state.loading)
 const itemKey = ref()

@@ -29,8 +29,8 @@ export interface XYProps {
     ts: Array<number>
 }
 export interface allProps {
-    point_amp_list: Array<number>
-    point_fre_list: Array<number>
+    point_amp_list: Array<number> // 幅度列表y
+    point_fre_list: Array<number> // 频度数据列表x
     raw_datas: Array<number>
     ts: Array<number>
 }
@@ -276,6 +276,33 @@ const store = createStore<GlobalDataProps>({
         getDataX(state) {
             if (state.allData.length) {
                 return state.allData[0].points_info.ts
+            }
+            return []
+        },
+        getAmpY(state) {
+            const res: YDataProps[] = []
+            state.allData.forEach(
+                x => {
+                    if (state.chooseChannel.includes(x.curve_info.channel)) {
+                        const obj: YDataProps = {
+                            name: '',
+                            data: [],
+                            type: ''
+                        }
+                        obj.name = x.curve_info.channel
+                        obj.data = x.points_info.point_amp_list
+                        obj.type = 'line'
+                        res.push(obj)
+                    }
+                }
+            )
+
+            // console.log('在getDataY: ', res)
+            return res
+        },
+        getFreX(state) {
+            if (state.allData.length) {
+                return state.allData[0].points_info.point_fre_list
             }
             return []
         }
