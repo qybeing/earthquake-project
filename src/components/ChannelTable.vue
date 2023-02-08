@@ -10,8 +10,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { ElTable } from 'element-plus'
+
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
+const store = useStore<GlobalDataProps>()
+let channelArr = reactive(Array<string>())
 
 interface Curve {
     channel: string
@@ -21,6 +26,9 @@ const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 const multipleSelection = ref<Curve[]>([])
 const handleSelectionChange = (val: Curve[]) => {
     multipleSelection.value = val
+    channelArr = []
+    val.forEach(x => channelArr.push(x.channel))
+    store.commit('changeChannel', channelArr)
 }
 
 const tableData: Curve[] = [

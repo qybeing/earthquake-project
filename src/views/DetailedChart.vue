@@ -2,7 +2,7 @@
     <el-container>
         <el-aside width="200px" class="wrapper">
             <el-card :body-style="{ padding: '5px' }">
-                <div class="little_title">XJ/AHQ/00 2022-12-22</div>
+                <div class="little_title" @click="getData">XJ/AHQ/00 2022-12-22</div>
             </el-card>
             <el-card :body-style="{ padding: '5px' }">
                 <ChannelTable></ChannelTable>
@@ -19,13 +19,14 @@
         </el-aside>
         <el-main>
             <div class="chart_body" :key="itemKey">
-                <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
+                <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
+                <!-- <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
                     <el-table-column>
                         <template>
                             <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
                         </template>
                     </el-table-column>
-                </el-table>
+                </el-table> -->
             </div>
 
         </el-main>
@@ -35,7 +36,7 @@
 import ChannelTable from '@/components/ChannelTable.vue'
 import WorkArea from '@/components/WorkArea.vue'
 import { GlobalDataProps } from '@/store'
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import TimeDomainPlot from '@/components/TimeDomainPlot.vue'
 const store = useStore<GlobalDataProps>()
@@ -51,7 +52,13 @@ const changeID = () => {
     return id
 }
 
-const tableData = [1, 2, 3]
+function getData() {
+    alert('dianji')
+    store.commit('getAllData')
+    // xData = store.getters.getDataX
+    // yData = store.getters.getDataY
+}
+
 </script>
 
 <style scoped>
