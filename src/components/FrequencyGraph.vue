@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" style=" width: 1280px;height: 200px;"></div>
+        <div :id="rowId" style=" width: 1280px;height: 220px;"></div>
     </div>
 </template>
 
@@ -50,9 +50,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
     // 把配置和数据放这里
     chart.setOption(
         {
-            title: {
-                text: 'Stacked Line'
-            },
+            backgroundColor: 'white',
             tooltip: {
                 trigger: 'axis'
             },

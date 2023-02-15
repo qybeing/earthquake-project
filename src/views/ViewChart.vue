@@ -64,7 +64,7 @@
                             <CurveGraph :curveData=scope.row.points_info.raw_datas :ts_list=scope.row.points_info.ts
                                 :network=scope.row.curve_info.network :station=scope.row.curve_info.station
                                 :location=scope.row.curve_info.location :channel=scope.row.curve_info.channel
-                                :rowId=changeID()>
+                                :rowId=changeID() :p_start_time=scope.row.curve_info.p_start_time>
                             </CurveGraph>
                         </template>
                     </el-table-column>

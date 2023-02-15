@@ -39,14 +39,25 @@ const props = defineProps({
     rowId: {
         type: String,
         required: true
+    },
+    p_start_time: {
+        type: String,
+        required: true
     }
 })
 const datax = props.ts_list.map(x => timestampToTimeHMS(x))
 const date = timestampToTimeYMD(props.ts_list[0])
 const title = props.network + '/' + props.station + '/' + props.location + '/' + props.channel + '  ' + date
-
-onMounted(() => initChart(props.curveData, datax, title))
-watch(props.curveData, () => initChart(props.curveData, datax, title))
+console.log('props.p_start_time', props.p_start_time)
+onMounted(() => {
+    const ptime = props.p_start_time.split(' ')[1]
+    initChart(props.curveData, datax, title, ptime)
+})
+watch(props.curveData, () => {
+    const ptime = props.p_start_time.split(' ')[1]
+    initChart(props.curveData, datax, title, ptime)
+})
+watch(() => props.p_start_time, () => console.log('props.p_start_time', props.p_start_time))
 // const refId = 'echarts' + props.rowId
 // const refId = computed(() => 'echarts' + props.rowId)
 
@@ -69,7 +80,7 @@ function timestampToTimeYMD(timestamp: number) {
     const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
     return Y + M + D
 }
-function initChart(listy: Array<number>, listx: Array<string>, title: string) {
+function initChart(listy: Array<number>, listx: Array<string>, title: string, ptime: string) {
     console.log('props.rowId: ', props.rowId)
     console.log('props.curveData: ', props.curveData)
 
@@ -157,7 +168,59 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string) {
                 data: listy,
                 type: 'line',
                 symbol: 'none',
-                smooth: true
+                smooth: true,
+                markLine: {
+                    symbol: ['none', 'none'], // 去掉箭头
+                    itemStyle: {
+                        normal: {
+                            lineStyle: {
+                                type: 'solid',
+                                color: { // 设置渐变
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'red '// 0% 处的颜色
+                                    }, {
+                                        offset: 1, color: 'blue' // 100% 处的颜色
+                                    }],
+                                    global: false // 缺省为 false
+                                }
+                            }
+                            // label: {
+                            //     normal: {
+                            //         show: true,
+                            //         position: 'right',
+                            //         formatter: 'P',
+                            //         textStyle: {
+                            //             color: 'red', // 标注线终点文字颜色
+                            //             fontSize: 20,
+                            //             fontWeight: 800,
+                            //             padding: [0, 0, 10, 0] // 文字间距
+                            //         }
+                            //     }
+                            // }
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'right',
+                            formatter: 'P',
+                            textStyle: {
+                                color: 'red', // 标注线终点文字颜色
+                                fontSize: 20,
+                                fontWeight: 800,
+                                padding: [0, 0, 10, 0] // 文字间距
+                            }
+                        }
+                    },
+                    data: [{
+                        xAxis: ptime // 这里设置false是隐藏不了的，可以设置为-1
+                    }]
+                }
             }
         ]
     }, true)

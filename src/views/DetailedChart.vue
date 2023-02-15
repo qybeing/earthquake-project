@@ -21,6 +21,7 @@
             <div class="chart_body" :key="itemKey">
                 <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
                 <FrequencyGraph :rowId=changeID()></FrequencyGraph>
+                <Spectrogram></Spectrogram>
                 <!-- <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
                     <el-table-column>
                         <template>
@@ -35,6 +36,7 @@
 </template>
 <script setup lang="ts">
 import ChannelTable from '@/components/ChannelTable.vue'
+import Spectrogram from '@/components/Spectrogram.vue'
 import WorkArea from '@/components/WorkArea.vue'
 import { GlobalDataProps } from '@/store'
 import { computed, reactive, ref, watch } from 'vue'

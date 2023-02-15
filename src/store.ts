@@ -1,6 +1,13 @@
 import { createStore, Commit } from 'vuex'
 import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
+
+export interface WorkProps {
+    DownSampling: number,
+    GoRespond: number,
+    Normalization: string
+}
+
 export interface QueryProps {
     network: string
     station: string
@@ -23,6 +30,7 @@ export interface DataProps {
     start_time: string
     curve_id: string
     end_time: string
+    p_start_time: string
 }
 export interface XYProps {
     raw_datas: Array<number>
@@ -63,7 +71,9 @@ export interface GlobalDataProps {
     loading: boolean;
 
     allData: allPointProps[];
-    chooseChannel: Array<string>
+    chooseChannel: Array<string>;
+
+    workChoose: WorkProps
 }
 
 const store = createStore<GlobalDataProps>({
@@ -88,6 +98,11 @@ const store = createStore<GlobalDataProps>({
             window_len: '5s',
             fn: ''
         },
+        workChoose: {
+            DownSampling: 0,
+            GoRespond: 0,
+            Normalization: 'none'
+        },
         filter: {
             network: '',
             station: '',
@@ -97,6 +112,15 @@ const store = createStore<GlobalDataProps>({
         loading: false
     },
     mutations: {
+        changeDownSampling(state, newDownSampling: number) {
+            state.workChoose.DownSampling = newDownSampling
+        },
+        changeGoRespond(state, newGoRespond: number) {
+            state.workChoose.GoRespond = newGoRespond
+        },
+        changeNormalization(state, newNormalization: string) {
+            state.workChoose.Normalization = newNormalization
+        },
         changeChannel(state, newChannels: Array<string>) {
             state.chooseChannel = newChannels
             console.log('state.chooseChannel', state.chooseChannel)
