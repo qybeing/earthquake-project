@@ -11,6 +11,7 @@
             </template>
         </el-table-column>
     </el-table>
+    <el-button @click="sendWork">查看</el-button>
 
     <!-- 模态框部分-->
     <!-- 1.降采样  -->
@@ -23,7 +24,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="chooseDialog.isDownSampling = false">取消</el-button>
-                <el-button type="primary" @click="setGoRespond(workInput.DownSampling)">
+                <el-button type="primary" @click="setDownSampling(workInput.DownSampling)">
                     确认
                 </el-button>
             </span>
@@ -37,7 +38,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="chooseDialog.isGoRespond = false">取消</el-button>
-                <el-button type="primary" @click="chooseDialog.isGoRespond = false">
+                <el-button type="primary" @click="setGoRespond(workInput.GoRespond)">
                     确认
                 </el-button>
             </span>
@@ -56,7 +57,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="chooseDialog.isNormalization = false">取消</el-button>
-                <el-button type="primary" @click="chooseDialog.isNormalization = false">
+                <el-button type="primary" @click="setNormalization(workInput.Normalization)">
                     确认
                 </el-button>
             </span>
@@ -77,15 +78,24 @@ const store = useStore<GlobalDataProps>()
 const workInput = reactive(computed(() => store.state.workChoose))
 interface Curve {
     id: number
+    name: string
     channel: string
 }
 
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 const multipleSelection = ref<Curve[]>([])
 const handleSelectionChange = (val: Curve[]) => {
+    console.log('操作选择： ', val)
     multipleSelection.value = val
 }
-
+const sendWork = () => {
+    const arr: string[] = []
+    multipleSelection.value.forEach(x => {
+        arr.push(x.name)
+    })
+    store.commit('changeworkChoosedName', arr)
+    store.commit('getWorkData')
+}
 const chooseDialog = reactive({
     isDownSampling: false,
     isGoRespond: false,
@@ -108,23 +118,33 @@ const clickObject = (id: number) => {
     }
 }
 
-const setGoRespond = (n: number) => {
-    chooseDialog.isGoRespond = false
-    console.log('chooseDialog.isGoRespond: ', chooseDialog.isGoRespond)
+const setDownSampling = (n: number) => {
     store.commit('changeDownSampling', n)
+    chooseDialog.isDownSampling = false
+}
+const setGoRespond = (n: number) => {
+    store.commit('changeGoRespond', n)
+    chooseDialog.isGoRespond = false
+}
+const setNormalization = (n: string) => {
+    store.commit('changeNormalization', n)
+    chooseDialog.isNormalization = false
 }
 
 const tableData: Curve[] = [
     {
         id: 1,
+        name: 'DownSampling',
         channel: '降采样'
     },
     {
         id: 2,
+        name: 'GoRespond',
         channel: '仪器去响应'
     },
     {
         id: 3,
+        name: 'Normalization',
         channel: '归一化'
     }
 ]

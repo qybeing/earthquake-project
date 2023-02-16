@@ -1,11 +1,18 @@
 import { createStore, Commit } from 'vuex'
 import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
+import { ca } from 'element-plus/es/locale'
 
 export interface WorkProps {
     DownSampling: number,
     GoRespond: number,
     Normalization: string
+}
+
+export interface WorkToSend {
+    downsample?: number,
+    divide_sensitivity?: number,
+    normalization?: string
 }
 
 export interface QueryProps {
@@ -73,7 +80,10 @@ export interface GlobalDataProps {
     allData: allPointProps[];
     chooseChannel: Array<string>;
 
-    workChoose: WorkProps
+    workChoose: WorkProps;
+    workToSend: WorkToSend;
+    workChoosedId: number[]
+    workChoosedName: string[]
 }
 
 const store = createStore<GlobalDataProps>({
@@ -103,6 +113,11 @@ const store = createStore<GlobalDataProps>({
             GoRespond: 0,
             Normalization: 'none'
         },
+        workToSend: {
+
+        },
+        workChoosedId: [],
+        workChoosedName: [],
         filter: {
             network: '',
             station: '',
@@ -112,6 +127,12 @@ const store = createStore<GlobalDataProps>({
         loading: false
     },
     mutations: {
+        changeworkChoosedId(state, newArr: number[]) {
+            state.workChoosedId = newArr
+        },
+        changeworkChoosedName(state, newArr: string[]) {
+            state.workChoosedName = newArr
+        },
         changeDownSampling(state, newDownSampling: number) {
             state.workChoose.DownSampling = newDownSampling
         },
@@ -138,6 +159,46 @@ const store = createStore<GlobalDataProps>({
         changeConditions(state, newConditions) {
             console.log('newConditions: ', newConditions)
             state.querydata = newConditions
+        },
+        // 获取工作区操作后的数据
+        getWorkData(state) {
+            console.log('开始获取 getWorkData')
+            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_points_and_transform'
+            // const url = '/mock/get_curves_and_points'
+            const formData = new FormData()
+            const obj: WorkToSend = {}
+            state.workChoosedName.forEach(x => {
+                switch (x) {
+                    case 'DownSampling':
+                        obj.downsample = state.workChoose.DownSampling
+                        break
+                    case 'GoRespond':
+                        obj.divide_sensitivity = state.workChoose.GoRespond
+                        break
+                    case 'Normalization':
+                        obj.normalization = state.workChoose.Normalization
+                }
+            })
+
+            const args = {
+                curve_ids: state.chooses,
+                pretreatment_args: obj
+            }
+            formData.append('args', JSON.stringify(args))
+            console.log('formdata: ', formData)
+            axios
+                .post(url, formData)
+                .then((res) => {
+                    console.log('res: ', res)
+                    console.log('obj: ', res.data.data.res)
+                    state.allData = Object.values(res.data.data.res)
+                    console.log('state.allData : ', state.allData)
+                    console.log('~~~~~ ')
+                    // console.log('curve_data: ', obj.curve_data)
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error)
+                })
         },
         // ~~~~~~~~~~~~~~~~~~
         // 详细分析
