@@ -78,6 +78,7 @@ export interface GlobalDataProps {
     loading: boolean;
 
     allData: allPointProps[];
+    chooseData: DataProps;
     chooseChannel: Array<string>;
 
     workChoose: WorkProps;
@@ -88,7 +89,7 @@ export interface GlobalDataProps {
 
 const store = createStore<GlobalDataProps>({
     state: {
-        chooseChannel: ['BHN'],
+        chooseChannel: [],
         allData: [],
         querydata: {
             conditions: {
@@ -107,6 +108,16 @@ const store = createStore<GlobalDataProps>({
         window: {
             window_len: '5s',
             fn: ''
+        },
+        chooseData: {
+            network: '',
+            station: '',
+            location: '',
+            channel: '',
+            start_time: '',
+            curve_id: '',
+            end_time: '',
+            p_start_time: ''
         },
         workChoose: {
             DownSampling: 0,
@@ -127,6 +138,9 @@ const store = createStore<GlobalDataProps>({
         loading: false
     },
     mutations: {
+        changeChooseData(state, newData: DataProps) {
+            state.chooseData = newData
+        },
         changeworkChoosedId(state, newArr: number[]) {
             state.workChoosedId = newArr
         },
@@ -163,36 +177,42 @@ const store = createStore<GlobalDataProps>({
         // 获取工作区操作后的数据
         getWorkData(state) {
             console.log('开始获取 getWorkData')
-            // const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_points_and_transform'
-            const url = '/mock/get_points_and_transform1'
-            // const formData = new FormData()
-            // const obj: WorkToSend = {}
-            // state.workChoosedName.forEach(x => {
-            //     switch (x) {
-            //         case 'DownSampling':
-            //             obj.downsample = state.workChoose.DownSampling
-            //             break
-            //         case 'GoRespond':
-            //             obj.divide_sensitivity = state.workChoose.GoRespond
-            //             break
-            //         case 'Normalization':
-            //             obj.normalization = state.workChoose.Normalization
-            //     }
-            // })
+            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_points_and_transform'
+            // const url = '/mock/get_points_and_transform1'
+            const formData = new FormData()
+            const obj: WorkToSend = {}
+            state.workChoosedName.forEach(x => {
+                switch (x) {
+                    case 'DownSampling':
+                        obj.downsample = state.workChoose.DownSampling
+                        break
+                    case 'GoRespond':
+                        obj.divide_sensitivity = state.workChoose.GoRespond
+                        break
+                    case 'Normalization':
+                        obj.normalization = state.workChoose.Normalization
+                }
+            })
 
-            // const args = {
-            //     curve_ids: state.chooses,
-            //     pretreatment_args: obj
-            // }
-            // formData.append('args', JSON.stringify(args))
-            // console.log('formdata: ', formData)
+            const pretitle = state.chooseData.curve_id.slice(0, 10)
+            const ids: string[] = []
+            state.chooseChannel.forEach(x => {
+                ids.push(pretitle + x)
+            })
+
+            const args = {
+                curve_ids: ids,
+                pretreatment_args: obj
+            }
+            formData.append('args', JSON.stringify(args))
+            console.log('formdata: ', formData)
             axios
-                // .post(url, formData)
-                .get(url)
+                .post(url, formData)
+                // .get(url)
                 .then((res) => {
                     console.log('res: ', res)
-                    console.log('obj: ', res.data.data.res)
-                    state.allData = Object.values(res.data.data.res)
+                    console.log('obj: ', res.data.res)
+                    state.allData = Object.values(res.data.res)
                     console.log('state.allData : ', state.allData)
                     console.log('~~~~~ ')
                     // console.log('curve_data: ', obj.curve_data)
@@ -338,6 +358,11 @@ const store = createStore<GlobalDataProps>({
         }
     },
     getters: {
+        getTitle(state) {
+            const info = state.chooseData
+            const title = info.network + '/' + info.station + '/' + info.location + ' ' + info.start_time.split(' ')[0]
+            return title
+        },
         getDataY(state) {
             const res: YDataProps[] = []
             state.allData.forEach(

@@ -57,7 +57,8 @@
                 </div>
             </template>
             <div class="chart_body" :key="itemKey">
-                <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
+                <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading"
+                    @row-dblclick="seeDetail">
                     <el-table-column>
                         <template #default="scope">
                             <!-- <el-button @click="change(scope.row)">看一看</el-button> -->
@@ -71,13 +72,14 @@
                 </el-table>
             </div>
         </el-card>
-    </el-container>
+</el-container>
 </template>
 <script setup lang="ts">
+
 import { computed, watch, reactive, ref } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
-import { GlobalDataProps, WindowProp } from '../store'
+import { GlobalDataProps, WindowProp, DataProps } from '../store'
 import CurveGraph from '../components/CurveGraph.vue'
 const store = useStore<GlobalDataProps>()
 const tableData = computed(() => store.state.viewChartData)
@@ -89,6 +91,13 @@ const querydataform = reactive(computed(() => store.state.filter))
 const formInline = reactive(computed(() => store.state.window))
 const onReturn = () => {
     router.push('/offline/offlineAnalysis')
+}
+const seeDetail = (row: any) => {
+    console.log('点击的data:', row.curve_info)
+    router.push('/offline/DetailedChart')
+    store.commit('changeChooseData', row.curve_info)
+    store.commit('changeChannel', [row.curve_info.channel])
+    store.commit('getAllData')
 }
 
 const options = [

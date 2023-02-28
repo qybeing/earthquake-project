@@ -2,7 +2,7 @@
     <el-container>
         <el-aside width="200px" class="wrapper">
             <el-card :body-style="{ padding: '5px' }">
-                <div class="little_title" @click="getData">XJ/AHQ/00 2022-12-22</div>
+                <div class="little_title" @click="getData">{{ title }}</div>
             </el-card>
             <el-card :body-style="{ padding: '5px' }">
                 <ChannelTable></ChannelTable>
@@ -11,11 +11,11 @@
                 <WorkArea></WorkArea>
             </el-card>
             <!-- <div class="multi_channel">
-                <ChannelTable></ChannelTable>
-            </div>
-            <div class="tool_area">
-                <WorkArea></WorkArea>
-            </div> -->
+                    <ChannelTable></ChannelTable>
+                </div>
+                <div class="tool_area">
+                    <WorkArea></WorkArea>
+                </div> -->
         </el-aside>
         <el-main>
             <div class="chart_body" :key="itemKey">
@@ -23,18 +23,19 @@
                 <FrequencyGraph :rowId=changeID()></FrequencyGraph>
                 <Spectrogram></Spectrogram>
                 <!-- <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
-                    <el-table-column>
-                        <template>
-                            <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
-                        </template>
-                    </el-table-column>
-                </el-table> -->
+                        <el-table-column>
+                            <template>
+                                <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
+                            </template>
+                        </el-table-column>
+                    </el-table> -->
             </div>
 
         </el-main>
-    </el-container>
+</el-container>
 </template>
 <script setup lang="ts">
+
 import ChannelTable from '@/components/ChannelTable.vue'
 import Spectrogram from '@/components/Spectrogram.vue'
 import WorkArea from '@/components/WorkArea.vue'
@@ -46,6 +47,8 @@ import FrequencyGraph from '@/components/FrequencyGraph.vue'
 const store = useStore<GlobalDataProps>()
 const loading = computed(() => store.state.loading)
 const itemKey = ref()
+let title = ref<string>()
+title = store.getters.getTitle
 itemKey.value = Math.random()
 watch(loading, (newVal) => {
     console.log(newVal)

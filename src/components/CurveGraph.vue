@@ -1,12 +1,13 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" :style="{ width: '1280px', height: '150px' }"></div>
+        <div :id="rowId" :style="{ width: '1400px', height: '150px' }"></div>
         <!-- <div :id="rowId"></div> -->
-    </div>
+</div>
 </template>
 
 <script lang="ts" setup>
+
 import { defineProps, onMounted, PropType, watch, ref, computed, ComputedRef } from 'vue'
 import axios from 'axios'
 import * as echarts from 'echarts'
