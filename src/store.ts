@@ -88,7 +88,7 @@ export interface GlobalDataProps {
 
 const store = createStore<GlobalDataProps>({
     state: {
-        chooseChannel: [],
+        chooseChannel: ['BHN'],
         allData: [],
         querydata: {
             conditions: {
@@ -163,31 +163,32 @@ const store = createStore<GlobalDataProps>({
         // 获取工作区操作后的数据
         getWorkData(state) {
             console.log('开始获取 getWorkData')
-            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_points_and_transform'
-            // const url = '/mock/get_curves_and_points'
-            const formData = new FormData()
-            const obj: WorkToSend = {}
-            state.workChoosedName.forEach(x => {
-                switch (x) {
-                    case 'DownSampling':
-                        obj.downsample = state.workChoose.DownSampling
-                        break
-                    case 'GoRespond':
-                        obj.divide_sensitivity = state.workChoose.GoRespond
-                        break
-                    case 'Normalization':
-                        obj.normalization = state.workChoose.Normalization
-                }
-            })
+            // const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_points_and_transform'
+            const url = '/mock/get_points_and_transform1'
+            // const formData = new FormData()
+            // const obj: WorkToSend = {}
+            // state.workChoosedName.forEach(x => {
+            //     switch (x) {
+            //         case 'DownSampling':
+            //             obj.downsample = state.workChoose.DownSampling
+            //             break
+            //         case 'GoRespond':
+            //             obj.divide_sensitivity = state.workChoose.GoRespond
+            //             break
+            //         case 'Normalization':
+            //             obj.normalization = state.workChoose.Normalization
+            //     }
+            // })
 
-            const args = {
-                curve_ids: state.chooses,
-                pretreatment_args: obj
-            }
-            formData.append('args', JSON.stringify(args))
-            console.log('formdata: ', formData)
+            // const args = {
+            //     curve_ids: state.chooses,
+            //     pretreatment_args: obj
+            // }
+            // formData.append('args', JSON.stringify(args))
+            // console.log('formdata: ', formData)
             axios
-                .post(url, formData)
+                // .post(url, formData)
+                .get(url)
                 .then((res) => {
                     console.log('res: ', res)
                     console.log('obj: ', res.data.data.res)

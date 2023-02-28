@@ -1,16 +1,15 @@
 <template>
     <div class="my_table">
-        <el-table ref="multipleTableRef" :data="tableData" style="width: 100%"
-            @selection-change="handleSelectionChange">
+        <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" />
             <el-table-column property="channel" label="频道" width="120" />
         </el-table>
-    </div>
-
+</div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+
+import { onMounted, reactive, ref } from 'vue'
 import { ElTable } from 'element-plus'
 
 import { useStore } from 'vuex'
@@ -30,6 +29,30 @@ const handleSelectionChange = (val: Curve[]) => {
     val.forEach(x => channelArr.push(x.channel))
     store.commit('changeChannel', channelArr)
 }
+const toggleSelection = (rows?: Curve[]) => {
+    if (rows) {
+        rows.forEach((row) => {
+            // TODO: improvement typing when refactor table
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            multipleTableRef.value!.toggleRowSelection(row, undefined)
+        })
+    } else {
+        multipleTableRef.value!.clearSelection()
+    }
+}
+onMounted(() => {
+    const chooseChannel = store.state.chooseChannel
+    const arr: Curve[] = []
+    chooseChannel.forEach(x => {
+        tableData.forEach(data => {
+            if (data.channel === x) {
+                arr.push(data)
+            }
+        })
+    })
+    toggleSelection(arr)
+})
 
 const tableData: Curve[] = [
     {

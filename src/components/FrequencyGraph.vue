@@ -2,7 +2,7 @@
 <template>
     <div class="echarts-box">
         <div :id="rowId" style=" width: 1280px;height: 220px;"></div>
-    </div>
+</div>
 </template>
 
 <script lang="ts" setup>
@@ -43,6 +43,11 @@ watch(() => store.state.chooseChannel, () => {
     console.log('更新 yData')
     initChart(store.getters.getAmpY, xData)
 })
+watch(() => store.state.allData, () => {
+    channels = store.state.chooseChannel
+    console.log('更新 allData')
+    initChart(store.getters.getAmpY, xData)
+}, { deep: true })
 onMounted(() => initChart(yData, xData))
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
     const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
