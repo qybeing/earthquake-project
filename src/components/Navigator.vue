@@ -1,11 +1,12 @@
 <template>
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false"
-        @select="handleSelect" :router="true" style='height: 100%;'>
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect"
+        :router="true" style='height: 100%;'>
         <el-menu-item index="0">
             <span class="title">
                 地震大数据可视化分析平台
             </span></el-menu-item>
         <div class="flex-grow" />
+        <el-menu-item index="/online/mapView">地图显示</el-menu-item>
         <el-menu-item index="/offline/upload">上传文件</el-menu-item>
         <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item>
         <el-menu-item index="/offline/DetailedChart">详细分析</el-menu-item>

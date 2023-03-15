@@ -11,6 +11,7 @@
     "@vueuse/core": "^9.6.0",
     "axios": "^1.2.0",
     "echarts": "^5.4.0",
+    "echarts-extension-amap": "^1.11.0",
     "element-plus": "^2.2.23",
     "element-ui": "^2.15.12",
     "vue": "^3.2.13",
