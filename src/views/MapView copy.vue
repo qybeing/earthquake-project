@@ -491,6 +491,7 @@ export default {
             data: that.convertData(that.data.sort(function (a, b) {
               return b.value - a.value
             }).slice(0, 6)),
+            symbol: 'triangle',
             symbolSize: function (val) {
               return val[2] / 10
             },

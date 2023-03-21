@@ -32,13 +32,19 @@
             </div>
 
         </el-main>
-</el-container>
+        <el-aside width="220px">
+            <el-card :body-style="{ padding: '5px' }">
+                <FeatureArea></FeatureArea>
+            </el-card>
+        </el-aside>
+    </el-container>
 </template>
 <script setup lang="ts">
 
 import ChannelTable from '@/components/ChannelTable.vue'
 import Spectrogram from '@/components/Spectrogram.vue'
 import WorkArea from '@/components/WorkArea.vue'
+import FeatureArea from '@/components/FeatureArea.vue'
 import { GlobalDataProps } from '@/store'
 import { computed, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'

@@ -65,6 +65,33 @@ export interface YDataProps {
     type: string
     data: Array<number>
 }
+export interface TimeDomainProps {
+    max_value: number,
+    peak_value: number,
+    min_value: number,
+    mean: number,
+    p_p_value: number,
+    abs_mean: number,
+    rms: number,
+    square_root_amplitude: number,
+    std: number,
+    kurtosis: number,
+    skewness: number,
+    clearance_factor: number,
+    shape_factor: number,
+    impulse_factor: number,
+    crest_factor: number,
+    first_autocorrelation: number,
+    second_autocorrelation: number,
+    waveform_complexity: number
+}
+
+export interface FrequencyDomainProps {
+    fc: number,
+    mf: number,
+    rmsf: number,
+    vf: number
+}
 
 export interface GlobalDataProps {
     querydata: Conditions
@@ -85,6 +112,8 @@ export interface GlobalDataProps {
     workToSend: WorkToSend;
     workChoosedId: number[]
     workChoosedName: string[]
+    timeDomainData: TimeDomainProps;
+    frequencyDomainData: FrequencyDomainProps;
 }
 
 const store = createStore<GlobalDataProps>({
@@ -135,7 +164,34 @@ const store = createStore<GlobalDataProps>({
             location: '',
             channel: ''
         },
-        loading: false
+        loading: false,
+        timeDomainData: {
+            max_value: 589272,
+            peak_value: 589272,
+            min_value: -574544,
+            mean: -174.6211820706069,
+            p_p_value: 1163816,
+            abs_mean: 12385.815946053153,
+            rms: 41943.66144410338,
+            square_root_amplitude: 5109.073329670558,
+            std: 41943.2979483056,
+            kurtosis: 68.09951942319798,
+            skewness: -0.1225004083462748,
+            clearance_factor: 115.33833280055842,
+            shape_factor: 3.3864269925203505,
+            impulse_factor: 47.57635690426811,
+            crest_factor: 14.04913113713973,
+            first_autocorrelation: -0.2586300601935077,
+            second_autocorrelation: 0.05438943833922028,
+            waveform_complexity: 0.12500586071415126
+        },
+        frequencyDomainData: {
+            fc: 26.803457158156977,
+            mf: 1747792637.1831155,
+            rmsf: 31.35159616892004,
+            vf: 264.49726670988514
+        }
+
     },
     mutations: {
         changeChooseData(state, newData: DataProps) {
