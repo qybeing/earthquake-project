@@ -2,7 +2,10 @@
     <el-container>
         <el-aside width="200px" class="wrapper">
             <el-card :body-style="{ padding: '5px' }">
-                <div class="little_title" @click="getData">{{ title }}</div>
+                <div >
+                    <div class="little_title id">{{ title.id }}</div>
+                    <div class="little_title">{{ title.time }}</div>
+                </div>
             </el-card>
             <el-card :body-style="{ padding: '5px' }">
                 <ChannelTable></ChannelTable>
@@ -53,7 +56,7 @@ import FrequencyGraph from '@/components/FrequencyGraph.vue'
 const store = useStore<GlobalDataProps>()
 const loading = computed(() => store.state.loading)
 const itemKey = ref()
-let title = ref<string>()
+let title = reactive<{ id: string, time: string }>({ id: 'xxx', time: 'xxx-xx-xx' })
 title = store.getters.getTitle
 itemKey.value = Math.random()
 watch(loading, (newVal) => {
@@ -82,16 +85,16 @@ function getData() {
     /*  声明行间距和列间距  */
     grid-gap: 2px;
     /*  声明行的高度  */
-    grid-template-rows: 30px 170px 1fr;
+    grid-template-rows: 50px 170px 1fr;
 }
 
 .little_title {
-    /* border: 2px solid black; */
-    /* padding: 5px;
-    margin: 2px; */
-    /* font-size: 80% */
+    text-align: center;
+    margin: 0 auto;
 }
-
+.id {
+    font-weight: bold;
+}
 .multi_channel {
     border: 2px solid black;
     padding: 5px;

@@ -337,6 +337,31 @@ const store = createStore<GlobalDataProps>({
                     console.log(error)
                 })
         },
+        // 地图上模拟一个假的
+        getViewChartDataFromMap(state) {
+            console.log('开始获取 getViewChartData')
+            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            // const url = '/mock/get_curve_with_part_points'
+            const formData = new FormData()
+            const obj = {
+                curve_ids: ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
+                window: { window_len: '5s', fn: '' }
+            }
+            formData.append('args', JSON.stringify(obj))
+            axios
+                .post(url, formData)
+                .then((res) => {
+                    console.log('res: ', res)
+                    console.log('obj: ', res.data.res)
+                    state.viewChartData = Object.values(res.data.res)
+                    console.log('state.viewChartData : ', state.viewChartData)
+                    console.log('~~~~~ ')
+                    // console.log('curve_data: ', obj.curve_data)
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error)
+                })
+        },
         getViewChartDataWithWindow(state) {
             console.log('开始获取 getViewChartDataWithWindow')
             const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
@@ -431,7 +456,12 @@ const store = createStore<GlobalDataProps>({
     getters: {
         getTitle(state) {
             const info = state.chooseData
-            const title = info.network + '/' + info.station + '/' + info.location + ' ' + info.start_time.split(' ')[0]
+            const id = info.network + '/' + info.station + '/' + info.location
+            const time = info.start_time
+            const title = {
+                id: id,
+                time: time
+            }
             return title
         },
         getDataY(state) {

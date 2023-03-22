@@ -4,6 +4,34 @@
       <div ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
     </a-row>
   </a-card>
+  <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px">
+    <div class="domain_title2">台站信息</div>
+    <el-form label-position="left" size="default" label-width="80px" :model="curveData"
+      style="width: 100%;background-color: white;">
+      <el-form-item label="编号">
+        <el-input readonly :value="curveData.id" />
+      </el-form-item>
+      <el-form-item label="纬度">
+        <el-input readonly :value="curveData.latitude" />
+      </el-form-item>
+      <el-form-item label="经度">
+        <el-input readonly :value="curveData.longitude" />
+      </el-form-item>
+    </el-form>
+    <div class="domain_title2">振幅信息</div>
+    <el-form label-position="left" size="default" label-width="80px" :model="amplitudeData"
+      style="width: 100%;background-color: white;">
+      <el-form-item label="时间">
+        <el-input readonly :value="amplitudeData.time" />
+      </el-form-item>
+      <el-form-item label="最大振幅">
+        <el-input readonly :value="amplitudeData.max_amplitude" />
+      </el-form-item>
+      <el-form-item label="等级">
+        <el-input readonly :value="amplitudeData.level" />
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -13,8 +41,13 @@ import * as echarts from 'echarts' // echarts theme
 import 'echarts-extension-amap'
 import { onMounted, ref } from 'vue'
 import { siteData } from '../testData'
+import router from '@/router'
+import { GlobalDataProps } from '@/store'
+import { useStore } from 'vuex'
+const store = useStore<GlobalDataProps>()
 require('echarts/theme/macarons')
 const echartsMap = ref()
+const isopen = ref(false)
 onMounted(() => getAMap())
 const getAMap = () => {
   const myChart = echarts.init(echartsMap.value)
@@ -133,12 +166,13 @@ const getAMap = () => {
   option && myChart.setOption(option)
   myChart.off('click')
   myChart.on('click', function (params) {
-    console.log('点击了！', params)
-    alert(params)
+    router.push('/offline/ViewChart')
+    store.commit('getViewChartDataFromMap')
   })
   myChart.on('contextmenu', function (params) {
     console.log('右键点击点击了！', params)
-    open()
+    isopen.value = true
+    // open()
     // alert('右键点击')
   })
 }
@@ -153,4 +187,26 @@ const open = () => {
     }
   )
 }
+
+const curveData = {
+  id: 'XJ.AHQ.00.BHN',
+  longitude: 116.2164,
+  latitude: 31.3986
+}
+
+const amplitudeData = {
+  time: '2022-10-16 08:58:17',
+  max_amplitude: 116.2164,
+  level: 5
+}
 </script>
+
+<style>
+.domain_title2 {
+  font-size: 17px;
+  font-weight: bold;
+  border-bottom: 2px solid;
+  margin-bottom: 8px;
+  color: rgb(151, 151, 151);
+}
+</style>
