@@ -12,7 +12,10 @@
         </el-table-column>
     </el-table>
     <el-button @click="sendWork">查看</el-button>
-
+    <div>特征提取查看</div>
+    <el-select v-model="value" class="m-2" placeholder="Select" size="small">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
     <!-- 模态框部分-->
     <!-- 1.降采样  -->
     <el-dialog v-model="chooseDialog.isDownSampling" title="降采样" width="30%">
@@ -62,7 +65,7 @@
                 </el-button>
             </span>
         </template>
-</el-dialog>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -70,19 +73,36 @@
 import {
     Edit
 } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { ElTable } from 'element-plus'
 import { useStore } from 'vuex'
 import { GlobalDataProps, WorkProps } from '../store'
 import { computed } from '@vue/reactivity'
 const store = useStore<GlobalDataProps>()
 const workInput = reactive(computed(() => store.state.workChoose))
+const choosedchannels = reactive(computed(() => store.state.chooseChannel))
+const options: { value: string; label: string }[] = reactive([])
+watch(choosedchannels, (choosedchannels) => {
+    options.length = 0
+    choosedchannels.forEach(x => {
+        options.push({
+            value: x,
+            label: x
+        })
+    })
+}, { deep: true })
+
 interface Curve {
     id: number
     name: string
     channel: string
 }
 
+const value = ref('')
+watch(value, (value) => {
+    store.commit('changeFeatureChannel', value)
+    store.commit('changeFeatureInfo')
+})
 const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 const multipleSelection = ref<Curve[]>([])
 const handleSelectionChange = (val: Curve[]) => {

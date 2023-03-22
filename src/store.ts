@@ -3,6 +3,32 @@ import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
 import { ca } from 'element-plus/es/locale'
 
+export interface TimeDomainProps {
+    max_value: number,
+    peak_value: number,
+    min_value: number,
+    mean: number,
+    p_p_value: number,
+    abs_mean: number,
+    rms: number,
+    square_root_amplitude: number,
+    std: number,
+    kurtosis: number,
+    skewness: number,
+    clearance_factor: number,
+    shape_factor: number,
+    impulse_factor: number,
+    crest_factor: number,
+    first_autocorrelation: number,
+    second_autocorrelation: number,
+    waveform_complexity: number
+}
+export interface FrequencyDomainProps {
+    fc: number,
+    mf: number,
+    rmsf: number,
+    vf: number
+}
 export interface WorkProps {
     DownSampling: number,
     GoRespond: number,
@@ -48,6 +74,8 @@ export interface allProps {
     point_fre_list: Array<number> // 频度数据列表x
     raw_datas: Array<number>
     ts: Array<number>
+    frequency_domain_feature_extract_result?: FrequencyDomainProps
+    time_domain_feature_extract_result?: TimeDomainProps
 }
 export interface allPointProps {
     curve_info: DataProps
@@ -64,33 +92,6 @@ export interface YDataProps {
     name: string
     type: string
     data: Array<number>
-}
-export interface TimeDomainProps {
-    max_value: number,
-    peak_value: number,
-    min_value: number,
-    mean: number,
-    p_p_value: number,
-    abs_mean: number,
-    rms: number,
-    square_root_amplitude: number,
-    std: number,
-    kurtosis: number,
-    skewness: number,
-    clearance_factor: number,
-    shape_factor: number,
-    impulse_factor: number,
-    crest_factor: number,
-    first_autocorrelation: number,
-    second_autocorrelation: number,
-    waveform_complexity: number
-}
-
-export interface FrequencyDomainProps {
-    fc: number,
-    mf: number,
-    rmsf: number,
-    vf: number
 }
 
 export interface GlobalDataProps {
@@ -114,6 +115,8 @@ export interface GlobalDataProps {
     workChoosedName: string[]
     timeDomainData: TimeDomainProps;
     frequencyDomainData: FrequencyDomainProps;
+    // 特征提取所查看的频道
+    featureChannel: string
 }
 
 const store = createStore<GlobalDataProps>({
@@ -190,10 +193,22 @@ const store = createStore<GlobalDataProps>({
             mf: 1747792637.1831155,
             rmsf: 31.35159616892004,
             vf: 264.49726670988514
-        }
+        },
+        featureChannel: ''
 
     },
     mutations: {
+        changeFeatureInfo(state) {
+            state.allData.forEach(data => {
+                if (data.curve_info.channel === state.featureChannel && data.points_info.frequency_domain_feature_extract_result && data.points_info.time_domain_feature_extract_result) {
+                    state.frequencyDomainData = data.points_info.frequency_domain_feature_extract_result
+                    state.timeDomainData = data.points_info.time_domain_feature_extract_result
+                }
+            })
+        },
+        changeFeatureChannel(state, newChannel: string) {
+            state.featureChannel = newChannel
+        },
         changeChooseData(state, newData: DataProps) {
             state.chooseData = newData
         },
@@ -472,6 +487,16 @@ const store = createStore<GlobalDataProps>({
                 return state.allData[0].points_info.point_fre_list
             }
             return []
+        },
+        getChannelOptions(state) {
+            const options: { value: string; label: string }[] = []
+            state.chooseChannel.forEach(x => {
+                options.push({
+                    value: x,
+                    label: x
+                })
+            })
+            return options
         }
     }
 })
