@@ -1,5 +1,5 @@
 <template>
-    <div class="div1" style=" width: 1060px;height: 400px; background-color: #fff; text-align: center;">
+    <div class="div1" style=" width: 1082px;height: 400px; background-color: #fff; text-align: center;">
         <!-- <img :src="imgFun('test_png.png')" /> -->
         <img src="../assets/home/img/test.png" />
     </div>

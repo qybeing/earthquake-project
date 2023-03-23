@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" style=" width: 1060px;height: 220px;"></div>
+        <div :id="rowId" style=" width: 1082px;height: 220px;"></div>
 </div>
 </template>
 

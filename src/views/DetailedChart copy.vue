@@ -1,6 +1,6 @@
 <template>
-    <el-container class="total_wrapper">
-        <div class="wrapper">
+    <el-container>
+        <el-aside width="200px" class="wrapper">
             <el-card :body-style="{ padding: '5px' }">
                 <div >
                     <div class="little_title id">{{ title.id }}</div>
@@ -19,8 +19,8 @@
                 <div class="tool_area">
                     <WorkArea></WorkArea>
                 </div> -->
-        </div>
-        <div class="main_wrapper">
+        </el-aside>
+        <el-main>
             <div class="chart_body" :key="itemKey">
                 <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
                 <FrequencyGraph :rowId=changeID()></FrequencyGraph>
@@ -34,12 +34,12 @@
                     </el-table> -->
             </div>
 
-        </div>
-        <div>
+        </el-main>
+        <el-aside width="220px">
             <el-card :body-style="{ padding: '5px' }">
                 <FeatureArea></FeatureArea>
             </el-card>
-        </div>
+        </el-aside>
     </el-container>
 </template>
 <script setup lang="ts">
@@ -78,16 +78,6 @@ function getData() {
 </script>
 
 <style scoped>
-.main_wrapper {
-    overflow: auto;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-}
-.total_wrapper {
-    display: grid;
-    grid-template-columns: 200px 1fr 220px;
-    grid-gap: 2px;
-}
 .wrapper {
     display: grid;
     /*  声明列的宽度  */
