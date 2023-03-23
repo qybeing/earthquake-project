@@ -1,6 +1,5 @@
 <template>
-    <div>工作区</div>
-    <el-divider />
+    <div class="work_title">工作区</div>
     <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange"
         :show-header=false>
         <el-table-column type="selection" width="40" />
@@ -11,11 +10,13 @@
             </template>
         </el-table-column>
     </el-table>
-    <el-button @click="sendWork">查看</el-button>
-    <div>特征提取查看</div>
-    <el-select v-model="value" class="m-2" placeholder="Select" size="small">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+    <div class="query_button"><el-button @click="sendWork">查看</el-button></div>
+    <div class="select">
+        <div>特征提取频道选择:</div>
+        <el-select v-model="value" placeholder="Select" size="small">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+    </div>
     <!-- 模态框部分-->
     <!-- 1.降采样  -->
     <el-dialog v-model="chooseDialog.isDownSampling" title="降采样" width="30%">
@@ -184,3 +185,30 @@ const form = reactive({
 })
 
 </script>
+
+<style>
+.select {
+    font-size: 14px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.query_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    padding: 2px;
+    border-bottom: 1px solid #909399;
+}
+
+.work_title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #909399;
+    text-align: center;
+    height: 35px;
+    line-height: 35px;
+    border-bottom: 1px solid;
+}
+</style>
