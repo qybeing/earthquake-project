@@ -4,7 +4,7 @@
       <div ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
     </a-row>
   </a-card>
-  <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px">
+  <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
     <div class="domain_title2">台站信息</div>
     <el-form label-position="left" size="default" label-width="80px" :model="curveData"
       style="width: 100%;background-color: white;">
@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+// import AMap from 'AMap'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
 // ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
@@ -77,6 +78,7 @@ const getAMap = () => {
       viewMode: '3D',
       // 高德地图中心经纬度
       center: [104.114129, 37.550339],
+      // layers: [new AMap.TileLayer.Satellite()],
       // 地图缩放
       zoom: 4,
       // 开启鼠标缩放和平移漫游
@@ -89,6 +91,8 @@ const getAMap = () => {
       renderOnMoving: true,
       // ECharts 图层的 zIndex 默认 2022
       echartsLayerZIndex: 2022
+
+      // layers: [new AMap.TileLayer.Satellite()]
       // 说明：如果想要添加卫星、路网等图层
       // 暂时先不要使用layers配置，因为存在Bug
       // 建议使用amap.add的方式，使用方式参见最下方代码
@@ -114,7 +118,7 @@ const getAMap = () => {
           show: false
         },
         itemStyle: {
-          color: 'grey'
+          color: 'white'
         },
         emphasis: {
           label: {
@@ -163,7 +167,22 @@ const getAMap = () => {
     animation: true
   }
 
+  // const map = myChart.getModel().getComponent('amap').getAMap()
+  // // 设置显示卫星图
+  // const Satellite = new window.AMap.TileLayer.Satellite({
+  //   zIndex: 10
+  // })
+  // map.add(Satellite)
+
   option && myChart.setOption(option)
+
+  const map = myChart.getModel().getComponent('amap').getAMap()
+  // 设置显示卫星图
+  const Satellite = new window.AMap.TileLayer.Satellite({
+    zIndex: 10
+  })
+  map.add(Satellite)
+
   myChart.off('click')
   myChart.on('click', function (params) {
     router.push('/offline/ViewChart')

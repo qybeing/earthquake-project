@@ -3,6 +3,10 @@ module.exports = {
   env: {
     node: true
   },
+  globals: {
+    AMap: false,
+    AMapUI: false
+  },
   extends: [
     'plugin:vue/vue3-essential',
     '@vue/standard',
