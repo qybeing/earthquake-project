@@ -152,8 +152,8 @@ const store = createStore<GlobalDataProps>({
             p_start_time: ''
         },
         workChoose: {
-            DownSampling: 0,
-            GoRespond: 0,
+            DownSampling: 40,
+            GoRespond: 1,
             Normalization: 'none'
         },
         workToSend: {

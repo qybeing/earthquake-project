@@ -3,7 +3,7 @@
     <div class="echarts-box">
         <div :id="rowId" :style="{ width: '1400px', height: '150px' }"></div>
         <!-- <div :id="rowId"></div> -->
-</div>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -114,21 +114,6 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            // axisLine: {
-            //     onZero: false,
-            //     color: '#666669',
-            //     lineStyle: {
-            //         type: 'solid',
-            //         color: '#666669', // 左边线的颜色
-            //         width: '1'// 坐标线的宽度
-            //     }
-            // },
-            // axisLabel: {
-            //     formatter: '{value} ',
-            //     color: '#666669',
-            //     // interval: 0,
-            //     rotate: 40
-            // },
             // 坐标轴轴线
             axisLine: {
                 show: false
@@ -206,6 +191,7 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
                         }
                     },
                     label: {
+                        formatter: '{b}',
                         normal: {
                             show: true,
                             position: 'right',
@@ -219,6 +205,7 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
                         }
                     },
                     data: [{
+                        name: 'p',
                         xAxis: ptime // 这里设置false是隐藏不了的，可以设置为-1
                     }]
                 }

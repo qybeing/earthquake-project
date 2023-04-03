@@ -59,6 +59,9 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
             tooltip: {
                 trigger: 'axis'
             },
+            dataZoom: [{
+                type: 'inside'
+            }],
             legend: {
                 data: channels
             },

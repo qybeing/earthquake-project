@@ -4,6 +4,7 @@ import OfflineAnalysis from './views/OfflineAnalysis.vue'
 import DetailedChart from './views/DetailedChart.vue'
 import ViewChart from './views/ViewChart.vue'
 import MapView from './views/MapView.vue'
+import TestChart from './views/TestChart.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -39,6 +40,11 @@ const router = createRouter({
             path: '/online/mapView',
             name: 'mapView',
             component: MapView
+        },
+        {
+            path: '/test',
+            name: 'testChart',
+            component: TestChart
         }
     ]
 })

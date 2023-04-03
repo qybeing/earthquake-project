@@ -50,7 +50,7 @@ require('echarts/theme/macarons')
 const echartsMap = ref()
 const isopen = ref(false)
 onMounted(() => getAMap())
-function changeSerise(option: any, zoom: any, myChart:any) {
+function changeSerise(option: any, zoom: any, myChart: any) {
   let input
   if (zoom < 6) {
     input = [
@@ -60,14 +60,17 @@ function changeSerise(option: any, zoom: any, myChart:any) {
         // 使用高德地图坐标系
         coordinateSystem: 'amap',
         data: networkData,
-        symbol: 'circle',
+        symbol: 'triangle',
+        symbolSize: function (val: number[]) {
+          return val[2] * 1
+        },
         label: {
           formatter: '{b}',
           position: 'right',
           show: false
         },
         itemStyle: {
-          color: 'white'
+          color: 'yellow'
         },
         emphasis: {
           label: {
@@ -81,9 +84,9 @@ function changeSerise(option: any, zoom: any, myChart:any) {
         coordinateSystem: 'amap',
         data: networkData.slice(0, 1),
         symbol: 'triangle',
-        // symbolSize: function (val) {
-        //   return val[2] / 10
-        // },
+        symbolSize: function () {
+          return 20
+        },
         // encode: {
         //   value: 2
         // },
@@ -122,13 +125,14 @@ function changeSerise(option: any, zoom: any, myChart:any) {
         coordinateSystem: 'amap',
         data: siteData,
         symbol: 'triangle',
+        symbolSize: 10,
         label: {
           formatter: '{b}',
           position: 'right',
           show: false
         },
         itemStyle: {
-          color: 'white'
+          color: 'yellow'
         },
         emphasis: {
           label: {
@@ -142,6 +146,7 @@ function changeSerise(option: any, zoom: any, myChart:any) {
         coordinateSystem: 'amap',
         data: siteData.slice(0, 6),
         symbol: 'triangle',
+        symbolSize: 15,
         // symbolSize: function (val) {
         //   return val[2] / 10
         // },

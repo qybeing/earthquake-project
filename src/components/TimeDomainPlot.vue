@@ -2,7 +2,7 @@
 <template>
     <div class="echarts-box">
         <div :id="rowId" style=" width: 1082px;height: 220px;"></div>
-</div>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -21,6 +21,23 @@ type series = {
     type: string
     data: number[]
 }
+const markLineInfo = {
+    data: [{
+        name: 'p',
+        xAxis: 1665881646
+    },
+    {
+        name: 's',
+        xAxis: 1665881886
+    }],
+    label: {
+        formatter: '{c}'
+    },
+    draggable: true,
+    animation: false,
+    silent: true
+}
+yData.markLine = markLineInfo
 type ySeriseProp = series[]
 const props = defineProps({
     rowId: {
@@ -84,7 +101,23 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
             yAxis: {
                 type: 'value'
             },
-            series: ySerise
+            series: ySerise,
+            markLine: {
+                data: [{
+                    name: 'p',
+                    xAxis: 1665881646
+                },
+                {
+                    name: 's',
+                    xAxis: 1665881886
+                }],
+                label: {
+                    formatter: '{c}'
+                },
+                draggable: true,
+                animation: false,
+                silent: true
+            }
         }, true)
     window.onresize = function () {
         // 自适应大小
