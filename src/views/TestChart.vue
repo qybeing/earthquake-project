@@ -45,6 +45,7 @@ function initChart() {
       barWidth: '65%',
       data: [8.1, 13.3, 1.5, 14.6, 10.8, 9.0, 9.2, 9.3],
       markLine: { // 开始标预警线
+        symbol: ['none', 'none'], // 去掉箭头
         itemStyle: {
           normal: {
             borderWidth: 1,
@@ -57,6 +58,9 @@ function initChart() {
               textStyle: {
                 fontSize: 16,
                 fontWeight: 'bolder'
+              },
+              label: {
+                formatter: '{b}'
               }
             }
           }
@@ -148,9 +152,29 @@ function initChart() {
         id: 'aaa',
         markLine: {
           data: [
-            { xAxis: threshold },
-            { xAxis: threshold2 }
-          ]
+            { xAxis: threshold, name: 'P' },
+            { xAxis: threshold2, name: 'S' }
+          ],
+          symbol: ['none', 'none'], // 去掉箭头
+          itemStyle: {
+            normal: {
+              borderWidth: 1,
+              lineStyle: {
+                type: 'dash',
+                color: '#333 ',
+                width: 2
+              },
+              label: {
+                textStyle: {
+                  fontSize: 16,
+                  fontWeight: 'bolder'
+                },
+                label: {
+                  formatter: '{b}'
+                }
+              }
+            }
+          }
         }
       }]
     })
