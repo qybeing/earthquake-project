@@ -2,7 +2,7 @@
     <el-container class="total_wrapper">
         <div class="wrapper">
             <el-card :body-style="{ padding: '5px' }">
-                <div >
+                <div @click="getData">
                     <div class="little_title id">{{ title.id }}</div>
                     <div class="little_title">{{ title.time }}</div>
                 </div>
@@ -83,11 +83,13 @@ function getData() {
     border-radius: 4px;
     border: 1px solid #e4e7ed;
 }
+
 .total_wrapper {
     display: grid;
     grid-template-columns: 200px 1fr 220px;
     grid-gap: 2px;
 }
+
 .wrapper {
     display: grid;
     /*  声明列的宽度  */
@@ -102,9 +104,11 @@ function getData() {
     text-align: center;
     margin: 0 auto;
 }
+
 .id {
     font-weight: bold;
 }
+
 .multi_channel {
     border: 2px solid black;
     padding: 5px;
@@ -125,5 +129,4 @@ function getData() {
     width: 100%;
     height: 100%;
     /* background-color: rgb(197, 90, 90); */
-}
-</style>
+}</style>

@@ -61,8 +61,8 @@ function changeSerise(option: any, zoom: any, myChart: any) {
         coordinateSystem: 'amap',
         data: networkData,
         symbol: 'triangle',
-        symbolSize: function (val: number[]) {
-          return val[2] * 1
+        symbolSize: function () {
+          return 25
         },
         label: {
           formatter: '{b}',

@@ -97,7 +97,8 @@ const seeDetail = (row: any) => {
     router.push('/offline/DetailedChart')
     store.commit('changeChooseData', row.curve_info)
     store.commit('changeChannel', [row.curve_info.channel])
-    store.commit('getAllData')
+    // store.commit('getAllData')
+    store.commit('getWorkDataBefore')
 }
 
 const options = [

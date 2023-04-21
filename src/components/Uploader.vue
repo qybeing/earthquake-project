@@ -1,5 +1,5 @@
 <template>
-    <el-upload class="upload-demo" drag action="https://667k040y03.yicp.fun/offline_mysql_curve/upload_curve" multiple
+    <el-upload class="upload-demo" drag action="https://71y830321n.goho.co/offline_mysql_curve/upload_curve" multiple
         :on-success="uploadSuccess" :on-error="uploadError" accept=".mseed" show-file-list=false>
         <el-icon class="el-icon--upload">
             <upload-filled />

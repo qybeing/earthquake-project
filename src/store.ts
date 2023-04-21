@@ -248,7 +248,8 @@ const store = createStore<GlobalDataProps>({
         // 获取工作区操作后的数据
         getWorkData(state) {
             console.log('开始获取 getWorkData')
-            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_points_and_transform'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
             // const url = '/mock/get_points_and_transform1'
             const formData = new FormData()
             const obj: WorkToSend = {}
@@ -292,18 +293,70 @@ const store = createStore<GlobalDataProps>({
                     console.log(error)
                 })
         },
+        // 获取工作区操作前的数据
+        getWorkDataBefore(state) {
+            console.log('开始获取 getWorkData')
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            // const url = '/mock/get_points_and_transform1'
+            const formData = new FormData()
+            const obj: WorkToSend = {}
+            state.workChoosedName.forEach(x => {
+                switch (x) {
+                    case 'DownSampling':
+                        obj.downsample = state.workChoose.DownSampling
+                        break
+                    case 'GoRespond':
+                        obj.divide_sensitivity = state.workChoose.GoRespond
+                        break
+                    case 'Normalization':
+                        obj.normalization = state.workChoose.Normalization
+                }
+            })
+
+            const pretitle = state.chooseData.curve_id.slice(0, 10)
+            const ids: string[] = []
+            // state.chooseChannel.forEach(x => {
+            //     ids.push(pretitle + x)
+            // })
+
+            ids.push(pretitle + 'BHE')
+            ids.push(pretitle + 'BHN')
+            ids.push(pretitle + 'BHZ')
+
+            const args = {
+                curve_ids: ids,
+                pretreatment_args: obj
+            }
+            formData.append('args', JSON.stringify(args))
+            console.log('formdata: ', formData)
+            axios
+                .post(url, formData)
+                // .get(url)
+                .then((res) => {
+                    console.log('res: ', res)
+                    console.log('obj: ', res.data.res)
+                    state.allData = Object.values(res.data.res)
+                    console.log('state.allData : ', state.allData)
+                    console.log('~~~~~ ')
+                    // console.log('curve_data: ', obj.curve_data)
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error)
+                })
+        },
         // ~~~~~~~~~~~~~~~~~~
         // 详细分析
         getAllData(state) {
             console.log('开始获取 getAllData')
-            // const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
-            const url = '/mock/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            // const url = '/mock/get_curves_and_points'
             axios
                 .get(url)
                 .then((res) => {
                     console.log('res: ', res)
-                    console.log('obj: ', res.data.data.res)
-                    state.allData = Object.values(res.data.data.res)
+                    console.log('obj: ', res.data.res)
+                    state.allData = Object.values(res.data.res)
                     console.log('state.allData : ', state.allData)
                     console.log('~~~~~ ')
                     // console.log('curve_data: ', obj.curve_data)
@@ -315,7 +368,7 @@ const store = createStore<GlobalDataProps>({
         // ~~~~~~~~~~~~~~~~~~
         getViewChartData(state) {
             console.log('开始获取 getViewChartData')
-            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -340,7 +393,7 @@ const store = createStore<GlobalDataProps>({
         // 地图上模拟一个假的
         getViewChartDataFromMap(state) {
             console.log('开始获取 getViewChartData')
-            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -364,7 +417,7 @@ const store = createStore<GlobalDataProps>({
         },
         getViewChartDataWithWindow(state) {
             console.log('开始获取 getViewChartDataWithWindow')
-            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -389,7 +442,7 @@ const store = createStore<GlobalDataProps>({
         },
         getViewChartDataWithFilter(state) {
             console.log('开始获取 getViewChartDataWithFilte')
-            const url = 'https://667k040y03.yicp.fun/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -422,7 +475,7 @@ const store = createStore<GlobalDataProps>({
              * dakai
              */
             console.log('开始获取')
-            const url = 'https://667k040y03.yicp.fun//offline_mysql_curve/get_curves_with_condition'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
             const formData = new FormData()
             formData.append('args', JSON.stringify(state.querydata))
             axios

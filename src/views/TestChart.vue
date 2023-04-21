@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import * as echarts from 'echarts'
 import { onMounted } from 'vue'
+import { raw_datas, ts } from '../testData'
 
 onMounted(() => initChart())
 
@@ -23,17 +24,19 @@ function initChart() {
     xAxis: [{
       id: '2',
       type: 'category',
-      data: ['1', '2', '3', '4', '5', '6', '7', '8'],
-      axisTick: {
-        alignWithLabel: true
-      }
+      // data: ['1', '2', '3', '4', '5', '6', '7', '8'],
+      data: ts,
+      // axisTick: {
+      //   alignWithLabel: true
+      // }
+      boundaryGap: false
     }],
     yAxis: {
       type: 'value',
       id: '2',
-      min: 0,
-      max: 15,
-      interval: 3,
+      // min: 0,
+      // max: 15,
+      // interval: 3,
       axisLabel: {
         formatter: '{value}'
       }
@@ -43,7 +46,8 @@ function initChart() {
       name: '',
       type: 'line',
       barWidth: '65%',
-      data: [8.1, 13.3, 1.5, 14.6, 10.8, 9.0, 9.2, 9.3],
+      // data: [8.1, 13.3, 1.5, 14.6, 10.8, 9.0, 9.2, 9.3],
+      data: raw_datas,
       markLine: { // 开始标预警线
         symbol: ['none', 'none'], // 去掉箭头
         itemStyle: {

@@ -5,7 +5,7 @@ import 'element-plus/theme-chalk/index.css'
 import App from './App.vue'
 import store from './store'
 import axios from 'axios'
-import './mock/index.js'
+// import './mock/index.js'
 
 // axios.defaults.baseURL = 'http://8.130.32.230:1123/'
 axios.interceptors.request.use(config => {
@@ -17,7 +17,7 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(config => {
     setTimeout(() => {
         store.commit('setLoading', false)
-    }, 1000)
+    }, 500)
     return config
 }, e => {
     // const { error } = e.response.data
