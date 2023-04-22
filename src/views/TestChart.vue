@@ -91,7 +91,56 @@ function initChart() {
           type: 'line',
           // barWidth: '65%',
           // data: [8.1, 13.3, 1.5, 14.6, 10.8, 9.0, 9.2, 9.3],
-          data: raw_datas,
+          data: raw_datas
+          // markLine: {
+          //   symbol: ['none', 'none'], // 去掉箭头
+          //   lineStyle: {
+          //     type: 'solid',
+          //     color: 'rgba(164, 43, 43, 1)',
+          //     width: 1
+          //   },
+          //   label: {
+          //     show: true,
+          //     position: 'end',
+          //     formatter: '{b}',
+          //     textStyle: {
+          //       color: 'red', // 标注线终点文字颜色
+          //       fontSize: 20,
+          //       fontWeight: 500
+          //     }
+          //   },
+          //   data: [{
+          //     name: 'P',
+          //     xAxis: ptime.value, // 这里设置false是隐藏不了的，可以设置为-1
+          //     lineStyle: {
+          //       color: 'red'
+          //     },
+          //     label: {
+          //       textStyle: {
+          //         color: 'red'
+          //       }
+          //     }
+          //   },
+          //   {
+          //     name: 'S',
+          //     xAxis: stime.value,
+          //     lineStyle: {
+          //       color: 'blue'
+          //     },
+          //     label: {
+          //       textStyle: {
+          //         color: 'blue'
+          //       }
+          //     }
+          //   }
+          //   ],
+          //   silent: true // 标线无点击事件
+          // }
+        },
+        {
+          id: 'bbb',
+          name: '',
+          type: 'line',
           markLine: {
             symbol: ['none', 'none'], // 去掉箭头
             lineStyle: {

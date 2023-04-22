@@ -67,6 +67,23 @@
             </span>
         </template>
     </el-dialog>
+    <!-- 4.滤波 -->
+    <el-dialog v-model="chooseDialog.isFiltering" title="滤波" width="30%">
+        <el-form-item label="滤波器" :label-width="formLabelWidth">
+            <el-select  v-model="filterValue" placeholder="Please select a zone">
+                <el-option label="带通滤波器" value="dt_filter" />
+                <el-option label="巴特沃斯滤波器" value="btws_filter" />
+            </el-select>
+        </el-form-item>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="chooseDialog.isFiltering = false">取消</el-button>
+                <el-button type="primary" @click="chooseDialog.isFiltering = false">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -83,6 +100,7 @@ const store = useStore<GlobalDataProps>()
 const workInput = reactive(computed(() => store.state.workChoose))
 const choosedchannels = reactive(computed(() => store.state.chooseChannel))
 const options: { value: string; label: string }[] = reactive([])
+const filterValue = ref('dt_filter')
 watch(choosedchannels, (choosedchannels) => {
     options.length = 0
     choosedchannels.forEach(x => {
@@ -121,7 +139,8 @@ const sendWork = () => {
 const chooseDialog = reactive({
     isDownSampling: false,
     isGoRespond: false,
-    isNormalization: false
+    isNormalization: false,
+    isFiltering: false
 })
 
 const clickObject = (id: number) => {
@@ -134,6 +153,9 @@ const clickObject = (id: number) => {
             break
         case 3:
             chooseDialog.isNormalization = true
+            break
+        case 4:
+            chooseDialog.isFiltering = true
             break
         default:
             break
@@ -168,6 +190,11 @@ const tableData: Curve[] = [
         id: 3,
         name: 'Normalization',
         channel: '归一化'
+    },
+    {
+        id: 4,
+        name: 'Filtering',
+        channel: '滤波'
     }
 ]
 

@@ -64,6 +64,7 @@ export interface DataProps {
     curve_id: string
     end_time: string
     p_start_time: string
+    s_start_time?: string
 }
 export interface XYProps {
     raw_datas: Array<number>
@@ -117,6 +118,11 @@ export interface GlobalDataProps {
     frequencyDomainData: FrequencyDomainProps;
     // 特征提取所查看的频道
     featureChannel: string
+
+    // P波S波
+    ptime: string
+    stime: string
+
 }
 
 const store = createStore<GlobalDataProps>({
@@ -194,7 +200,9 @@ const store = createStore<GlobalDataProps>({
             rmsf: 0.0000,
             vf: 0.0000
         },
-        featureChannel: ''
+        featureChannel: '',
+        ptime: '0',
+        stime: '0'
 
     },
     mutations: {
@@ -337,6 +345,8 @@ const store = createStore<GlobalDataProps>({
                     console.log('res: ', res)
                     console.log('obj: ', res.data.res)
                     state.allData = Object.values(res.data.res)
+                    state.ptime = state.allData[0].curve_info.p_start_time
+                    state.stime = state.allData[0].curve_info.s_start_time || ''
                     console.log('state.allData : ', state.allData)
                     console.log('~~~~~ ')
                     // console.log('curve_data: ', obj.curve_data)
