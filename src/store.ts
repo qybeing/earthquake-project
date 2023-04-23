@@ -345,8 +345,8 @@ const store = createStore<GlobalDataProps>({
                     console.log('res: ', res)
                     console.log('obj: ', res.data.res)
                     state.allData = Object.values(res.data.res)
-                    state.ptime = state.allData[0].curve_info.p_start_time
-                    state.stime = state.allData[0].curve_info.s_start_time || ''
+                    state.ptime = (Date.parse(state.allData[0].curve_info.p_start_time) / 1000).toString()
+                    state.stime = (Date.parse(state.allData[0].curve_info.s_start_time || '') / 1000).toString()
                     console.log('state.allData : ', state.allData)
                     console.log('~~~~~ ')
                     // console.log('curve_data: ', obj.curve_data)

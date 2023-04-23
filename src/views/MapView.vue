@@ -3,6 +3,7 @@
     <a-row>
       <div ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
     </a-row>
+    <div id="tip" class="input-card">地图上右击鼠标，弹出右键菜单</div>
   </a-card>
   <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
     <div class="domain_title2">台站信息</div>
@@ -85,7 +86,7 @@ function changeSerise(option: any, zoom: any, myChart: any) {
         data: networkData.slice(0, 1),
         symbol: 'triangle',
         symbolSize: function () {
-          return 20
+          return 25
         },
         // encode: {
         //   value: 2
@@ -147,12 +148,6 @@ function changeSerise(option: any, zoom: any, myChart: any) {
         data: siteData.slice(0, 6),
         symbol: 'triangle',
         symbolSize: 15,
-        // symbolSize: function (val) {
-        //   return val[2] / 10
-        // },
-        // encode: {
-        //   value: 2
-        // },
         // 配置绘制完成时显示特效
         showEffectOn: 'render',
         // 涟漪特效
@@ -225,138 +220,71 @@ const getAMap = () => {
       // 暂时先不要使用layers配置，因为存在Bug
       // 建议使用amap.add的方式，使用方式参见最下方代码
     },
-    // series: [
-    //   {
-    //     name: 'pm2.5',
-    //     type: 'scatter',
-    //     // 使用高德地图坐标系
-    //     coordinateSystem: 'amap',
-    //     data: siteData,
-    //     symbol: 'triangle',
-    //     label: {
-    //       formatter: '{b}',
-    //       position: 'right',
-    //       show: false
-    //     },
-    //     itemStyle: {
-    //       color: 'white'
-    //     },
-    //     emphasis: {
-    //       label: {
-    //         show: true
-    //       }
-    //     }
-    //   },
-    //   {
-    //     name: 'Top 5',
-    //     type: 'effectScatter',
-    //     coordinateSystem: 'amap',
-    //     data: siteData.slice(0, 6),
-    //     symbol: 'triangle',
-    //     // symbolSize: function (val) {
-    //     //   return val[2] / 10
-    //     // },
-    //     // encode: {
-    //     //   value: 2
-    //     // },
-    //     // 配置绘制完成时显示特效
-    //     showEffectOn: 'render',
-    //     // 涟漪特效
-    //     rippleEffect: {
-    //       // 波纹的绘制方式，可选 'stroke' 和 'fill'
-    //       brushType: 'stroke'
-    //     },
-    //     // 开启鼠标 hover 的提示动画效果
-    //     hoverAnimation: true,
-    //     label: {
-    //       formatter: '{b}',
-    //       position: 'right',
-    //       show: true
-    //     },
-    //     itemStyle: {
-    //       color: 'red',
-    //       shadowBlur: 10,
-    //       shadowColor: '#333'
-    //     },
-    //     zlevel: 1,
-    //     tooltip: {
-    //       show: true, // 提示框
-    //       triggerOn: 'contextmenu'
-    //     }
-    //   }
-    // ],
+    series: [
+      {
+        name: 'pm2.5',
+        type: 'scatter',
+        // 使用高德地图坐标系
+        coordinateSystem: 'amap',
+        data: networkData,
+        symbol: 'triangle',
+        symbolSize: function () {
+          return 25
+        },
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: false
+        },
+        itemStyle: {
+          color: 'yellow'
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
+        }
+      },
+      {
+        name: 'Top 5',
+        type: 'effectScatter',
+        coordinateSystem: 'amap',
+        data: networkData.slice(0, 1),
+        symbol: 'triangle',
+        symbolSize: function () {
+          return 25
+        },
+        // encode: {
+        //   value: 2
+        // },
+        // 配置绘制完成时显示特效
+        showEffectOn: 'render',
+        // 涟漪特效
+        rippleEffect: {
+          // 波纹的绘制方式，可选 'stroke' 和 'fill'
+          brushType: 'stroke'
+        },
+        // 开启鼠标 hover 的提示动画效果
+        hoverAnimation: true,
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: true
+        },
+        itemStyle: {
+          color: 'red',
+          shadowBlur: 10,
+          shadowColor: '#333'
+        },
+        zlevel: 1,
+        tooltip: {
+          show: true, // 提示框
+          triggerOn: 'contextmenu'
+        }
+      }
+    ],
     animation: true
   }
-
-  // const map = myChart.getModel().getComponent('amap').getAMap()
-  // // 设置显示卫星图
-  // const Satellite = new window.AMap.TileLayer.Satellite({
-  //   zIndex: 10
-  // })
-  // map.add(Satellite)
-
-  //   function changeSerise(option:any) {
-  //     option.series = [
-  //       {
-  //         name: 'pm2.5',
-  //         type: 'scatter',
-  //         // 使用高德地图坐标系
-  //         coordinateSystem: 'amap',
-  //         data: siteData,
-  //         symbol: 'triangle',
-  //         label: {
-  //           formatter: '{b}',
-  //           position: 'right',
-  //           show: false
-  //         },
-  //         itemStyle: {
-  //           color: 'white'
-  //         },
-  //         emphasis: {
-  //           label: {
-  //             show: true
-  //           }
-  //         }
-  //       },
-  //       {
-  //         name: 'Top 5',
-  //         type: 'effectScatter',
-  //         coordinateSystem: 'amap',
-  //         data: siteData.slice(0, 6),
-  //         symbol: 'triangle',
-  //         // symbolSize: function (val) {
-  //         //   return val[2] / 10
-  //         // },
-  //         // encode: {
-  //         //   value: 2
-  //         // },
-  //         // 配置绘制完成时显示特效
-  //         showEffectOn: 'render',
-  //         // 涟漪特效
-  //         rippleEffect: {
-  //           // 波纹的绘制方式，可选 'stroke' 和 'fill'
-  //           brushType: 'stroke'
-  //         },
-  //         // 开启鼠标 hover 的提示动画效果
-  //         hoverAnimation: true,
-  //         label: {
-  //           formatter: '{b}',
-  //           position: 'right',
-  //           show: true
-  //         },
-  //         itemStyle: {
-  //           color: 'red',
-  //           shadowBlur: 10,
-  //           shadowColor: '#333'
-  //         },
-  //         zlevel: 1,
-  //         tooltip: {
-  //           show: true, // 提示框
-  //           triggerOn: 'contextmenu'
-  //         }
-  //       }
-  //     ],
-  //  }
 
   option && myChart.setOption(option)
 
@@ -372,6 +300,8 @@ const getAMap = () => {
     changeSerise(option, zoom, myChart)
     // option && myChart.setOption(option)
   })
+  map.addControl(new window.AMap.Scale())
+  map.addControl(new window.AMap.ToolBar())
 
   myChart.off('click')
   myChart.on('click', function (params) {
@@ -381,20 +311,7 @@ const getAMap = () => {
   myChart.on('contextmenu', function (params) {
     console.log('右键点击点击了！', params)
     isopen.value = true
-    // open()
-    // alert('右键点击')
   })
-}
-
-const open = () => {
-  ElMessageBox.alert(
-    '<strong>proxy is <i>HTML</i> string</strong>',
-    '详细信息',
-    {
-      dangerouslyUseHTMLString: true,
-      draggable: true
-    }
-  )
 }
 
 const curveData = {
@@ -410,7 +327,7 @@ const amplitudeData = {
 }
 </script>
 
-<style>
+<style scoped>
 .domain_title2 {
   font-size: 17px;
   font-weight: bold;
@@ -418,4 +335,13 @@ const amplitudeData = {
   margin-bottom: 8px;
   color: rgb(151, 151, 151);
 }
+.input-card {
+            width: 150px;
+            top: 40px;
+            right:10px;
+            bottom: auto;
+            position: fixed;
+            z-index: 999;
+            background-color: #fff;
+        }
 </style>

@@ -107,7 +107,11 @@ watch(() => store.state.allData, () => {
     console.log('更新 allData')
     initChart(store.getters.getDataY, xData)
 }, { deep: true })
-onMounted(() => initChart(yData, xData))
+onMounted(() => {
+    initChart(yData, xData)
+    console.log('ptime: ', ptime)
+    console.log('stime: ', stime)
+})
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
     const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     ySerise.push(
