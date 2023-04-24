@@ -96,7 +96,9 @@ function changeSerise(option: any, zoom: any, myChart: any) {
         // 涟漪特效
         rippleEffect: {
           // 波纹的绘制方式，可选 'stroke' 和 'fill'
-          brushType: 'stroke'
+          brushType: 'fill',
+          scale: 4,
+          period: 1
         },
         // 开启鼠标 hover 的提示动画效果
         hoverAnimation: true,
@@ -153,7 +155,10 @@ function changeSerise(option: any, zoom: any, myChart: any) {
         // 涟漪特效
         rippleEffect: {
           // 波纹的绘制方式，可选 'stroke' 和 'fill'
-          brushType: 'stroke'
+          brushType: 'fill',
+          scale: 4,
+          period: 1,
+          number: 2
         },
         // 开启鼠标 hover 的提示动画效果
         hoverAnimation: true,
@@ -342,6 +347,6 @@ const amplitudeData = {
             bottom: auto;
             position: fixed;
             z-index: 999;
-            background-color: #fff;
+            background-color: #5a83c3;
         }
 </style>

@@ -154,60 +154,64 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
                 data: listy,
                 type: 'line',
                 symbol: 'none',
-                smooth: true,
+                smooth: true
+                // markLine: {
+                //     symbol: ['none', 'none'], // 去掉箭头
+                //     lineStyle: {
+                //         type: 'solid',
+                //         color: 'rgba(164, 43, 43, 1)',
+                //         width: 1
+                //     },
+                //     label: {
+                //         show: true,
+                //         position: 'end',
+                //         formatter: '{b}',
+                //         textStyle: {
+                //             color: 'red', // 标注线终点文字颜色
+                //             fontSize: 20,
+                //             fontWeight: 500
+                //         }
+                //     },
+                //     data: [{
+                //         name: 'p',
+                //         xAxis: ptime // 这里设置false是隐藏不了的，可以设置为-1
+                //     }]
+                // }
+            },
+            {
+                name: '',
+                type: 'line',
                 markLine: {
                     symbol: ['none', 'none'], // 去掉箭头
-                    itemStyle: {
-                        normal: {
-                            lineStyle: {
-                                type: 'solid',
-                                color: { // 设置渐变
-                                    type: 'linear',
-                                    x: 0,
-                                    y: 0,
-                                    x2: 0,
-                                    y2: 1,
-                                    colorStops: [{
-                                        offset: 0, color: 'red '// 0% 处的颜色
-                                    }, {
-                                        offset: 1, color: 'blue' // 100% 处的颜色
-                                    }],
-                                    global: false // 缺省为 false
-                                }
-                            }
-                            // label: {
-                            //     normal: {
-                            //         show: true,
-                            //         position: 'right',
-                            //         formatter: 'P',
-                            //         textStyle: {
-                            //             color: 'red', // 标注线终点文字颜色
-                            //             fontSize: 20,
-                            //             fontWeight: 800,
-                            //             padding: [0, 0, 10, 0] // 文字间距
-                            //         }
-                            //     }
-                            // }
-                        }
+                    lineStyle: {
+                        type: 'solid',
+                        color: 'rgba(164, 43, 43, 1)',
+                        width: 1
                     },
                     label: {
+                        show: true,
+                        position: 'end',
                         formatter: '{b}',
-                        normal: {
-                            show: true,
-                            position: 'right',
-                            formatter: 'P',
-                            textStyle: {
-                                color: 'red', // 标注线终点文字颜色
-                                fontSize: 20,
-                                fontWeight: 800,
-                                padding: [0, 0, 10, 0] // 文字间距
-                            }
+                        textStyle: {
+                            color: 'red', // 标注线终点文字颜色
+                            fontSize: 20,
+                            fontWeight: 500
                         }
                     },
                     data: [{
                         name: 'p',
-                        xAxis: ptime // 这里设置false是隐藏不了的，可以设置为-1
-                    }]
+                        xAxis: ptime, // 这里设置false是隐藏不了的，可以设置为-1
+                        lineStyle: {
+                            color: 'red'
+                        },
+                        label: {
+                            textStyle: {
+                                color: 'red'
+                            }
+                        }
+                    }],
+                    silent: true, // 标线无点击事件
+                    animation: false
                 }
             }
         ]

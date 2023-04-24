@@ -206,6 +206,12 @@ const store = createStore<GlobalDataProps>({
 
     },
     mutations: {
+        changePStartTime(state, pt) {
+            state.ptime = pt
+        },
+        changeSStartTime(state, st) {
+            state.ptime = st
+        },
         changeFeatureInfo(state) {
             state.allData.forEach(data => {
                 if (data.curve_info.channel === state.featureChannel && data.points_info.frequency_domain_feature_extract_result && data.points_info.time_domain_feature_extract_result) {
@@ -252,6 +258,27 @@ const store = createStore<GlobalDataProps>({
         changeConditions(state, newConditions) {
             console.log('newConditions: ', newConditions)
             state.querydata = newConditions
+        },
+        // 发送请求更新p波s波
+        change_p_s_start_time(state) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
+            const formData = new FormData()
+            const args = {
+                curve_id: state.chooses[0],
+                p_start_time: state.ptime,
+                s_start_time: state.stime
+            }
+            formData.append('args', JSON.stringify(args))
+            axios
+            .post(url, formData)
+            // .get(url)
+            .then((res) => {
+                console.log('res: ', res)
+                // console.log('curve_data: ', obj.curve_data)
+            })
+            .catch(function (error) { // 请求失败处理
+                console.log(error)
+            })
         },
         // 获取工作区操作后的数据
         getWorkData(state) {

@@ -92,9 +92,12 @@ const changeMark = () => {
     // chooseDialog.isDownSampling = false
     if (radio.value === 'p') {
         ptime.value = markData.x
+        store.commit('changePStartTime', ptime.value)
     } else {
         stime.value = markData.x
+        store.commit('changeSStartTime', stime.value)
     }
+    store.commit('change_p_s_start_time')
     dialogFormVisible.value = false
 }
 watch(() => store.state.chooseChannel, () => {
@@ -160,7 +163,8 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
                     }
                 }
                 ],
-                silent: true // 标线无点击事件
+                silent: true, // 标线无点击事件
+                animation: false
             }
         }
     )

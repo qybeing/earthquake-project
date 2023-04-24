@@ -69,11 +69,36 @@
     </el-dialog>
     <!-- 4.滤波 -->
     <el-dialog v-model="chooseDialog.isFiltering" title="滤波" width="30%">
-        <el-form-item label="滤波器" :label-width="formLabelWidth">
-            <el-select  v-model="filterValue" placeholder="Please select a zone">
-                <el-option label="带通滤波器" value="dt_filter" />
-                <el-option label="巴特沃斯滤波器" value="btws_filter" />
+        <el-form-item label="滤波器：" label-width=100px>
+            <el-select v-model="filterValue" placeholder="Please select a zone">
+                <el-option label="巴特沃斯带通滤波器" value="dt_filter" />
+                <el-option label="巴特沃斯高通滤波器" value="ht_filter" />
+                <el-option label="巴特沃斯低通滤波器" value="lt_filter" />
             </el-select>
+        </el-form-item>
+        <el-form-item label="参数设置： " :label-width="formLabelWidth2"></el-form-item>
+        <div v-if="filterValue == 'dt_filter'">
+            <el-form-item label="通带低转角频率：" :label-width="formLabelWidth2">
+                <el-input autocomplete="off" style="width: 100px" />
+            </el-form-item>
+            <el-form-item label="通带高转角转角频率：" :label-width="formLabelWidth2">
+                <el-input autocomplete="off" style="width: 100px" />
+            </el-form-item>
+        </div>
+        <div v-else>
+            <el-form-item label="滤波器转角频率：" :label-width="formLabelWidth2">
+                <el-input autocomplete="off" style="width: 100px" />
+            </el-form-item>
+        </div>
+
+        <el-form-item label="采样率(Hz)：" :label-width="formLabelWidth2">
+            <el-input autocomplete="off" style="width: 100px" />
+        </el-form-item>
+        <el-form-item label="过滤角点/顺序：" :label-width="formLabelWidth2">
+            <el-input autocomplete="off" style="width: 100px" />
+        </el-form-item>
+        <el-form-item label="zerophase：" :label-width="formLabelWidth2">
+            <el-input autocomplete="off" style="width: 100px" />
         </el-form-item>
         <template #footer>
             <span class="dialog-footer">
@@ -199,6 +224,7 @@ const tableData: Curve[] = [
 ]
 
 const formLabelWidth = '100px'
+const formLabelWidth2 = '170px'
 
 const form = reactive({
     name: '',
