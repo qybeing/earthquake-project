@@ -20,9 +20,9 @@
     <!-- 模态框部分-->
     <!-- 1.降采样  -->
     <el-dialog v-model="chooseDialog.isDownSampling" title="降采样" width="30%">
-        <el-form :model="form">
+        <el-form :model="ruleForm">
             <el-form-item label="间隔个数" :label-width="formLabelWidth">
-                <el-input v-model="workInput.DownSampling" autocomplete="off" style="width: 50px" />
+                <el-input v-model.number="workInput.DownSampling" autocomplete="off" style="width: 50px" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -37,7 +37,7 @@
     <!-- 2.仪器去响应 -->
     <el-dialog v-model="chooseDialog.isGoRespond" title="仪器去响应" width="30%">
         <el-form-item label="仪器灵敏度" :label-width="formLabelWidth">
-            <el-input v-model="workInput.GoRespond" autocomplete="off" style="width: 50px" />
+            <el-input v-model.number="workInput.GoRespond" autocomplete="off" style="width: 50px" />
         </el-form-item>
         <template #footer>
             <span class="dialog-footer">
@@ -79,26 +79,26 @@
         <el-form-item label="参数设置： " :label-width="formLabelWidth2"></el-form-item>
         <div v-if="filterValue == 'dt_filter'">
             <el-form-item label="通带低转角频率：" :label-width="formLabelWidth2">
-                <el-input autocomplete="off" style="width: 100px" />
+                <el-input v-model="filterInfo.freqmin" autocomplete="off" style="width: 100px" />
             </el-form-item>
             <el-form-item label="通带高转角转角频率：" :label-width="formLabelWidth2">
-                <el-input autocomplete="off" style="width: 100px" />
+                <el-input v-model="filterInfo.freqmax" autocomplete="off" style="width: 100px" />
             </el-form-item>
         </div>
         <div v-else>
             <el-form-item label="滤波器转角频率：" :label-width="formLabelWidth2">
-                <el-input autocomplete="off" style="width: 100px" />
+                <el-input v-model="filterInfo.freq" autocomplete="off" style="width: 100px" />
             </el-form-item>
         </div>
 
         <el-form-item label="采样率(Hz)：" :label-width="formLabelWidth2">
-            <el-input autocomplete="off" style="width: 100px" />
+            <el-input v-model="filterInfo.df" autocomplete="off" style="width: 100px" />
         </el-form-item>
         <el-form-item label="过滤角点/顺序：" :label-width="formLabelWidth2">
-            <el-input autocomplete="off" style="width: 100px" />
+            <el-input v-model="filterInfo.corners" autocomplete="off" style="width: 100px" />
         </el-form-item>
         <el-form-item label="zerophase：" :label-width="formLabelWidth2">
-            <el-input autocomplete="off" style="width: 100px" />
+            <el-input v-model="filterInfo.zerophase" autocomplete="off" style="width: 100px" />
         </el-form-item>
         <template #footer>
             <span class="dialog-footer">
@@ -121,11 +121,88 @@ import { ElTable } from 'element-plus'
 import { useStore } from 'vuex'
 import { GlobalDataProps, WorkProps } from '../store'
 import { computed } from '@vue/reactivity'
+import type { FormInstance, FormRules } from 'element-plus'
 const store = useStore<GlobalDataProps>()
 const workInput = reactive(computed(() => store.state.workChoose))
 const choosedchannels = reactive(computed(() => store.state.chooseChannel))
 const options: { value: string; label: string }[] = reactive([])
+const filterInfo = {
+    freq: 50,
+    freqmin: 20,
+    freqmax: 80,
+    df: 100,
+    corners: 4,
+    zerophase: 'False'
+}
 const filterValue = ref('dt_filter')
+// 表单校验
+const ruleFormRef = ref<FormInstance>()
+const ruleForm = reactive({
+    number: '',
+    region: '',
+    count: '',
+    date1: '',
+    date2: '',
+    delivery: false,
+    type: [],
+    resource: '',
+    desc: ''
+})
+const rules = reactive<FormRules>({
+    number: [
+        { required: true, message: 'age is required', trigger: 'blur' },
+        { type: 'number', message: 'age must be a number', trigger: 'blur' }
+    ],
+    region: [
+        {
+            required: true,
+            message: 'Please select Activity zone',
+            trigger: 'change'
+        }
+    ],
+    count: [
+        {
+            required: true,
+            message: 'Please select Activity count',
+            trigger: 'change'
+        }
+    ],
+    date1: [
+        {
+            type: 'date',
+            required: true,
+            message: 'Please pick a date',
+            trigger: 'change'
+        }
+    ],
+    date2: [
+        {
+            type: 'date',
+            required: true,
+            message: 'Please pick a time',
+            trigger: 'change'
+        }
+    ],
+    type: [
+        {
+            type: 'array',
+            required: true,
+            message: 'Please select at least one activity type',
+            trigger: 'change'
+        }
+    ],
+    resource: [
+        {
+            required: true,
+            message: 'Please select activity resource',
+            trigger: 'change'
+        }
+    ],
+    desc: [
+        { required: true, message: 'Please input activity form', trigger: 'blur' }
+    ]
+})
+
 watch(choosedchannels, (choosedchannels) => {
     options.length = 0
     choosedchannels.forEach(x => {
@@ -225,17 +302,6 @@ const tableData: Curve[] = [
 
 const formLabelWidth = '100px'
 const formLabelWidth2 = '170px'
-
-const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: false,
-    type: [],
-    resource: '',
-    desc: ''
-})
 
 </script>
 
