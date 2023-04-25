@@ -13,6 +13,14 @@
                             </svg>
                         </el-button>
                     </div>
+                    <div class="channelChoose">
+                        <div class="text_middle">频道：</div>
+                        <el-checkbox-group v-model="seeChannel" class="boxgroup" @change="seeChannelChange" >
+                            <el-checkbox label="BHE" />
+                            <el-checkbox label="BHN" />
+                            <el-checkbox label="BHZ" />
+                        </el-checkbox-group>
+                    </div>
                     <div class="filter_style">
                         <el-form :inline="true" :model="querydataform" class="demo-form-inline">
                             <div class="wrapper">
@@ -25,9 +33,9 @@
                                 <el-form-item label="位置">
                                     <el-input v-model="querydataform.location" />
                                 </el-form-item>
-                                <el-form-item label="频道">
+                                <!-- <el-form-item label="频道">
                                     <el-input v-model="querydataform.channel" />
-                                </el-form-item>
+                                </el-form-item> -->
                                 <el-form-item>
                                     <el-button type="success" @click="onFilter">过滤</el-button>
                                 </el-form-item>
@@ -72,7 +80,7 @@
                 </el-table>
             </div>
         </el-card>
-</el-container>
+    </el-container>
 </template>
 <script setup lang="ts">
 
@@ -82,7 +90,7 @@ import { useStore } from 'vuex'
 import { GlobalDataProps, WindowProp, DataProps } from '../store'
 import CurveGraph from '../components/CurveGraph.vue'
 const store = useStore<GlobalDataProps>()
-const tableData = computed(() => store.state.viewChartData)
+const tableData = reactive(computed(() => store.getters.getViewChartData))
 const numID = ref()
 const itemKey = ref()
 numID.value = 0
@@ -92,6 +100,7 @@ const formInline = reactive(computed(() => store.state.window))
 const onReturn = () => {
     router.push('/offline/offlineAnalysis')
 }
+const seeChannel = reactive(computed(() => store.state.seeChannel))
 const seeDetail = (row: any) => {
     console.log('点击的data:', row.curve_info)
     router.push('/offline/DetailedChart')
@@ -99,6 +108,11 @@ const seeDetail = (row: any) => {
     store.commit('changeChannel', [row.curve_info.channel])
     // store.commit('getAllData')
     store.commit('getWorkDataBefore')
+}
+
+const seeChannelChange = (row: any) => {
+    console.log('频道选择', row)
+    store.commit('changeSeeChannel', row)
 }
 
 const options = [
@@ -155,6 +169,29 @@ const onFilter = () => {
 }
 </script>
 <style scoped>
+.text_middle {
+    vertical-align: middle;
+    display: table-cell
+}
+
+.channelChoose {
+    margin-left: 30px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    align-items: center;
+}
+
+.boxgroup {
+    /* margin-left: 40px; */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgb(227, 226, 226); */
+}
+
 .chart_container {
     background-color: #fff;
 }
@@ -188,8 +225,9 @@ const onFilter = () => {
 .filter_style {
     /* width: 100%; */
     margin-left: 30px;
+    margin-right: 10px;
     display: grid;
-    grid-template-columns: 4fr 3fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
 }
 
@@ -198,7 +236,7 @@ const onFilter = () => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(5, 150px);
+    grid-template-columns: repeat(4, 140px);
     /*  声明行间距和列间距  */
     /* grid-gap: 10px; */
     /*  声明行的高度  */

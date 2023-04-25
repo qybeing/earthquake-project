@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="tableData" style="width: 100%" border v-loading="loading" empty-text="暂无数据"
+    <el-table ref='multipleTableRef' :data="tableData" style="width: 100%" border v-loading="loading" empty-text="暂无数据"
         :cell-style="{ textAlign: 'center' }" :header-cell-style="{ textAlign: 'center' }"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="40" />
@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import { useStore } from 'vuex'
 import { DataProps, GlobalDataProps } from '../store'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 const store = useStore<GlobalDataProps>()
 const arr: string[] = reactive([])
 interface CurveInfo {
@@ -33,6 +33,11 @@ watch(tableData, (newVal) => {
     console.log(newVal)
 }, { immediate: true, deep: true })
 
+const multipleTableRef = ref()
+nextTick(() => {
+    console.log('加载完成 nexttick')
+    multipleTableRef.value.toggleAllSelection()
+})
 const handleSelectionChange = (val: CurveInfo[]) => {
     multipleSelection.value = val
     console.log('multipleSelection: ', multipleSelection.value)

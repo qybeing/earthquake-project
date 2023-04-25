@@ -123,6 +123,9 @@ export interface GlobalDataProps {
     ptime: string
     stime: string
 
+    // seeChannel 图表略看的频道多选
+    seeChannel: Array<string>;
+
 }
 
 const store = createStore<GlobalDataProps>({
@@ -202,10 +205,13 @@ const store = createStore<GlobalDataProps>({
         },
         featureChannel: '',
         ptime: '0',
-        stime: '0'
-
+        stime: '0',
+        seeChannel: ['BHE', 'BHN', 'BHZ']
     },
     mutations: {
+        changeSeeChannel(state, channels) {
+            state.seeChannel = channels
+        },
         changePStartTime(state, pt) {
             state.ptime = pt
         },
@@ -270,15 +276,15 @@ const store = createStore<GlobalDataProps>({
             }
             formData.append('args', JSON.stringify(args))
             axios
-            .post(url, formData)
-            // .get(url)
-            .then((res) => {
-                console.log('res: ', res)
-                // console.log('curve_data: ', obj.curve_data)
-            })
-            .catch(function (error) { // 请求失败处理
-                console.log(error)
-            })
+                .post(url, formData)
+                // .get(url)
+                .then((res) => {
+                    console.log('res: ', res)
+                    // console.log('curve_data: ', obj.curve_data)
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error)
+                })
         },
         // 获取工作区操作后的数据
         getWorkData(state) {
@@ -544,6 +550,17 @@ const store = createStore<GlobalDataProps>({
         }
     },
     getters: {
+        getViewChartData(state) {
+            const res: PointProps[] = []
+            state.viewChartData.forEach(
+                x => {
+                    if (state.seeChannel.includes(x.curve_info.channel)) {
+                        res.push(x)
+                    }
+                }
+            )
+            return res
+        },
         getTitle(state) {
             const info = state.chooseData
             const id = info.network + '/' + info.station + '/' + info.location
