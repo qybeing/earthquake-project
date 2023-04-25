@@ -12,9 +12,9 @@
         <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item>
         <el-sub-menu>
             <template #title>详细分析</template>
-            <el-menu-item index="/offline/DetailedChart">波段一</el-menu-item>
-            <el-menu-item index="1">波段二</el-menu-item>
-            <el-menu-item index="2">波段三</el-menu-item>
+            <el-menu-item index="/offline/DetailedChart">手段一</el-menu-item>
+            <el-menu-item index="1">手段二</el-menu-item>
+            <el-menu-item index="2">手段三</el-menu-item>
         </el-sub-menu>
         <!-- <el-menu-item index="/offline/DetailedChart">详细分析</el-menu-item> -->
     </el-menu>

@@ -17,6 +17,8 @@
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
     </div>
+    <div class="set_center"><el-button :icon="Position" size="large" type="primary" color="#626aef"
+        @click.prevent="onOnlineAnalysis">在线分析</el-button></div>
     <!-- 模态框部分-->
     <!-- 1.降采样  -->
     <el-dialog v-model="chooseDialog.isDownSampling" title="降采样" width="30%">
@@ -112,14 +114,12 @@
 </template>
 
 <script lang="ts" setup>
-
-import {
-    Edit
-} from '@element-plus/icons-vue'
+import router from '@/router'
+import { Search, Position } from '@element-plus/icons-vue'
 import { reactive, ref, watch } from 'vue'
 import { ElTable } from 'element-plus'
 import { useStore } from 'vuex'
-import { GlobalDataProps, WorkProps } from '../store'
+import { GlobalDataProps } from '../store'
 import { computed } from '@vue/reactivity'
 import type { FormInstance, FormRules } from 'element-plus'
 const store = useStore<GlobalDataProps>()
@@ -303,9 +303,21 @@ const tableData: Curve[] = [
 const formLabelWidth = '100px'
 const formLabelWidth2 = '170px'
 
+const onOnlineAnalysis = () => {
+    router.push('/online/mapView')
+}
+
 </script>
 
 <style>
+.set_center {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
 .select {
     font-size: 14px;
     display: grid;

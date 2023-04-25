@@ -97,7 +97,7 @@ const changeMark = () => {
         stime.value = markData.x
         store.commit('changeSStartTime', stime.value)
     }
-    // store.commit('change_p_s_start_time')
+    store.commit('change_p_s_start_time')
     dialogFormVisible.value = false
 }
 watch(() => store.state.chooseChannel, () => {

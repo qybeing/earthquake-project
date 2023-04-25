@@ -279,7 +279,7 @@ const store = createStore<GlobalDataProps>({
                 .post(url, formData)
                 // .get(url)
                 .then((res) => {
-                    console.log('res: ', res)
+                    console.log('p波s波更新res: ', res)
                     // console.log('curve_data: ', obj.curve_data)
                 })
                 .catch(function (error) { // 请求失败处理
