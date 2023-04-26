@@ -25,6 +25,7 @@
 <script lang="ts" setup>
 
 import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
 import { onMounted, defineProps, watch, PropType, reactive, ref } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
@@ -38,6 +39,13 @@ const stime = ref(store.state.stime)
 const markData = reactive({ x: '0', y: '0' })
 const dialogFormVisible = ref(false)
 const radio = ref('p')
+
+const open = () => {
+  ElMessage({
+    message: '标记成功！',
+    type: 'success'
+  })
+}
 
 type series = {
     name: string
@@ -98,6 +106,7 @@ const changeMark = () => {
         store.commit('changeSStartTime', stime.value)
     }
     store.commit('change_p_s_start_time')
+    open()
     dialogFormVisible.value = false
 }
 watch(() => store.state.chooseChannel, () => {

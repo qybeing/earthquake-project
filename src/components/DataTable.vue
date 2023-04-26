@@ -29,11 +29,13 @@ watch(loading, (newVal) => {
     console.log(newVal)
 })
 // const tableData2 = reactive(tableData)
+// const multipleTableRef = ref()
 watch(tableData, (newVal) => {
     console.log(newVal)
+    // multipleTableRef.value.toggleAllSelection()
 }, { immediate: true, deep: true })
-
 const multipleTableRef = ref()
+
 nextTick(() => {
     console.log('加载完成 nexttick')
     multipleTableRef.value.toggleAllSelection()
@@ -54,4 +56,5 @@ const handleSelectionChange = (val: CurveInfo[]) => {
 function getId(x: DataProps): string {
     return x.network + '.' + x.station + '.' + x.location + '.' + x.channel
 }
+
 </script>
