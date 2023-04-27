@@ -18,7 +18,7 @@
         </el-select>
     </div>
     <div class="set_center"><el-button :icon="Position" size="large" type="primary" color="#626aef"
-        @click.prevent="onOnlineAnalysis">在线分析</el-button></div>
+            @click.prevent="onOnlineAnalysis">在线分析</el-button></div>
     <!-- 模态框部分-->
     <!-- 1.降采样  -->
     <el-dialog v-model="chooseDialog.isDownSampling" title="降采样" width="30%">
@@ -72,40 +72,40 @@
     <!-- 4.滤波 -->
     <el-dialog v-model="chooseDialog.isFiltering" title="滤波" width="30%">
         <el-form-item label="滤波器：" label-width=100px>
-            <el-select v-model="filterValue" placeholder="Please select a zone">
-                <el-option label="巴特沃斯带通滤波器" value="dt_filter" />
-                <el-option label="巴特沃斯高通滤波器" value="ht_filter" />
-                <el-option label="巴特沃斯低通滤波器" value="lt_filter" />
+            <el-select v-model="workInput.filter" placeholder="Please select a zone">
+                <el-option label="巴特沃斯带通滤波器" value="bandpass" />
+                <el-option label="巴特沃斯高通滤波器" value="highpass" />
+                <el-option label="巴特沃斯低通滤波器" value="lowpass" />
             </el-select>
         </el-form-item>
         <el-form-item label="参数设置： " :label-width="formLabelWidth2"></el-form-item>
-        <div v-if="filterValue == 'dt_filter'">
+        <div v-if="workInput.filter == 'bandpass'">
             <el-form-item label="通带低转角频率：" :label-width="formLabelWidth2">
-                <el-input v-model="filterInfo.freqmin" autocomplete="off" style="width: 100px" />
+                <el-input v-model="workFilterProps.freqmin" autocomplete="off" style="width: 100px" />
             </el-form-item>
             <el-form-item label="通带高转角转角频率：" :label-width="formLabelWidth2">
-                <el-input v-model="filterInfo.freqmax" autocomplete="off" style="width: 100px" />
+                <el-input v-model="workFilterProps.freqmax" autocomplete="off" style="width: 100px" />
             </el-form-item>
         </div>
         <div v-else>
             <el-form-item label="滤波器转角频率：" :label-width="formLabelWidth2">
-                <el-input v-model="filterInfo.freq" autocomplete="off" style="width: 100px" />
+                <el-input v-model="workFilterProps.freq" autocomplete="off" style="width: 100px" />
             </el-form-item>
         </div>
 
         <el-form-item label="采样率(Hz)：" :label-width="formLabelWidth2">
-            <el-input v-model="filterInfo.df" autocomplete="off" style="width: 100px" />
+            <el-input v-model="workFilterProps.df" autocomplete="off" style="width: 100px" />
         </el-form-item>
         <el-form-item label="过滤角点/顺序：" :label-width="formLabelWidth2">
-            <el-input v-model="filterInfo.corners" autocomplete="off" style="width: 100px" />
+            <el-input v-model="workFilterProps.corners" autocomplete="off" style="width: 100px" />
         </el-form-item>
         <el-form-item label="zerophase：" :label-width="formLabelWidth2">
-            <el-input v-model="filterInfo.zerophase" autocomplete="off" style="width: 100px" />
+            <el-input v-model="workFilterProps.zerophase" autocomplete="off" style="width: 100px" />
         </el-form-item>
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="chooseDialog.isFiltering = false">取消</el-button>
-                <el-button type="primary" @click="chooseDialog.isFiltering = false">
+                <el-button type="primary"  @click="setFilter(workInput.filter)">
                     确认
                 </el-button>
             </span>
@@ -125,15 +125,9 @@ import type { FormInstance, FormRules } from 'element-plus'
 const store = useStore<GlobalDataProps>()
 const workInput = reactive(computed(() => store.state.workChoose))
 const choosedchannels = reactive(computed(() => store.state.chooseChannel))
+const workFilterProps = reactive(computed(() => store.state.workFilterProps))
 const options: { value: string; label: string }[] = reactive([])
-const filterInfo = {
-    freq: 50,
-    freqmin: 20,
-    freqmax: 80,
-    df: 100,
-    corners: 4,
-    zerophase: 'False'
-}
+
 const filterValue = ref('dt_filter')
 // 表单校验
 const ruleFormRef = ref<FormInstance>()
@@ -275,6 +269,11 @@ const setGoRespond = (n: number) => {
 const setNormalization = (n: string) => {
     store.commit('changeNormalization', n)
     chooseDialog.isNormalization = false
+}
+const setFilter = (n: string) => {
+    store.commit('changeWorkFilter', n)
+    store.commit('changeWorkFilterProps', workFilterProps)
+    chooseDialog.isFiltering = false
 }
 
 const tableData: Curve[] = [

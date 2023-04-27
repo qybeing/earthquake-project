@@ -12,7 +12,7 @@
         <!-- <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item> -->
         <el-sub-menu index="/offline/offlineAnalysis">
             <template #title>离线分析</template>
-            <el-menu-item index="/offline/offlineAnalysis">文件数据</el-menu-item>
+            <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">文件数据</el-menu-item>
             <el-menu-item index="/offline/ViewChart">批量查看</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="/offline/DetailedChart">

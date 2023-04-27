@@ -3,6 +3,15 @@ import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
 import { ca } from 'element-plus/es/locale'
 
+//  巴特沃斯滤波器
+export interface WorkFilterProps {
+    freq?: number,
+    freqmin?: number,
+    freqmax?: number,
+    df: number,
+    corners: number,
+    zerophase: string
+}
 export interface TimeDomainProps {
     max_value: number,
     peak_value: number,
@@ -32,7 +41,8 @@ export interface FrequencyDomainProps {
 export interface WorkProps {
     DownSampling: number,
     GoRespond: number,
-    Normalization: string
+    Normalization: string,
+    filter: string
 }
 
 export interface WorkToSend {
@@ -126,6 +136,9 @@ export interface GlobalDataProps {
     // seeChannel 图表略看的频道多选
     seeChannel: Array<string>;
 
+    // 滤波参数
+    workFilterProps: WorkFilterProps
+
 }
 
 const store = createStore<GlobalDataProps>({
@@ -163,7 +176,8 @@ const store = createStore<GlobalDataProps>({
         workChoose: {
             DownSampling: 40,
             GoRespond: 1,
-            Normalization: 'none'
+            Normalization: 'none',
+            filter: 'bandpass'
         },
         workToSend: {
 
@@ -206,7 +220,15 @@ const store = createStore<GlobalDataProps>({
         featureChannel: '',
         ptime: '0',
         stime: '0',
-        seeChannel: ['BHE', 'BHN', 'BHZ']
+        seeChannel: ['BHE', 'BHN', 'BHZ'],
+        workFilterProps: {
+            freq: 1,
+            freqmin: 1,
+            freqmax: 3,
+            df: 100,
+            corners: 4,
+            zerophase: 'False'
+        }
     },
     mutations: {
         changeSeeChannel(state, channels) {
@@ -247,6 +269,12 @@ const store = createStore<GlobalDataProps>({
         changeNormalization(state, newNormalization: string) {
             state.workChoose.Normalization = newNormalization
         },
+        changeWorkFilter(state, filter: string) {
+            state.workChoose.filter = filter
+        },
+        changeWorkFilterProps(state, filterProps: WorkFilterProps) {
+            state.workFilterProps = filterProps
+        },
         changeChannel(state, newChannels: Array<string>) {
             state.chooseChannel = newChannels
             console.log('state.chooseChannel', state.chooseChannel)
@@ -267,7 +295,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 发送请求更新p波s波
         change_p_s_start_time(state) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/change_p_s_start_time'
             const formData = new FormData()
             const args = {
                 curve_id: state.chooses[0],
@@ -289,11 +317,15 @@ const store = createStore<GlobalDataProps>({
         // 获取工作区操作后的数据
         getWorkData(state) {
             console.log('开始获取 getWorkData')
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            // const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
             // const url = '/mock/get_points_and_transform1'
             const formData = new FormData()
             const obj: WorkToSend = {}
+            const filter = {
+                filter_name: '',
+                filter_args: <any>[]
+            }
             state.workChoosedName.forEach(x => {
                 switch (x) {
                     case 'DownSampling':
@@ -304,6 +336,10 @@ const store = createStore<GlobalDataProps>({
                         break
                     case 'Normalization':
                         obj.normalization = state.workChoose.Normalization
+                        break
+                    // 在这里写滤波逻辑
+                    case 'Filtering':
+                        filter.filter_name = state.workChoose.filter
                 }
             })
 
@@ -313,10 +349,36 @@ const store = createStore<GlobalDataProps>({
                 ids.push(pretitle + x)
             })
 
-            const args = {
+            interface argsProps {
+                curve_ids: string[],
+                pretreatment_args: unknown,
+                filter?: unknown
+            }
+
+            const args: argsProps = {
                 curve_ids: ids,
                 pretreatment_args: obj
             }
+            if (filter.filter_name !== '') {
+                if (filter.filter_name === 'bandpass') {
+                    const arr: (string | number | undefined)[] = []
+                    arr[0] = state.workFilterProps.freqmin
+                    arr[1] = state.workFilterProps.freqmax
+                    arr[2] = state.workFilterProps.df
+                    arr[3] = state.workFilterProps.corners
+                    arr[4] = state.workFilterProps.zerophase
+                    filter.filter_args = arr
+                } else if (filter.filter_name === 'highpass' || filter.filter_name === 'lowpass') {
+                    const arr: (string | number | undefined)[] = []
+                    arr[0] = state.workFilterProps.freq
+                    arr[1] = state.workFilterProps.df
+                    arr[2] = state.workFilterProps.corners
+                    arr[3] = state.workFilterProps.zerophase
+                    filter.filter_args = arr
+                }
+                args.filter = filter
+            }
+
             formData.append('args', JSON.stringify(args))
             console.log('formdata: ', formData)
             axios
@@ -337,8 +399,8 @@ const store = createStore<GlobalDataProps>({
         // 获取工作区操作前的数据
         getWorkDataBefore(state) {
             console.log('开始获取 getWorkData')
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            // const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
             // const url = '/mock/get_points_and_transform1'
             const formData = new FormData()
             const obj: WorkToSend = {}
@@ -392,7 +454,7 @@ const store = createStore<GlobalDataProps>({
         // 详细分析
         getAllData(state) {
             console.log('开始获取 getAllData')
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curves_and_points'
             axios
                 .get(url)
@@ -411,7 +473,7 @@ const store = createStore<GlobalDataProps>({
         // ~~~~~~~~~~~~~~~~~~
         getViewChartData(state) {
             console.log('开始获取 getViewChartData')
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -436,7 +498,7 @@ const store = createStore<GlobalDataProps>({
         // 地图上模拟一个假的
         getViewChartDataFromMap(state) {
             console.log('开始获取 getViewChartData')
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -460,7 +522,7 @@ const store = createStore<GlobalDataProps>({
         },
         getViewChartDataWithWindow(state) {
             console.log('开始获取 getViewChartDataWithWindow')
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -485,7 +547,7 @@ const store = createStore<GlobalDataProps>({
         },
         getViewChartDataWithFilter(state) {
             console.log('开始获取 getViewChartDataWithFilte')
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
             // const url = '/mock/get_curve_with_part_points'
             const formData = new FormData()
             const obj = {
@@ -518,7 +580,7 @@ const store = createStore<GlobalDataProps>({
              * dakai
              */
             console.log('开始获取')
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
+            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_with_condition'
             const formData = new FormData()
             formData.append('args', JSON.stringify(state.querydata))
             axios
