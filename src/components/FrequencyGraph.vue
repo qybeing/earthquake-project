@@ -2,13 +2,13 @@
 <template>
     <div class="echarts-box">
         <div :id="rowId" style=" width: 1082px;height: 220px;"></div>
-</div>
+    </div>
 </template>
 
 <script lang="ts" setup>
 
 import * as echarts from 'echarts'
-import { onMounted, defineProps, watch, PropType, reactive } from 'vue'
+import { onMounted, defineProps, watch, PropType, reactive, onBeforeUnmount } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
@@ -36,6 +36,13 @@ const props = defineProps({
     //     required: true
     // }
 })
+let chart: any = null
+onMounted(
+    () => {
+        chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+    }
+)
+// const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
 // watch(channels, () => initChart(store.getters.getDataY, xData))
 // watch(channels, () => console.log('更新 yData'))
 watch(() => store.state.chooseChannel, () => {
@@ -49,8 +56,11 @@ watch(() => store.state.allData, () => {
     initChart(store.getters.getAmpY, xData)
 }, { deep: true })
 onMounted(() => initChart(yData, xData))
+onBeforeUnmount(() => {
+    chart && chart.clear()
+})
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
-    const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+    // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     // const chart = echarts.init(this.$refs[`echarts${props.rowId}`], 'white')
     // 把配置和数据放这里
     chart.setOption(

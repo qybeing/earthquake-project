@@ -26,7 +26,7 @@
 
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
-import { onMounted, defineProps, watch, PropType, reactive, ref } from 'vue'
+import { onMounted, defineProps, watch, PropType, reactive, ref, onBeforeUnmount } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
@@ -41,10 +41,10 @@ const dialogFormVisible = ref(false)
 const radio = ref('p')
 
 const open = () => {
-  ElMessage({
-    message: '标记成功！',
-    type: 'success'
-  })
+    ElMessage({
+        message: '标记成功！',
+        type: 'success'
+    })
 }
 
 type series = {
@@ -95,6 +95,12 @@ watch(() => stime.value, () => {
     console.log('更新stime')
     initChart(store.getters.getDataY, xData)
 }, { deep: true })
+let chart: any = null
+onMounted(
+    () => {
+        chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+    }
+)
 const changeMark = () => {
     // store.commit('changeDownSampling', n)
     // chooseDialog.isDownSampling = false
@@ -124,8 +130,11 @@ onMounted(() => {
     console.log('ptime: ', ptime)
     console.log('stime: ', stime)
 })
+onBeforeUnmount(() => {
+    chart && chart.clear()
+})
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
-    const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+    // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     ySerise.push(
         {
             name: '',
@@ -216,7 +225,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
         // 自适应大小
         chart.resize()
     }
-    chart.on('click', function (params) { // 用于做每个点的监听，只用点击点才能够获取想要的监听效果；
+    chart.on('click', function (params: { name: string; value: { toString: () => string } }) { // 用于做每个点的监听，只用点击点才能够获取想要的监听效果；
         const data = {
             x: params.name,
             y: params.value

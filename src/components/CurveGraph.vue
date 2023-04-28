@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 
-import { defineProps, onMounted, PropType, watch, ref, computed, ComputedRef } from 'vue'
+import { defineProps, onMounted, PropType, watch, ref, computed, ComputedRef, onBeforeUnmount } from 'vue'
 import axios from 'axios'
 import * as echarts from 'echarts'
 type arrProp = number[]
@@ -46,6 +46,8 @@ const props = defineProps({
         required: true
     }
 })
+const chart:any = null
+// const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
 const datax = props.ts_list.map(x => timestampToTimeHMS(x))
 const date = timestampToTimeYMD(props.ts_list[0])
 const title = props.network + '/' + props.station + '/' + props.location + '/' + props.channel + '  ' + date
@@ -81,11 +83,14 @@ function timestampToTimeYMD(timestamp: number) {
     const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
     return Y + M + D
 }
+onBeforeUnmount(() => {
+    chart && chart.clear()
+})
 function initChart(listy: Array<number>, listx: Array<string>, title: string, ptime: string) {
     console.log('props.rowId: ', props.rowId)
     console.log('props.curveData: ', props.curveData)
-
     const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+    // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     // const chart = echarts.init(this.$refs[`echarts${props.rowId}`], 'white')
     // 把配置和数据放这里
     chart.setOption({
