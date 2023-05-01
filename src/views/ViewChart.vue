@@ -15,7 +15,7 @@
                     </div>
                     <div class="channelChoose">
                         <div class="text_middle">频道：</div>
-                        <el-checkbox-group v-model="seeChannel" class="boxgroup" @change="seeChannelChange" >
+                        <el-checkbox-group v-model="seeChannel" class="boxgroup" @change="seeChannelChange">
                             <el-checkbox label="BHE" />
                             <el-checkbox label="BHN" />
                             <el-checkbox label="BHZ" />
@@ -107,7 +107,7 @@ const seeDetail = (row: any) => {
     store.commit('changeChooseData', row.curve_info)
     store.commit('changeChannel', [row.curve_info.channel])
     // store.commit('getAllData')
-    store.commit('getWorkDataBefore')
+    store.dispatch('fetchWorkDataBefore')
 }
 
 const seeChannelChange = (row: any) => {
