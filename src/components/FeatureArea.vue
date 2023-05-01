@@ -1,7 +1,7 @@
 <template>
   <div class="domain_title">时序</div>
   <el-form label-position="left" size="small" label-width="95px" :model="timeDomain"
-    style="width: 100%;background-color: white;">
+    style="width: 100%;background-color: white;" v-loading="loading">
     <el-form-item label="最大值">
       <el-input readonly :value="timeDomain.max_value" />
     </el-form-item>
@@ -59,7 +59,7 @@
   </el-form>
   <div class="domain_title">频域</div>
   <el-form label-position="left" size="small" label-width="80px" :model="frequencyDomain"
-    style="width: 100%;background-color: white;">
+    style="width: 100%;background-color: white;" v-loading="loading">
     <el-form-item label="重心频率">
       <el-input readonly :value="frequencyDomain.fc" />
     </el-form-item>
@@ -72,6 +72,12 @@
     <el-form-item label="频率方差">
       <el-input readonly :value="frequencyDomain.vf" />
     </el-form-item>
+    <el-form-item label="频率三次矩">
+      <el-input readonly :value="frequencyDomain.ftm" />
+    </el-form-item>
+    <el-form-item label="频率四次矩">
+      <el-input readonly :value="frequencyDomain.ffm" />
+    </el-form-item>
   </el-form>
 </template>
 
@@ -83,6 +89,7 @@ import { computed } from '@vue/reactivity'
 const store = useStore<GlobalDataProps>()
 const timeDomain = reactive(computed(() => store.state.timeDomainData))
 const frequencyDomain = reactive(computed(() => store.state.frequencyDomainData))
+const loading = computed(() => store.state.loading)
 
 </script>
 
@@ -94,14 +101,15 @@ const frequencyDomain = reactive(computed(() => store.state.frequencyDomainData)
 }
 
 .el-form-item--small {
-  margin-bottom: 3.9px !important
+  /* margin-bottom: 3.9px !important */
+  margin-bottom: 1.9px !important
 }
 
 .domain_title {
   font-size: 15px;
   font-weight: bold;
   border-bottom: 1px solid;
-  margin-bottom: 1px;
+  margin-bottom: 1.9px;
   color: rgb(151, 151, 151);
 }
 </style>

@@ -21,7 +21,7 @@
                 </div> -->
         </div>
         <div class="main_wrapper">
-            <div class="chart_body" :key="itemKey">
+            <div class="chart_body" :key="itemKey" v-loading="loading">
                 <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
                 <FrequencyGraph :rowId=changeID()></FrequencyGraph>
                 <Spectrogram></Spectrogram>
@@ -129,4 +129,5 @@ function getData() {
     width: 100%;
     height: 100%;
     /* background-color: rgb(197, 90, 90); */
-}</style>
+}
+</style>

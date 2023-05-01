@@ -36,7 +36,9 @@ export interface FrequencyDomainProps {
     fc: number,
     mf: number,
     rmsf: number,
-    vf: number
+    vf: number,
+    ftm: number,
+    ffm: number
 }
 export interface WorkProps {
     DownSampling: number,
@@ -44,13 +46,11 @@ export interface WorkProps {
     Normalization: string,
     filter: string
 }
-
 export interface WorkToSend {
     downsample?: number,
     divide_sensitivity?: number,
     normalization?: string
 }
-
 export interface QueryProps {
     network: string
     station: string
@@ -104,7 +104,6 @@ export interface YDataProps {
     type: string
     data: Array<number>
 }
-
 export interface GlobalDataProps {
     querydata: Conditions
     data: DataProps[];
@@ -215,7 +214,9 @@ const store = createStore<GlobalDataProps>({
             fc: 0.0000,
             mf: 0.0000,
             rmsf: 0.0000,
-            vf: 0.0000
+            vf: 0.0000,
+            ftm: 0.0000,
+            ffm: 0.0000
         },
         featureChannel: '',
         ptime: '0',

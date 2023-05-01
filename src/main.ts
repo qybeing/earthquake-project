@@ -11,7 +11,7 @@ import axios from 'axios'
 // axios.defaults.baseURL = 'http://8.130.32.230:1123/'
 axios.interceptors.request.use(config => {
     store.commit('setLoading', true)
-    // store.commit('setError', { status: false, message: '' })
+
     return config
 })
 
@@ -21,11 +21,10 @@ axios.interceptors.response.use(config => {
     }, 500)
     return config
 }, e => {
-    // const { error } = e.response.data
-    // store.commit('setError', { status: true, message: error })
+    const { error } = e.response.data
     store.commit('setLoading', false)
     alert('请求失败')
-    return Promise.reject(e.response)
+    return Promise.reject(error)
 })
 
 const app = createApp(App)
