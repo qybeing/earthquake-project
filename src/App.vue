@@ -14,7 +14,18 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from 'element-plus'
+import { computed, watch } from 'vue'
 import Navigator from './components/Navigator.vue'
+import store from './store'
+const error = computed(() => store.state.error)
+watch(() => error.value.status, () => {
+      const { status, message } = error.value
+      if (status && message) {
+        ElMessage.error(message)
+      }
+    })
+
 </script>
 
 <style>

@@ -130,8 +130,6 @@ const options = [
 ]
 
 const onDetailedChart = () => {
-    // router.push('/offline/DetailedChart')
-    // store.commit('getDetailedChartData')
     console.log('formInline', formInline.value)
     store.commit('getWindow', formInline.value)
     store.dispatch('fetchViewChartData')
@@ -147,10 +145,7 @@ const onFullChart = () => {
 }
 
 const loading = computed(() => store.state.loading)
-watch(loading, (newVal) => {
-    console.log(newVal)
-})
-// const tableData2 = reactive(tableData)
+
 watch(tableData, (newVal) => {
     console.log(newVal)
     itemKey.value = Math.random()
@@ -207,11 +202,9 @@ const onFilter = () => {
 .chart_body {
     width: 100%;
     height: 100%;
-    /* background-color: rgb(197, 90, 90); */
 }
 
 .icon {
-    /* background-color: #fff; */
     display: flex;
     align-items: center;
 }
@@ -222,7 +215,6 @@ const onFilter = () => {
 }
 
 .filter_style {
-    /* width: 100%; */
     margin-left: 30px;
     margin-right: 10px;
     display: grid;
@@ -231,7 +223,6 @@ const onFilter = () => {
 }
 
 .wrapper {
-    /* margin: 60px; */
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */

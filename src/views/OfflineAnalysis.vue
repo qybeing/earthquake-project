@@ -37,7 +37,7 @@ import {
     Search,
     DataAnalysis
 } from '@element-plus/icons-vue'
-
+import { ElMessage } from 'element-plus'
 // import QueryForm from '@/components/QueryForm'
 import DataTable from '@/components/DataTable.vue'
 import router from '@/router'

@@ -3,6 +3,10 @@ import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
 import { ca } from 'element-plus/es/locale'
 
+export interface GlobalErrorProps {
+    status: boolean;
+    message?: string;
+  }
 //  巴特沃斯滤波器
 export interface WorkFilterProps {
     freq?: number,
@@ -105,6 +109,7 @@ export interface YDataProps {
     data: Array<number>
 }
 export interface GlobalDataProps {
+    error: GlobalErrorProps;
     querydata: Conditions
     data: DataProps[];
     viewChartData: PointProps[];
@@ -142,6 +147,7 @@ export interface GlobalDataProps {
 
 const store = createStore<GlobalDataProps>({
     state: {
+        error: { status: false },
         chooseChannel: [],
         allData: [],
         querydata: {
@@ -232,6 +238,9 @@ const store = createStore<GlobalDataProps>({
         }
     },
     mutations: {
+        setError(state, e: GlobalErrorProps) {
+            state.error = e
+          },
         changeSeeChannel(state, channels) {
             state.seeChannel = channels
         },

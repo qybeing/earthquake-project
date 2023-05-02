@@ -105,7 +105,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="chooseDialog.isFiltering = false">取消</el-button>
-                <el-button type="primary"  @click="setFilter(workInput.filter)">
+                <el-button type="primary" @click="setFilter(workInput.filter)">
                     确认
                 </el-button>
             </span>
@@ -116,7 +116,7 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { Search, Position } from '@element-plus/icons-vue'
-import { reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { ElTable } from 'element-plus'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
@@ -128,9 +128,6 @@ const choosedchannels = reactive(computed(() => store.state.chooseChannel))
 const workFilterProps = reactive(computed(() => store.state.workFilterProps))
 const options: { value: string; label: string }[] = reactive([])
 
-const filterValue = ref('dt_filter')
-// 表单校验
-const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
     number: '',
     region: '',
@@ -141,60 +138,6 @@ const ruleForm = reactive({
     type: [],
     resource: '',
     desc: ''
-})
-const rules = reactive<FormRules>({
-    number: [
-        { required: true, message: 'age is required', trigger: 'blur' },
-        { type: 'number', message: 'age must be a number', trigger: 'blur' }
-    ],
-    region: [
-        {
-            required: true,
-            message: 'Please select Activity zone',
-            trigger: 'change'
-        }
-    ],
-    count: [
-        {
-            required: true,
-            message: 'Please select Activity count',
-            trigger: 'change'
-        }
-    ],
-    date1: [
-        {
-            type: 'date',
-            required: true,
-            message: 'Please pick a date',
-            trigger: 'change'
-        }
-    ],
-    date2: [
-        {
-            type: 'date',
-            required: true,
-            message: 'Please pick a time',
-            trigger: 'change'
-        }
-    ],
-    type: [
-        {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-        }
-    ],
-    resource: [
-        {
-            required: true,
-            message: 'Please select activity resource',
-            trigger: 'change'
-        }
-    ],
-    desc: [
-        { required: true, message: 'Please input activity form', trigger: 'blur' }
-    ]
 })
 
 watch(choosedchannels, (choosedchannels) => {
@@ -213,6 +156,7 @@ interface Curve {
     channel: string
 }
 
+// const value = reactive(computed(() => choosedchannels.value.length > 0 ? choosedchannels.value[0] : ''))
 const value = ref('')
 watch(value, (value) => {
     store.commit('changeFeatureChannel', value)
@@ -305,6 +249,31 @@ const formLabelWidth2 = '170px'
 const onOnlineAnalysis = () => {
     router.push('/online/mapView')
 }
+
+const toggleSelection = (rows?: Curve[]) => {
+    if (rows) {
+        rows.forEach((row) => {
+            // TODO: improvement typing when refactor table
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            multipleTableRef.value!.toggleRowSelection(row, undefined)
+        })
+    } else {
+        multipleTableRef.value!.clearSelection()
+    }
+}
+onMounted(() => {
+    const chooseChannel = store.state.workChoosedName
+    const arr: Curve[] = []
+    chooseChannel.forEach(x => {
+        tableData.forEach(data => {
+            if (data.name === x) {
+                arr.push(data)
+            }
+        })
+    })
+    toggleSelection(arr)
+})
 
 </script>
 
