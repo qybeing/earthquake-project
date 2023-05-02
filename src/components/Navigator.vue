@@ -54,7 +54,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 const onAnalysis = () => {
-    store.commit('getCurveData')
+    store.dispatch('fetchCurveData')
 }
 </script>
 

@@ -89,45 +89,6 @@ function changeSerise(option: any, zoom: any, myChart: any) {
           }
         }
       },
-      // {
-      //   name: 'Top 5',
-      //   type: 'effectScatter',
-      //   coordinateSystem: 'amap',
-      //   data: networkData.slice(0, 1),
-      //   symbol: 'triangle',
-      //   symbolSize: function () {
-      //     return 25
-      //   },
-      //   // encode: {
-      //   //   value: 2
-      //   // },
-      //   // 配置绘制完成时显示特效
-      //   showEffectOn: 'render',
-      //   // 涟漪特效
-      //   rippleEffect: {
-      //     // 波纹的绘制方式，可选 'stroke' 和 'fill'
-      //     brushType: 'fill',
-      //     scale: 4,
-      //     period: 1
-      //   },
-      //   // 开启鼠标 hover 的提示动画效果
-      //   hoverAnimation: true,
-      //   label: {
-      //     formatter: '{b}',
-      //     position: 'right',
-      //     show: true
-      //   },
-      //   itemStyle: {
-      //     color: 'red',
-      //     shadowBlur: 10,
-      //     shadowColor: '#333'
-      //   },
-      //   zlevel: 1,
-      //   tooltip: {
-      //     show: true, // 提示框
-      //     triggerOn: 'contextmenu'
-      //   }
-      // }
       {
         name: 'warnSite',
         type: 'effectScatter',
@@ -331,43 +292,6 @@ const getAMap = () => {
           }
         }
       }
-      // {
-      //   name: 'Top 5',
-      //   type: 'effectScatter',
-      //   coordinateSystem: 'amap',
-      //   data: networkData.slice(0, 1),
-      //   symbol: 'triangle',
-      //   symbolSize: function () {
-      //     return 25
-      //   },
-      //   // encode: {
-      //   //   value: 2
-      //   // },
-      //   // 配置绘制完成时显示特效
-      //   showEffectOn: 'render',
-      //   // 涟漪特效
-      //   rippleEffect: {
-      //     // 波纹的绘制方式，可选 'stroke' 和 'fill'
-      //     brushType: 'stroke'
-      //   },
-      //   // 开启鼠标 hover 的提示动画效果
-      //   hoverAnimation: true,
-      //   label: {
-      //     formatter: '{b}',
-      //     position: 'right',
-      //     show: true
-      //   },
-      //   itemStyle: {
-      //     color: 'red',
-      //     shadowBlur: 10,
-      //     shadowColor: '#333'
-      //   },
-      //   zlevel: 1,
-      //   tooltip: {
-      //     show: true, // 提示框
-      //     triggerOn: 'contextmenu'
-      //   }
-      // }
     ],
     animation: true
   }
@@ -392,7 +316,7 @@ const getAMap = () => {
   myChart.off('click')
   myChart.on('click', function (params) {
     router.push('/offline/ViewChart')
-    store.commit('getViewChartDataFromMap')
+    store.dispatch('fetchViewChartData')
   })
   myChart.on('contextmenu', function (params) {
     console.log('右键点击点击了！', params)

@@ -2,7 +2,7 @@
     <el-container class="total_wrapper">
         <div class="wrapper">
             <el-card :body-style="{ padding: '5px' }">
-                <div @click="getData">
+                <div>
                     <div class="little_title id">{{ title.id }}</div>
                     <div class="little_title">{{ title.time }}</div>
                 </div>
@@ -13,27 +13,13 @@
             <el-card :body-style="{ padding: '5px' }">
                 <WorkArea></WorkArea>
             </el-card>
-            <!-- <div class="multi_channel">
-                    <ChannelTable></ChannelTable>
-                </div>
-                <div class="tool_area">
-                    <WorkArea></WorkArea>
-                </div> -->
         </div>
         <div class="main_wrapper">
             <div class="chart_body" :key="itemKey" v-loading="loading">
                 <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
                 <FrequencyGraph :rowId=changeID()></FrequencyGraph>
                 <Spectrogram></Spectrogram>
-                <!-- <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading">
-                        <el-table-column>
-                            <template>
-                                <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
-                            </template>
-                        </el-table-column>
-                    </el-table> -->
             </div>
-
         </div>
         <div>
             <el-card :body-style="{ padding: '5px' }">
@@ -66,13 +52,6 @@ const changeID = () => {
     const id: string = Math.random() + ''
     console.log('rowId: ', id)
     return id
-}
-
-function getData() {
-    alert('dianji')
-    store.commit('getAllData')
-    // xData = store.getters.getDataX
-    // yData = store.getters.getDataY
 }
 
 </script>

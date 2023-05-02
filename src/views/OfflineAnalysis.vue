@@ -47,15 +47,15 @@ import { useStore } from 'vuex'
 import { computed } from '@vue/reactivity'
 const store = useStore<GlobalDataProps>()
 const formInline = reactive(computed(() => store.state.querydata))
-store.commit('getCurveData')
+store.dispatch('fetchCurveData')
 const onQuery = () => {
     store.commit('changeConditions', formInline.value)
-    store.commit('getCurveData')
+    store.dispatch('fetchCurveData')
 }
 
 const onViewChart = () => {
     router.push('/offline/ViewChart')
-    store.commit('getViewChartData')
+    store.commit('fetchViewChartData')
 }
 </script>
 

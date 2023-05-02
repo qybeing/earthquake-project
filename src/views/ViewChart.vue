@@ -106,7 +106,6 @@ const seeDetail = (row: any) => {
     router.push('/offline/DetailedChart')
     store.commit('changeChooseData', row.curve_info)
     store.commit('changeChannel', [row.curve_info.channel])
-    // store.commit('getAllData')
     store.dispatch('fetchWorkDataBefore')
 }
 
@@ -135,7 +134,7 @@ const onDetailedChart = () => {
     // store.commit('getDetailedChartData')
     console.log('formInline', formInline.value)
     store.commit('getWindow', formInline.value)
-    store.commit('getViewChartDataWithWindow')
+    store.dispatch('fetchViewChartData')
 }
 
 const onFullChart = () => {
@@ -144,7 +143,7 @@ const onFullChart = () => {
         fn: ''
     }
     store.commit('getWindow', defaultWindow)
-    store.commit('getViewChartDataWithWindow')
+    store.dispatch('fetchViewChartData')
 }
 
 const loading = computed(() => store.state.loading)
@@ -165,7 +164,7 @@ const changeID = () => {
 const onFilter = () => {
     console.log('过滤')
     store.commit('changeFilter', querydataform.value)
-    store.commit('getViewChartDataWithFilter')
+    store.dispatch('fetchViewChartData')
 }
 </script>
 <style scoped>

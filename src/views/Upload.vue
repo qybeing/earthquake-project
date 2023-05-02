@@ -27,7 +27,7 @@ import router from '@/router'
 import store from '@/store'
 const onAnalysis = () => {
     router.push('/offline/offlineAnalysis')
-    store.commit('getCurveData')
+    store.dispatch('fetchCurveData')
 }
 </script>
 

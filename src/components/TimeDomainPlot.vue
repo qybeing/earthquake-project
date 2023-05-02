@@ -53,40 +53,14 @@ type series = {
     data?: number[]
     markLine?: unknown
 }
-// const markLineInfo = {
-//     data: [{
-//         name: 'p',
-//         xAxis: 1665881646
-//     },
-//     {
-//         name: 's',
-//         xAxis: 1665881886
-//     }],
-//     label: {
-//         formatter: '{c}'
-//     },
-//     draggable: true,
-//     animation: false,
-//     silent: true
-// }
-// yData.markLine = markLineInfo
 type ySeriseProp = series[]
 const props = defineProps({
     rowId: {
         type: String,
         required: true
     }
-    // ts_list: {
-    //     type: Array as PropType<arrProp>,
-    //     required: true
-    // },
-    // ySerise: {
-    //     type: Array as PropType<ySeriseProp>,
-    //     required: true
-    // }
 })
-// watch(channels, () => initChart(store.getters.getDataY, xData))
-// watch(channels, () => console.log('更新 yData'))
+
 watch(() => ptime.value, () => {
     console.log('更新ptime')
     initChart(store.getters.getDataY, xData)
@@ -111,7 +85,7 @@ const changeMark = () => {
         stime.value = markData.x
         store.commit('changeSStartTime', stime.value)
     }
-    store.commit('change_p_s_start_time')
+    store.dispatch('fetchPSStarTime')
     open()
     dialogFormVisible.value = false
 }

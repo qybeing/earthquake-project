@@ -230,7 +230,7 @@ const sendWork = () => {
         arr.push(x.name)
     })
     store.commit('changeworkChoosedName', arr)
-    store.commit('getWorkData')
+    store.dispatch('fetchWorkData')
 }
 const chooseDialog = reactive({
     isDownSampling: false,
