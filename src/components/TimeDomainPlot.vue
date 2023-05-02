@@ -26,7 +26,7 @@
 
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
-import { onMounted, defineProps, watch, PropType, reactive, ref, onBeforeUnmount } from 'vue'
+import { onMounted, defineProps, watch, PropType, reactive, ref, onBeforeUnmount, nextTick } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
@@ -63,11 +63,11 @@ const props = defineProps({
 
 watch(() => ptime.value, () => {
     console.log('更新ptime')
-    initChart(store.getters.getDataY, xData)
+    initChart(store.getters.getDataY, store.getters.xData)
 }, { deep: true })
 watch(() => stime.value, () => {
     console.log('更新stime')
-    initChart(store.getters.getDataY, xData)
+    initChart(store.getters.getDataY, store.getters.xData)
 }, { deep: true })
 let chart: any = null
 onMounted(
@@ -92,20 +92,25 @@ const changeMark = () => {
 watch(() => store.state.chooseChannel, () => {
     channels = store.state.chooseChannel
     console.log('更新 yData')
-    initChart(store.getters.getDataY, xData)
+    initChart(store.getters.getDataY, store.getters.xData)
 })
 watch(() => store.state.allData, () => {
     channels = store.state.chooseChannel
     console.log('更新 allData')
-    initChart(store.getters.getDataY, xData)
+    console.log('更新 allData', store.getters.getDataY, store.getters.xData)
+    initChart(store.getters.getDataY, store.getters.xData)
 }, { deep: true })
 onMounted(() => {
+    console.log('时域图挂载完成', yData, xData)
     initChart(yData, xData)
     console.log('ptime: ', ptime)
     console.log('stime: ', stime)
 })
 onBeforeUnmount(() => {
     chart && chart.clear()
+})
+nextTick(() => {
+    initChart(yData, xData)
 })
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
     // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
@@ -160,8 +165,6 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
             }
         }
     )
-    // const chart = echarts.init(this.$refs[`echarts${props.rowId}`], 'white')
-    // 把配置和数据放这里
     chart.setOption(
         {
             backgroundColor: 'white',
@@ -180,11 +183,6 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
                 bottom: '3%',
                 containLabel: true
             },
-            // toolbox: {
-            //     feature: {
-            //         saveAsImage: {}
-            //     }
-            // },
             xAxis: {
                 type: 'category',
                 boundaryGap: false,

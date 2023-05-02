@@ -9,7 +9,6 @@
 <script lang="ts" setup>
 
 import { defineProps, onMounted, PropType, watch, ref, computed, ComputedRef, onBeforeUnmount } from 'vue'
-import axios from 'axios'
 import * as echarts from 'echarts'
 type arrProp = number[]
 const props = defineProps({
@@ -61,8 +60,6 @@ watch(props.curveData, () => {
     initChart(props.curveData, datax, title, ptime)
 })
 watch(() => props.p_start_time, () => console.log('props.p_start_time', props.p_start_time))
-// const refId = 'echarts' + props.rowId
-// const refId = computed(() => 'echarts' + props.rowId)
 
 // 时间戳转时间
 function timestampToTimeHMS(timestamp: number) {
@@ -90,8 +87,6 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
     console.log('props.rowId: ', props.rowId)
     console.log('props.curveData: ', props.curveData)
     const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
-    // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
-    // const chart = echarts.init(this.$refs[`echarts${props.rowId}`], 'white')
     // 把配置和数据放这里
     chart.setOption({
         title: {
@@ -160,31 +155,9 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
                 type: 'line',
                 symbol: 'none',
                 smooth: true
-                // markLine: {
-                //     symbol: ['none', 'none'], // 去掉箭头
-                //     lineStyle: {
-                //         type: 'solid',
-                //         color: 'rgba(164, 43, 43, 1)',
-                //         width: 1
-                //     },
-                //     label: {
-                //         show: true,
-                //         position: 'end',
-                //         formatter: '{b}',
-                //         textStyle: {
-                //             color: 'red', // 标注线终点文字颜色
-                //             fontSize: 20,
-                //             fontWeight: 500
-                //         }
-                //     },
-                //     data: [{
-                //         name: 'p',
-                //         xAxis: ptime // 这里设置false是隐藏不了的，可以设置为-1
-                //     }]
-                // }
             },
             {
-                name: '',
+                name: 'P',
                 type: 'line',
                 markLine: {
                     symbol: ['none', 'none'], // 去掉箭头

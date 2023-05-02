@@ -55,7 +55,7 @@ const onQuery = () => {
 
 const onViewChart = () => {
     router.push('/offline/ViewChart')
-    store.commit('fetchViewChartData')
+    store.dispatch('fetchViewChartData')
 }
 </script>
 

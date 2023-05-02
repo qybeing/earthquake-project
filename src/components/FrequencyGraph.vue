@@ -8,13 +8,13 @@
 <script lang="ts" setup>
 
 import * as echarts from 'echarts'
-import { onMounted, defineProps, watch, PropType, reactive, onBeforeUnmount } from 'vue'
+import { onMounted, defineProps, watch, PropType, reactive, onBeforeUnmount, computed } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
 let channels = reactive(store.state.chooseChannel)
-const xData = reactive(store.getters.getFreX)
-const yData = reactive(store.getters.getAmpY)
+const xData = reactive(computed(() => store.getters.getFreX))
+const yData = reactive(computed(() => store.getters.getAmpY))
 // type arrProp = number[]
 type series = {
     name: string
@@ -48,14 +48,14 @@ onMounted(
 watch(() => store.state.chooseChannel, () => {
     channels = store.state.chooseChannel
     console.log('更新 yData')
-    initChart(store.getters.getAmpY, xData)
+    initChart(yData.value, xData.value)
 })
 watch(() => store.state.allData, () => {
     channels = store.state.chooseChannel
     console.log('更新 allData')
-    initChart(store.getters.getAmpY, xData)
+    initChart(yData.value, xData.value)
 }, { deep: true })
-onMounted(() => initChart(yData, xData))
+onMounted(() => initChart(yData.value, xData.value))
 onBeforeUnmount(() => {
     chart && chart.clear()
 })
