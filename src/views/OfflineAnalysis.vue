@@ -22,6 +22,7 @@
                             </el-form-item>
                         </div>
                         <el-form-item>
+                            <el-button class="btn-seal" @click="exportExcel" type="primary" plain>导出Excel</el-button>
                             <el-button type="success" @click="onViewChart" :icon="DataAnalysis">批量查看</el-button>
                         </el-form-item>
                     </el-form>
@@ -37,6 +38,7 @@ import {
     Search,
     DataAnalysis
 } from '@element-plus/icons-vue'
+import htmlToExcel from '@/utils/htmlToExcel'
 import { ElMessage } from 'element-plus'
 // import QueryForm from '@/components/QueryForm'
 import DataTable from '@/components/DataTable.vue'
@@ -57,6 +59,11 @@ const onViewChart = () => {
     router.push('/offline/ViewChart')
     store.dispatch('fetchViewChartData')
 }
+
+function exportExcel() {
+    htmlToExcel.getExcel('#educe-table', '地震文件数据')
+}
+
 </script>
 
 <style scoped>

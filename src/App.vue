@@ -25,7 +25,6 @@ watch(() => error.value.status, () => {
         ElMessage.error(message)
       }
     })
-
 </script>
 
 <style>

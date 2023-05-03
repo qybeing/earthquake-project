@@ -1,5 +1,5 @@
 <template>
-    <el-table ref='multipleTableRef' :data="tableData" style="width: 100%" border v-loading="loading" empty-text="暂无数据"
+    <el-table id="educe-table" ref='multipleTableRef' :data="tableData" style="width: 100%" border v-loading="loading" empty-text="暂无数据"
         :cell-style="{ textAlign: 'center' }" :header-cell-style="{ textAlign: 'center' }"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="40" />
