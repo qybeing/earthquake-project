@@ -69,7 +69,6 @@ function exportExcel() {
 
 const checkNetwork = (rule: any, value: any, callback: any) => {
         setTimeout(() => {
-            console.log('表单value', value)
             const input = formInline.value.conditions.network
             if (input !== '') {
                 const reg = /^[A-Z]+$/
@@ -83,7 +82,6 @@ const checkNetwork = (rule: any, value: any, callback: any) => {
 }
 const checkStation = (rule: any, value: any, callback: any) => {
         setTimeout(() => {
-            console.log('表单value', value)
             const input = formInline.value.conditions.station
             if (input !== '') {
                 const reg = /^[A-Z]+$/
@@ -97,7 +95,6 @@ const checkStation = (rule: any, value: any, callback: any) => {
 }
 const checkChannel = (rule: any, value: any, callback: any) => {
         setTimeout(() => {
-            console.log('表单value', value)
             const input = formInline.value.conditions.channel
             if (input !== '') {
                 const reg = /^[A-Z]+$/
@@ -109,11 +106,10 @@ const checkChannel = (rule: any, value: any, callback: any) => {
             }
         }, 100)
 }
-
 const checkLocation = (rule: any, value: any, callback: any) => {
     setTimeout(() => {
         const input = formInline.value.conditions.location
-        console.log('location input: ', input)
+
         if (input !== '') {
             const reg = /^[0-9]+$/
             // console.log('!reg.test(value)') !Number.isInteger(input) ||

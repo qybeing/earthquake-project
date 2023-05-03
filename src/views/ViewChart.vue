@@ -22,22 +22,20 @@
                         </el-checkbox-group>
                     </div>
                     <div class="filter_style">
-                        <el-form :inline="true" :model="querydataform" class="demo-form-inline">
+                        <el-form :inline="true" :model="querydataform" ref="queryRuleFormRef" :rules="rules"
+                            class="demo-form-inline">
                             <div class="wrapper">
-                                <el-form-item label="台网">
+                                <el-form-item label="台网" prop="network">
                                     <el-input v-model="querydataform.network" />
                                 </el-form-item>
-                                <el-form-item label="台站">
+                                <el-form-item label="台站" prop="station">
                                     <el-input v-model="querydataform.station" />
                                 </el-form-item>
-                                <el-form-item label="位置">
+                                <el-form-item label="位置" prop="location">
                                     <el-input v-model="querydataform.location" />
                                 </el-form-item>
-                                <!-- <el-form-item label="频道">
-                                    <el-input v-model="querydataform.channel" />
-                                </el-form-item> -->
                                 <el-form-item>
-                                    <el-button type="success" @click="onFilter">过滤</el-button>
+                                    <el-button type="success" @click="submitForm(queryRuleFormRef)">过滤</el-button>
                                 </el-form-item>
                             </div>
                         </el-form>
@@ -89,6 +87,8 @@ import router from '@/router'
 import { useStore } from 'vuex'
 import { GlobalDataProps, WindowProp, DataProps } from '../store'
 import CurveGraph from '../components/CurveGraph.vue'
+import { ElMessage, FormInstance, FormRules } from 'element-plus'
+const queryRuleFormRef = ref<FormInstance>()
 const store = useStore<GlobalDataProps>()
 const tableData = reactive(computed(() => store.getters.getViewChartData))
 const numID = ref()
@@ -161,6 +161,66 @@ const onFilter = () => {
     store.commit('changeFilter', querydataform.value)
     store.dispatch('fetchViewChartData')
 }
+const checkNetwork = (rule: any, value: any, callback: any) => {
+    setTimeout(() => {
+        const input = querydataform.value.network
+        if (input !== '') {
+            const reg = /^[A-Z]+$/
+            if (!reg.test(input)) {
+                callback(new Error('请输入大写字母'))
+            } else {
+                callback()
+            }
+        }
+    }, 100)
+}
+const checkStation = (rule: any, value: any, callback: any) => {
+    setTimeout(() => {
+        const input = querydataform.value.station
+        if (input !== '') {
+            const reg = /^[A-Z]+$/
+            if (!reg.test(input)) {
+                callback(new Error('请输入大写字母'))
+            } else {
+                callback()
+            }
+        }
+    }, 100)
+}
+const checkLocation = (rule: any, value: any, callback: any) => {
+    setTimeout(() => {
+        const input = querydataform.value.location
+
+        if (input !== '') {
+            const reg = /^[0-9]+$/
+            // console.log('!reg.test(value)') !Number.isInteger(input) ||
+            if (!reg.test(input)) {
+                callback(new Error('请输入非负整数'))
+            } else {
+                callback()
+            }
+        }
+    }, 100)
+}
+const rules = reactive<FormRules>({
+    network: [{ validator: checkNetwork, trigger: 'blur' }],
+    station: [{ validator: checkStation, trigger: 'blur' }],
+    location: [{ validator: checkLocation, trigger: 'blur' }]
+})
+const submitForm = (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    formEl.validate((valid) => {
+        if (valid) {
+            onFilter()
+            console.log('submit!')
+        } else {
+            ElMessage.error('查询输入错误！')
+            console.log('error submit!')
+            return false
+        }
+    })
+}
+
 </script>
 <style scoped>
 .text_middle {
