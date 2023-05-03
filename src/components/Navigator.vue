@@ -6,7 +6,7 @@
                 地震大数据可视化分析平台
             </span></el-menu-item>
         <div class="flex-grow" />
-        <!-- <el-menu-item index="/test">测试</el-menu-item> -->
+        <el-menu-item index="/test">测试</el-menu-item>
         <el-menu-item index="/online/mapView">在线分析</el-menu-item>
         <el-menu-item index="/offline/upload">上传文件</el-menu-item>
         <!-- <el-menu-item index="/offline/offlineAnalysis" @click="onAnalysis">离线分析</el-menu-item> -->
@@ -36,19 +36,18 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const activeIndex = ref('/offline/upload')
-console.log('在导航组件中1', router)
+
 watch(
     router.currentRoute,
     (newValue, oldValue) => {
         activeIndex.value = newValue.fullPath
-        console.log('在导航组件中2', newValue.fullPath)
     },
     {
         deep: true,
         immediate: true
     }
 )
-// const activeIndex = this.router.path
+
 const handleSelect = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
