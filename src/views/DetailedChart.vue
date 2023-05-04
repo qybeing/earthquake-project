@@ -21,7 +21,7 @@
                 <Spectrogram></Spectrogram>
             </div>
         </div>
-        <div>
+        <div class="right_wrapper">
             <el-card :body-style="{ padding: '5px' }">
                 <FeatureArea></FeatureArea>
             </el-card>
@@ -58,14 +58,18 @@ const changeID = () => {
 
 <style scoped>
 .main_wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
     overflow: auto;
     border-radius: 4px;
+    background-color: #fff;
     border: 1px solid #e4e7ed;
 }
 
 .total_wrapper {
     display: grid;
     grid-template-columns: 200px 1fr 220px;
+    grid-template-rows: 1fr;
     grid-gap: 2px;
 }
 
@@ -77,6 +81,12 @@ const changeID = () => {
     grid-gap: 2px;
     /*  声明行的高度  */
     grid-template-rows: 50px 170px 1fr;
+}
+.right_wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    overflow: auto;
+    background-color: #fff;
 }
 
 .little_title {

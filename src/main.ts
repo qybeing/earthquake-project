@@ -17,7 +17,7 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(config => {
     setTimeout(() => {
         store.commit('setLoading', false)
-    }, 500)
+    }, 10)
     return config
 }, e => {
     console.log('报错： ', e)

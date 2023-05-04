@@ -6,8 +6,7 @@
                     <el-form :inline="true" ref="ruleFormRef" :rules="rules" :model="formInline" class="demo-form-inline">
                         <div class="wrapper">
                             <el-form-item label="台网:" prop="network">
-                                <el-input v-model="formInline.conditions.network"
-                                autocomplete="off" />
+                                <el-input v-model="formInline.conditions.network" autocomplete="off" />
                             </el-form-item>
                             <el-form-item label="台站:" prop="station">
                                 <el-input v-model="formInline.conditions.station" />
@@ -15,8 +14,12 @@
                             <el-form-item label="位置:" prop="location">
                                 <el-input v-model="formInline.conditions.location" />
                             </el-form-item>
-                            <el-form-item label="频道:" prop="channel">
-                                <el-input v-model="formInline.conditions.channel" />
+                            <el-form-item label="频道:">
+                                <!-- <el-input v-model="formInline.conditions.channel" /> -->
+                                <el-select v-model="formInline.conditions.channel" placeholder="Select">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label"
+                                        :value="item.value" />
+                                </el-select>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" :icon="Search" @click="submitForm(ruleFormRef)">查询</el-button>
@@ -51,6 +54,24 @@ import { computed } from '@vue/reactivity'
 const ruleFormRef = ref<FormInstance>()
 const store = useStore<GlobalDataProps>()
 const formInline = reactive(computed(() => store.state.querydata))
+const options: { value: string; label: string }[] = [
+    {
+        value: '',
+        label: '全部'
+    },
+    {
+        value: 'BHE',
+        label: 'BHE'
+    },
+    {
+        value: 'BHN',
+        label: 'BHN'
+    },
+    {
+        value: 'BHZ',
+        label: 'BHZ'
+    }
+]
 
 onMounted(() => store.dispatch('fetchCurveData'))
 const onQuery = () => {
@@ -68,43 +89,43 @@ function exportExcel() {
 }
 
 const checkNetwork = (rule: any, value: any, callback: any) => {
-        setTimeout(() => {
-            const input = formInline.value.conditions.network
-            if (input !== '') {
-                const reg = /^[A-Z]+$/
-                if (!reg.test(input)) {
-                    callback(new Error('请输入大写字母'))
-                } else {
-                    callback()
-                }
+    setTimeout(() => {
+        const input = formInline.value.conditions.network
+        if (input !== '') {
+            const reg = /^[A-Z]+$/
+            if (!reg.test(input)) {
+                callback(new Error('请输入大写字母'))
+            } else {
+                callback()
             }
-        }, 100)
+        }
+    }, 100)
 }
 const checkStation = (rule: any, value: any, callback: any) => {
-        setTimeout(() => {
-            const input = formInline.value.conditions.station
-            if (input !== '') {
-                const reg = /^[A-Z]+$/
-                if (!reg.test(input)) {
-                    callback(new Error('请输入大写字母'))
-                } else {
-                    callback()
-                }
+    setTimeout(() => {
+        const input = formInline.value.conditions.station
+        if (input !== '') {
+            const reg = /^[A-Z]+$/
+            if (!reg.test(input)) {
+                callback(new Error('请输入大写字母'))
+            } else {
+                callback()
             }
-        }, 100)
+        }
+    }, 100)
 }
 const checkChannel = (rule: any, value: any, callback: any) => {
-        setTimeout(() => {
-            const input = formInline.value.conditions.channel
-            if (input !== '') {
-                const reg = /^[A-Z]+$/
-                if (!reg.test(input)) {
-                    callback(new Error('请输入大写字母'))
-                } else {
-                    callback()
-                }
+    setTimeout(() => {
+        const input = formInline.value.conditions.channel
+        if (input !== '') {
+            const reg = /^[A-Z]+$/
+            if (!reg.test(input)) {
+                callback(new Error('请输入大写字母'))
+            } else {
+                callback()
             }
-        }, 100)
+        }
+    }, 100)
 }
 const checkLocation = (rule: any, value: any, callback: any) => {
     setTimeout(() => {
@@ -125,22 +146,25 @@ const checkLocation = (rule: any, value: any, callback: any) => {
 const rules = reactive<FormRules>({
     network: [{ validator: checkNetwork, trigger: 'blur' }],
     station: [{ validator: checkStation, trigger: 'blur' }],
-    channel: [{ validator: checkChannel, trigger: 'blur' }],
+    // channel: [{ validator: checkChannel, trigger: 'blur' }],
     location: [{ validator: checkLocation, trigger: 'blur' }]
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid) {
-        onQuery()
-      console.log('submit!')
-    } else {
-        ElMessage.error('查询输入错误！')
-      console.log('error submit!')
-      return false
+    if (!formEl) {
+        console.log('!formEl')
+       return
     }
-  })
+    formEl.validate((valid) => {
+        if (valid) {
+            onQuery()
+            console.log('submit!')
+        } else {
+            ElMessage.error('查询输入错误！')
+            console.log('error submit!')
+            return false
+        }
+    })
 }
 
 </script>
@@ -148,7 +172,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 <style scoped>
 .box-card {
     width: 100%;
-    overflow: hidden scroll;
+    overflow: hidden;
 }
 
 .card-header {
@@ -172,7 +196,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     display: grid;
     place-items: center;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(6, 140px);
+    grid-template-columns: repeat(6, 150px);
     /*  声明行间距和列间距  */
     grid-gap: 5px;
     /*  声明行的高度  */
