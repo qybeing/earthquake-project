@@ -60,7 +60,8 @@ const changeID = () => {
 .main_wrapper {
     display: grid;
     grid-template-rows: 1fr;
-    overflow: auto;
+    /* overflow: auto; */
+    overflow: overlay;
     border-radius: 4px;
     background-color: #fff;
     border: 1px solid #e4e7ed;
