@@ -174,7 +174,16 @@ const sendWork = () => {
         arr.push(x.name)
     })
     store.commit('changeworkChoosedName', arr)
-    store.dispatch('fetchWorkData')
+    // store.dispatch('fetchWorkData')
+    store.dispatch('fetchTimeDomainInfo')
+        .then(
+            () => store.dispatch('fetchFrequencyDomainInfo'))
+        .then(
+            () => store.dispatch('fetchTimeFrequencyInfo')
+        )
+        .then(
+            () => store.dispatch('fetchFeatureExtractionInfo')
+        )
 }
 const chooseDialog = reactive({
     isDownSampling: false,

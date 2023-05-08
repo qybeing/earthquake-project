@@ -26,13 +26,13 @@
 
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
-import { onMounted, defineProps, watch, PropType, reactive, ref, onBeforeUnmount, nextTick } from 'vue'
+import { onMounted, defineProps, watch, PropType, reactive, ref, onBeforeUnmount, nextTick, computed } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
 let channels = reactive(store.state.chooseChannel)
-const xData = reactive(store.getters.getDataX)
-const yData = reactive(store.getters.getDataY)
+const xData = reactive(computed(() => store.getters.getDataX))
+const yData = reactive(computed(() => store.getters.getDataY))
 const ptime = ref(store.state.ptime)
 const stime = ref(store.state.stime)
 // type arrProp = number[]
@@ -96,13 +96,13 @@ watch(() => store.state.chooseChannel, () => {
 })
 watch(() => store.state.allData, () => {
     channels = store.state.chooseChannel
-    console.log('更新 allData')
+    console.log('TimeDomainPlot更新 allData')
     console.log('更新 allData', store.getters.getDataY, store.getters.xData)
     initChart(store.getters.getDataY, store.getters.xData)
-}, { deep: true })
+}, { deep: true, immediate: true })
 onMounted(() => {
     console.log('时域图挂载完成', yData, xData)
-    initChart(yData, xData)
+    initChart(yData.value, xData.value)
     console.log('ptime: ', ptime)
     console.log('stime: ', stime)
 })
@@ -110,7 +110,7 @@ onBeforeUnmount(() => {
     chart && chart.clear()
 })
 nextTick(() => {
-    initChart(yData, xData)
+    initChart(yData.value, xData.value)
 })
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
     // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
@@ -209,4 +209,5 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
         // alert(JSON.stringify(data))
     })
 }
+
 </script>

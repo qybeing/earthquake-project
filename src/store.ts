@@ -3,6 +3,13 @@ import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
 import { ca } from 'element-plus/es/locale'
 
+function deepMergeFun(obj1: any, obj2: any) {
+    for (const key in obj2) {
+        obj1[key] = obj1[key] && obj1[key].toString() === '[object Object]' ? deepMergeFun(obj1[key], obj2[key]) : obj1[key] = obj2[key]
+    }
+    return obj1
+}
+
 export interface GlobalErrorProps {
     status: boolean;
     message?: string;
@@ -143,6 +150,9 @@ export interface GlobalDataProps {
     // 滤波参数
     workFilterProps: WorkFilterProps
 
+    // 频谱图
+    png_name: string
+
 }
 
 const store = createStore<GlobalDataProps>({
@@ -235,9 +245,13 @@ const store = createStore<GlobalDataProps>({
             df: 100,
             corners: 4,
             zerophase: 'False'
-        }
+        },
+        png_name: ''
     },
     mutations: {
+        setPng_name(state, png) {
+            state.png_name = png
+        },
         setError(state, e: GlobalErrorProps) {
             state.error = e
         },
@@ -301,9 +315,14 @@ const store = createStore<GlobalDataProps>({
             state.querydata = newConditions
         },
         fetchWorkData(state, data) {
-            state.allData = Object.values(data.res)
-            state.ptime = (Date.parse(state.allData[0].curve_info.p_start_time) / 1000).toString()
-            state.stime = (Date.parse(state.allData[0].curve_info.s_start_time || '') / 1000).toString()
+            state.allData = deepMergeFun(state.allData, data.res)
+            // state.allData = Object.values(data.res)
+            if (state.allData.length > 0 && Reflect.has(state.allData[0], 'curve_info')) {
+                state.ptime = (Date.parse(state.allData[0].curve_info.p_start_time) / 1000).toString()
+                state.stime = (Date.parse(state.allData[0].curve_info.s_start_time || '') / 1000).toString()
+            }
+
+            console.log('state.allData更新啦！ ', state.allData)
         },
         fetchViewChartData(state, data) {
             state.viewChartData = Object.values(data.res)
@@ -337,6 +356,38 @@ const store = createStore<GlobalDataProps>({
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
+            context.commit('fetchWorkData', data)
+        },
+        // 请求时域图数据
+        async fetchTimeDomainInfo(context) {
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_domain_info'
+            const args = context.getters.getWorkDataArgs
+            const { data } = await axios.post(url, args)
+            console.log('请求时域图数据', data)
+            context.commit('fetchWorkData', data)
+        },
+        // 请求频域图数据
+        async fetchFrequencyDomainInfo(context) {
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_frequency_domain_info'
+            const args = context.getters.getWorkDataArgs
+            const { data } = await axios.post(url, args)
+            console.log('请求频域图数据', data)
+            context.commit('fetchWorkData', data)
+        },
+        // 请求频谱图地址
+        async fetchTimeFrequencyInfo(context) {
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_frequency_info'
+            const args = context.getters.getWorkDataArgs
+            const { data } = await axios.post(url, args)
+            console.log('频谱图地址 ', data)
+            context.commit('setPng_name', data.t_f_png_name)
+        },
+        // 请求预处理和特征提取数据
+        async fetchFeatureExtractionInfo(context) {
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_feature_extraction_info'
+            const args = context.getters.getWorkDataArgs
+            const { data } = await axios.post(url, args)
+            console.log('请求预处理和特征提取数据', data)
             context.commit('fetchWorkData', data)
         },
         // 请求曲线数据表格信息（传入条件查询参数）

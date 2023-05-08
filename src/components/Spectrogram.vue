@@ -3,19 +3,7 @@
         <!-- <img :src="imgFun('test_png.png')" /> -->
         <!-- <img src="../assets/home/img/response.png" /> -->
         <!-- <img src="https://p1.ssl.qhimg.com/t0118332e529a5c2001.jpg" alt="BHE"> -->
-        <img id="BHE" :src="getUrl('BHE')" alt="BHE" @error="errorImg($event)">
-    </div>
-    <div class="div1" v-if="choosedchannels.includes('BHN')">
-        <!-- <img :src="imgFun('test_png.png')" /> -->
-        <!-- <img src="../assets/home/img/test.png" /> -->
-        <!-- <img src="../assets/home/img/response.png" /> -->
-        <!-- <img src="https://p1.ssl.qhimg.com/t0118332e529a5c2001.jpg"  alt="BHN"/> -->
-        <img id="BHN" :src="getUrl('BHN')" alt="BHN" @error="errorImg($event)">
-    </div>
-    <div class="div1" v-if="choosedchannels.includes('BHZ')">
-        <!-- <img :src="imgFun('test_png.png')" /> -->
-        <!-- <img src="https://p1.ssl.qhimg.com/t0118332e529a5c2001.jpg"  alt="BHZ"> -->
-        <img id="BHZ" :src="getUrl('BHZ')" alt="BHZ" @error="errorImg($event)">
+        <img id="BHE" :src="pngName" alt="BHE" @error="errorImg($event)">
     </div>
 </template>
 
@@ -24,17 +12,12 @@ import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
 // import defaultImage from '../assets/home/img/response.png'
+const pre = 'http://202.199.13.154:5100/offline_curve_analysis/tf_pngs?png_name='
 const store = useStore<GlobalDataProps>()
 const choosedchannels = reactive(computed(() => store.state.chooseChannel))
-const info = reactive(computed(() => store.state.chooseData))
-const preInfo = computed(() =>
-    info.value.network + '.' + info.value.station + '.' + info.value.location + '.'
-)
+const pngName = ref(computed(() => pre + store.state.png_name))
 
-function getUrl(channel: string) {
-    return preInfo.value + channel
-}
-function errorImg(e) {
+function errorImg(e:any) {
     console.log('image load failed')
     console.log(e.srcElement
         .id)
