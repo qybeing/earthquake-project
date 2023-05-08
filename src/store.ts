@@ -6,7 +6,7 @@ import { ca } from 'element-plus/es/locale'
 export interface GlobalErrorProps {
     status: boolean;
     message?: string;
-  }
+}
 //  巴特沃斯滤波器
 export interface WorkFilterProps {
     freq?: number,
@@ -240,7 +240,7 @@ const store = createStore<GlobalDataProps>({
     mutations: {
         setError(state, e: GlobalErrorProps) {
             state.error = e
-          },
+        },
         changeSeeChannel(state, channels) {
             state.seeChannel = channels
         },
@@ -327,22 +327,83 @@ const store = createStore<GlobalDataProps>({
     actions: {
         // 请求初始详细分析页面的所有频道数据
         async fetchWorkDataBefore(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            const args = context.getters.getWorkDataBeforeArgs
+            const { data } = await axios.post(url, args)
+            context.commit('fetchWorkData', data)
+        },
+        // 请求工作区操作后的数据
+        async fetchWorkData(context) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            const args = context.getters.getWorkDataArgs
+            const { data } = await axios.post(url, args)
+            context.commit('fetchWorkData', data)
+        },
+        // 请求曲线数据表格信息（传入条件查询参数）
+        async fetchCurveData(context) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
+            const formData = new FormData()
+            formData.append('args', JSON.stringify(context.state.querydata))
+            const { data } = await axios.post(url, formData)
+            context.commit('fetchCurveData', data)
+        },
+        // 请求批量查看曲线图
+        async fetchViewChartData(context) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const formData = new FormData()
+            const obj = {
+                curve_ids: context.state.chooses,
+                window: context.state.window,
+                filters: context.state.filter
+            }
+            formData.append('args', JSON.stringify(obj))
+            const { data } = await axios.post(url, formData)
+            context.commit('fetchViewChartData', data)
+        },
+        // 从地图发起请求查看曲线图
+        async fetchViewChartDataFromMap(context) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const formData = new FormData()
+            const obj = {
+                curve_ids: ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
+                window: { window_len: '5s', fn: '' }
+            }
+            formData.append('args', JSON.stringify(obj))
+            const { data } = await axios.post(url, formData)
+            context.commit('fetchViewChartData', data)
+        },
+        // 请求更新p波s波
+        async fetchPSStarTime(context) {
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
+            const formData = new FormData()
+            const args = {
+                curve_id: context.state.chooses[0],
+                p_start_time: context.state.ptime,
+                s_start_time: context.state.stime
+            }
+            formData.append('args', JSON.stringify(args))
+            const { data } = await axios.post(url, formData)
+            console.log('请求更新p波s波', data)
+        }
+    },
+    getters: {
+        getWorkDataBeforeArgs(state) {
             const formData = new FormData()
             const obj: WorkToSend = {}
-            context.state.workChoosedName.forEach(x => {
+            state.workChoosedName.forEach(x => {
                 switch (x) {
                     case 'DownSampling':
-                        obj.downsample = context.state.workChoose.DownSampling
+                        obj.downsample = state.workChoose.DownSampling
                         break
                     case 'GoRespond':
-                        obj.divide_sensitivity = context.state.workChoose.GoRespond
+                        obj.divide_sensitivity = state.workChoose.GoRespond
                         break
                     case 'Normalization':
-                        obj.normalization = context.state.workChoose.Normalization
+                        obj.normalization = state.workChoose.Normalization
                 }
             })
-            const pretitle = context.state.chooseData.curve_id.slice(0, 10)
+            const pretitle = state.chooseData.curve_id.slice(0, 10)
             const ids: string[] = []
             ids.push(pretitle + 'BHE')
             ids.push(pretitle + 'BHN')
@@ -352,37 +413,34 @@ const store = createStore<GlobalDataProps>({
                 pretreatment_args: obj
             }
             formData.append('args', JSON.stringify(args))
-            const { data } = await axios.post(url, formData)
-            context.commit('fetchWorkData', data)
+            return formData
         },
-        // 请求工作区操作后的数据
-        async fetchWorkData(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
+        getWorkDataArgs(state) {
             const formData = new FormData()
             const obj: WorkToSend = {}
             const filter = {
                 filter_name: '',
                 filter_args: <any>[]
             }
-            context.state.workChoosedName.forEach(x => {
+            state.workChoosedName.forEach(x => {
                 switch (x) {
                     case 'DownSampling':
-                        obj.downsample = context.state.workChoose.DownSampling
+                        obj.downsample = state.workChoose.DownSampling
                         break
                     case 'GoRespond':
-                        obj.divide_sensitivity = context.state.workChoose.GoRespond
+                        obj.divide_sensitivity = state.workChoose.GoRespond
                         break
                     case 'Normalization':
-                        obj.normalization = context.state.workChoose.Normalization
+                        obj.normalization = state.workChoose.Normalization
                         break
                     // 在这里写滤波逻辑
                     case 'Filtering':
-                        filter.filter_name = context.state.workChoose.filter
+                        filter.filter_name = state.workChoose.filter
                 }
             })
-            const pretitle = context.state.chooseData.curve_id.slice(0, 10)
+            const pretitle = state.chooseData.curve_id.slice(0, 10)
             const ids: string[] = []
-            context.state.chooseChannel.forEach(x => {
+            state.chooseChannel.forEach(x => {
                 ids.push(pretitle + x)
             })
             interface argsProps {
@@ -397,75 +455,25 @@ const store = createStore<GlobalDataProps>({
             if (filter.filter_name !== '') {
                 if (filter.filter_name === 'bandpass') {
                     const arr: (string | number | undefined)[] = []
-                    arr[0] = context.state.workFilterProps.freqmin
-                    arr[1] = context.state.workFilterProps.freqmax
-                    arr[2] = context.state.workFilterProps.df
-                    arr[3] = context.state.workFilterProps.corners
-                    arr[4] = context.state.workFilterProps.zerophase
+                    arr[0] = state.workFilterProps.freqmin
+                    arr[1] = state.workFilterProps.freqmax
+                    arr[2] = state.workFilterProps.df
+                    arr[3] = state.workFilterProps.corners
+                    arr[4] = state.workFilterProps.zerophase
                     filter.filter_args = arr
                 } else if (filter.filter_name === 'highpass' || filter.filter_name === 'lowpass') {
                     const arr: (string | number | undefined)[] = []
-                    arr[0] = context.state.workFilterProps.freq
-                    arr[1] = context.state.workFilterProps.df
-                    arr[2] = context.state.workFilterProps.corners
-                    arr[3] = context.state.workFilterProps.zerophase
+                    arr[0] = state.workFilterProps.freq
+                    arr[1] = state.workFilterProps.df
+                    arr[2] = state.workFilterProps.corners
+                    arr[3] = state.workFilterProps.zerophase
                     filter.filter_args = arr
                 }
                 args.filter = filter
             }
             formData.append('args', JSON.stringify(args))
-            console.log('formdata: ', formData)
-            const { data } = await axios.post(url, formData)
-            context.commit('fetchWorkData', data)
+            return formData
         },
-        // 请求曲线数据表格信息（传入条件查询参数）
-        async fetchCurveData(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_with_condition'
-            const formData = new FormData()
-            formData.append('args', JSON.stringify(context.state.querydata))
-            const { data } = await axios.post(url, formData)
-            context.commit('fetchCurveData', data)
-        },
-        // 请求批量查看曲线图
-        async fetchViewChartData(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
-            const formData = new FormData()
-            const obj = {
-                curve_ids: context.state.chooses,
-                window: context.state.window,
-                filters: context.state.filter
-            }
-            formData.append('args', JSON.stringify(obj))
-            const { data } = await axios.post(url, formData)
-            context.commit('fetchViewChartData', data)
-        },
-        // 从地图发起请求查看曲线图
-        async fetchViewChartDataFromMap(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
-            const formData = new FormData()
-            const obj = {
-                curve_ids: ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
-                window: { window_len: '5s', fn: '' }
-            }
-            formData.append('args', JSON.stringify(obj))
-            const { data } = await axios.post(url, formData)
-            context.commit('fetchViewChartData', data)
-        },
-        // 请求更新p波s波
-        async fetchPSStarTime(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/change_p_s_start_time'
-            const formData = new FormData()
-            const args = {
-                curve_id: context.state.chooses[0],
-                p_start_time: context.state.ptime,
-                s_start_time: context.state.stime
-            }
-            formData.append('args', JSON.stringify(args))
-            const { data } = await axios.post(url, formData)
-            console.log('请求更新p波s波', data)
-        }
-    },
-    getters: {
         getViewChartData(state) {
             const res: PointProps[] = []
             state.viewChartData.forEach(
