@@ -80,8 +80,9 @@ const onQuery = () => {
 }
 
 const onViewChart = () => {
-    router.push('/offline/ViewChart')
-    store.dispatch('fetchViewChartData')
+    store.dispatch('fetchViewChartData').then(
+        () => router.push('/offline/ViewChart')
+    )
 }
 
 function exportExcel() {

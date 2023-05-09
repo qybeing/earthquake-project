@@ -106,10 +106,10 @@ const loading = computed(() => store.state.loading)
 }
 
 .domain_title {
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: bold;
-  border-bottom: 1px solid;
-  margin-bottom: 1.9px;
+  border-bottom: 0.9px solid;
+  margin-bottom: 1.8px;
   color: rgb(151, 151, 151);
 }
 </style>
