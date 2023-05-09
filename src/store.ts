@@ -295,7 +295,7 @@ const store = createStore<GlobalDataProps>({
             state.ptime = pt
         },
         changeSStartTime(state, st) {
-            state.ptime = st
+            state.stime = st
         },
         // changeFeatureInfo(state) {
         //     state.allData.forEach(data => {

@@ -35,6 +35,8 @@ let channels = reactive(store.state.chooseChannel)
 const xData = reactive(store.getters.getDataX)
 const yData = reactive(store.getters.getDataY)
 const ptime = ref(store.state.ptime)
+// const ptime = ref(computed(() => store.state.ptime))
+// const stime = computed(() => store.state.stime)
 const stime = ref(store.state.stime)
 // type arrProp = number[]
 const markData = reactive({ x: '0', y: '0' })
@@ -71,12 +73,12 @@ watch(() => store.state.timePointData, () => {
     console.log('时域图更新 timePointData', store.state.timePointData)
     initChart(store.getters.getDataY, store.getters.xData)
 }, { deep: true })
-watch(() => ptime.value, () => {
-    console.log('更新ptime')
+watch(() => store.state.ptime, () => {
+    console.log('更新ptime', store.state.ptime)
     initChart(store.getters.getDataY, store.getters.xData)
 }, { deep: true })
-watch(() => stime.value, () => {
-    console.log('更新stime')
+watch(() => store.state.stime, () => {
+    console.log('更新stime', store.state.stime)
     initChart(store.getters.getDataY, store.getters.xData)
 }, { deep: true })
 let chart: any = null
@@ -99,11 +101,11 @@ const changeMark = () => {
     // store.commit('changeDownSampling', n)
     // chooseDialog.isDownSampling = false
     if (radio.value === 'p') {
-        ptime.value = markData.x
-        store.commit('changePStartTime', ptime.value)
+        const pValue = markData.x
+        store.commit('changePStartTime', pValue)
     } else {
-        stime.value = markData.x
-        store.commit('changeSStartTime', stime.value)
+        const sValue = markData.x
+        store.commit('changeSStartTime', sValue)
     }
     store.dispatch('fetchPSStarTime')
     open()
@@ -149,6 +151,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
                 data: [{
                     name: 'P',
                     xAxis: ptime.value, // 这里设置false是隐藏不了的，可以设置为-1
+                    // xAxis: store.state.ptime, // 这里设置false是隐藏不了的，可以设置为-1
                     lineStyle: {
                         color: 'red'
                     },
@@ -161,6 +164,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
                 {
                     name: 'S',
                     xAxis: stime.value,
+                    // xAxis: store.state.ptime,
                     lineStyle: {
                         color: 'blue'
                     },
