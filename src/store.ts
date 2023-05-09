@@ -486,17 +486,19 @@ const store = createStore<GlobalDataProps>({
             context.commit('fetchViewChartData', data)
         },
         // 请求更新p波s波
-        async fetchPSStarTime(context) {
+        async fetchPSStarTime(context, payload) {
             // const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
             const formData = new FormData()
             const args = {
-                curve_id: context.state.chooses[0],
-                p_start_time: context.state.ptime,
-                s_start_time: context.state.stime
+                curve_id: context.state.chooseData.curve_id,
+                p_start_time: payload.p_time,
+                s_start_time: payload.s_time
             }
             formData.append('args', JSON.stringify(args))
             const { data } = await axios.post(url, formData)
+            store.commit('changePStartTime', payload.p_time)
+            store.commit('changeSStartTime', payload.s_time)
             console.log('请求更新p波s波', data)
         }
     },

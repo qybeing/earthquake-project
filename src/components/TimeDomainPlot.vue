@@ -34,10 +34,10 @@ const store = useStore<GlobalDataProps>()
 let channels = reactive(store.state.chooseChannel)
 const xData = reactive(store.getters.getDataX)
 const yData = reactive(store.getters.getDataY)
-const ptime = ref(store.state.ptime)
-// const ptime = ref(computed(() => store.state.ptime))
-// const stime = computed(() => store.state.stime)
-const stime = ref(store.state.stime)
+// const ptime = ref(store.state.ptime)
+const ptime = computed(() => store.state.ptime)
+const stime = computed(() => store.state.stime)
+// const stime = ref(store.state.stime)
 // type arrProp = number[]
 const markData = reactive({ x: '0', y: '0' })
 const dialogFormVisible = ref(false)
@@ -65,22 +65,23 @@ const props = defineProps({
 })
 watch(() => store.state.chooseChannel, () => {
     channels = store.state.chooseChannel
-    console.log('更新 yData')
-    initChart(store.getters.getDataY, store.getters.xData)
+    console.log('1.更新 yData', ptime.value, stime.value)
+    console.log('1.更新 yData getDataX', store.getters.getDataX)
+    initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
 })
 watch(() => store.state.timePointData, () => {
     channels = store.state.chooseChannel
-    console.log('时域图更新 timePointData', store.state.timePointData)
-    initChart(store.getters.getDataY, store.getters.xData)
+    console.log('2.时域图更新 timePointData', ptime.value, stime.value)
+    initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
 }, { deep: true })
 watch(() => store.state.ptime, () => {
-    console.log('更新ptime', store.state.ptime)
-    initChart(store.getters.getDataY, store.getters.xData)
-}, { deep: true })
+    console.log('3.更新ptime', store.state.ptime, ptime.value)
+    initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
+})
 watch(() => store.state.stime, () => {
-    console.log('更新stime', store.state.stime)
-    initChart(store.getters.getDataY, store.getters.xData)
-}, { deep: true })
+    console.log('4.更新stime', store.state.stime, stime.value)
+    initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
+})
 let chart: any = null
 onMounted(
     // async () => {
@@ -93,21 +94,25 @@ onMounted(
         chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
         // const data = await store.dispatch('fetchTimeDomainInfo')
         // console.log('await store.dispatch(fetchTimeDomainInf) 的返回值', getDataY.value)
-        initChart(store.getters.getDataY, store.getters.xData)
+        // initChart(store.getters.getDataY, store.getters.xData, ptime.value, stime.value)
     }
 )
 
 const changeMark = () => {
     // store.commit('changeDownSampling', n)
     // chooseDialog.isDownSampling = false
-    if (radio.value === 'p') {
-        const pValue = markData.x
-        store.commit('changePStartTime', pValue)
-    } else {
-        const sValue = markData.x
-        store.commit('changeSStartTime', sValue)
+    const payload = {
+        p_time: ptime.value,
+        s_time: stime.value
     }
-    store.dispatch('fetchPSStarTime')
+    if (radio.value === 'p') {
+        payload.p_time = markData.x
+        // store.commit('changePStartTime', pValue)
+    } else {
+        payload.s_time = markData.x
+        // store.commit('changeSStartTime', sValue)
+    }
+    store.dispatch('fetchPSStarTime', payload)
     open()
     dialogFormVisible.value = false
 }
@@ -115,17 +120,17 @@ const changeMark = () => {
 onMounted(() => {
     // store.dispatch('fetchTimeDomainInfo')
     console.log('时域图挂载完成', yData, xData)
-    initChart(yData, xData)
-    console.log('ptime: ', ptime)
-    console.log('stime: ', stime)
+    // initChart(yData, xData)
+    console.log('ptime: ', ptime.value)
+    console.log('stime: ', stime.value)
 })
 onBeforeUnmount(() => {
     chart && chart.clear()
 })
-nextTick(() => {
-    initChart(yData, xData)
-})
-function initChart(ySerise: ySeriseProp, xData: Array<number>) {
+// nextTick(() => {
+//     initChart(store.getters.getDataY, store.getters.xData, ptime.value, stime.value)
+// })
+function initChart(ySerise: ySeriseProp, xData: Array<number>, pPoint: string, sPoint: string) {
     // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     ySerise.push(
         {
@@ -150,7 +155,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
                 },
                 data: [{
                     name: 'P',
-                    xAxis: ptime.value, // 这里设置false是隐藏不了的，可以设置为-1
+                    xAxis: pPoint, // 这里设置false是隐藏不了的，可以设置为-1
                     // xAxis: store.state.ptime, // 这里设置false是隐藏不了的，可以设置为-1
                     lineStyle: {
                         color: 'red'
@@ -163,7 +168,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
                 },
                 {
                     name: 'S',
-                    xAxis: stime.value,
+                    xAxis: sPoint,
                     // xAxis: store.state.ptime,
                     lineStyle: {
                         color: 'blue'
