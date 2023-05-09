@@ -26,13 +26,14 @@
 
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
-import { onMounted, defineProps, watch, PropType, reactive, ref, onBeforeUnmount, nextTick, computed } from 'vue'
-import { GlobalDataProps } from '@/store'
+import { onMounted, defineProps, watch, reactive, ref, onBeforeUnmount, nextTick } from 'vue'
+import { GlobalDataProps, YDataProps } from '@/store'
 import { useStore } from 'vuex'
+import { computed } from '@vue/reactivity'
 const store = useStore<GlobalDataProps>()
 let channels = reactive(store.state.chooseChannel)
-const xData = reactive(computed(() => store.getters.getDataX))
-const yData = reactive(computed(() => store.getters.getDataY))
+const xData = reactive(store.getters.getDataX)
+const yData = reactive(store.getters.getDataY)
 const ptime = ref(store.state.ptime)
 const stime = ref(store.state.stime)
 // type arrProp = number[]
@@ -60,7 +61,16 @@ const props = defineProps({
         required: true
     }
 })
-
+watch(() => store.state.chooseChannel, () => {
+    channels = store.state.chooseChannel
+    console.log('更新 yData')
+    initChart(store.getters.getDataY, store.getters.xData)
+})
+watch(() => store.state.timePointData, () => {
+    channels = store.state.chooseChannel
+    console.log('时域图更新 timePointData', store.state.timePointData)
+    initChart(store.getters.getDataY, store.getters.xData)
+}, { deep: true })
 watch(() => ptime.value, () => {
     console.log('更新ptime')
     initChart(store.getters.getDataY, store.getters.xData)
@@ -71,10 +81,20 @@ watch(() => stime.value, () => {
 }, { deep: true })
 let chart: any = null
 onMounted(
+    // async () => {
+    //     chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+    //     const data = await store.dispatch('fetchTimeDomainInfo')
+    //     console.log('await store.dispatch(fetchTimeDomainInf) 的返回值', getDataY.value)
+    //     initChart(getDataY.value, getDataX.value)
+    // }
     () => {
         chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
+        // const data = await store.dispatch('fetchTimeDomainInfo')
+        // console.log('await store.dispatch(fetchTimeDomainInf) 的返回值', getDataY.value)
+        initChart(store.getters.getDataY, store.getters.xData)
     }
 )
+
 const changeMark = () => {
     // store.commit('changeDownSampling', n)
     // chooseDialog.isDownSampling = false
@@ -89,20 +109,11 @@ const changeMark = () => {
     open()
     dialogFormVisible.value = false
 }
-watch(() => store.state.chooseChannel, () => {
-    channels = store.state.chooseChannel
-    console.log('更新 yData')
-    initChart(store.getters.getDataY, store.getters.xData)
-})
-watch(() => store.state.allData, () => {
-    channels = store.state.chooseChannel
-    console.log('TimeDomainPlot更新 allData')
-    console.log('更新 allData', store.getters.getDataY, store.getters.xData)
-    initChart(store.getters.getDataY, store.getters.xData)
-}, { deep: true, immediate: true })
+
 onMounted(() => {
+    // store.dispatch('fetchTimeDomainInfo')
     console.log('时域图挂载完成', yData, xData)
-    initChart(yData.value, xData.value)
+    initChart(yData, xData)
     console.log('ptime: ', ptime)
     console.log('stime: ', stime)
 })
@@ -110,7 +121,7 @@ onBeforeUnmount(() => {
     chart && chart.clear()
 })
 nextTick(() => {
-    initChart(yData.value, xData.value)
+    initChart(yData, xData)
 })
 function initChart(ySerise: ySeriseProp, xData: Array<number>) {
     // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
@@ -209,5 +220,4 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>) {
         // alert(JSON.stringify(data))
     })
 }
-
 </script>

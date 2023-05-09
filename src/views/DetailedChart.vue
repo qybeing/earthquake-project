@@ -35,7 +35,7 @@ import Spectrogram from '@/components/Spectrogram.vue'
 import WorkArea from '@/components/WorkArea.vue'
 import FeatureArea from '@/components/FeatureArea.vue'
 import { GlobalDataProps } from '@/store'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import TimeDomainPlot from '@/components/TimeDomainPlot.vue'
 import FrequencyGraph from '@/components/FrequencyGraph.vue'
@@ -53,6 +53,20 @@ const changeID = () => {
     console.log('rowId: ', id)
     return id
 }
+
+onMounted(
+    () => {
+        store.dispatch('fetchTimeDomainInfo')
+        .then(
+            () => store.dispatch('fetchFrequencyDomainInfo'))
+        .then(
+            () => store.dispatch('fetchTimeFrequencyInfo')
+        )
+        .then(
+            () => store.dispatch('fetchFeatureExtractionInfo')
+        )
+    }
+)
 
 </script>
 

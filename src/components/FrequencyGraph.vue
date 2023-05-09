@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 
 import * as echarts from 'echarts'
-import { onMounted, defineProps, watch, PropType, reactive, onBeforeUnmount, computed } from 'vue'
+import { onMounted, defineProps, watch, reactive, onBeforeUnmount, computed } from 'vue'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
@@ -16,6 +16,7 @@ let channels = reactive(store.state.chooseChannel)
 const xData = reactive(computed(() => store.getters.getFreX))
 const yData = reactive(computed(() => store.getters.getAmpY))
 // type arrProp = number[]
+// store.dispatch('fetchTimeFrequencyInfo')
 type series = {
     name: string
     type: string
@@ -39,6 +40,7 @@ const props = defineProps({
 let chart: any = null
 onMounted(
     () => {
+        // store.dispatch('fetchTimeFrequencyInfo')
         chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     }
 )
@@ -50,9 +52,9 @@ watch(() => store.state.chooseChannel, () => {
     console.log('更新 yData')
     initChart(yData.value, xData.value)
 })
-watch(() => store.state.allData, () => {
+watch(() => store.state.frequencyPointData, () => {
     channels = store.state.chooseChannel
-    console.log('更新 allData')
+    console.log('频域图 更新 frequencyPointData', store.state.frequencyPointData)
     initChart(yData.value, xData.value)
 }, { deep: true })
 onMounted(() => initChart(yData.value, xData.value))

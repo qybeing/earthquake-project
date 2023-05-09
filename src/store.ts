@@ -2,6 +2,7 @@ import { createStore, Commit } from 'vuex'
 import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
 import { ca } from 'element-plus/es/locale'
+import { Vue } from 'vue-demi'
 
 function deepMergeFun(obj1: any, obj2: any) {
     for (const key in obj2) {
@@ -99,9 +100,33 @@ export interface allProps {
     frequency_domain_feature_extract_result?: FrequencyDomainProps
     time_domain_feature_extract_result?: TimeDomainProps
 }
+export interface TimeDiagramProps {
+    raw_datas: Array<number>
+    ts: Array<number>
+}
+export interface FrequencyDiagramProps {
+    point_amp_list: Array<number> // 幅度列表y
+    point_fre_list: Array<number> // 频度数据列表x
+}
+export interface FeatureExtractionProps {
+    frequency_domain_feature_extract_result: FrequencyDomainProps
+    time_domain_feature_extract_result: TimeDomainProps
+}
 export interface allPointProps {
     curve_info: DataProps
     points_info: allProps
+}
+export interface TimePointProps {
+    curve_info: DataProps
+    points_info: TimeDiagramProps
+}
+export interface FrequencyPointProps {
+    curve_info: DataProps
+    points_info: FrequencyDiagramProps
+}
+export interface FeaturePointProps {
+    curve_info: DataProps
+    points_info: FeatureExtractionProps
 }
 export interface PointProps {
     curve_info: DataProps
@@ -152,6 +177,11 @@ export interface GlobalDataProps {
 
     // 频谱图
     png_name: string
+
+    // 详细分析页面
+    timePointData: TimePointProps[]
+    frequencyPointData: FrequencyPointProps[]
+    featurePointData: FeaturePointProps[]
 
 }
 
@@ -246,7 +276,10 @@ const store = createStore<GlobalDataProps>({
             corners: 4,
             zerophase: 'False'
         },
-        png_name: ''
+        png_name: '',
+        timePointData: [],
+        frequencyPointData: [],
+        featurePointData: []
     },
     mutations: {
         setPng_name(state, png) {
@@ -264,8 +297,16 @@ const store = createStore<GlobalDataProps>({
         changeSStartTime(state, st) {
             state.ptime = st
         },
+        // changeFeatureInfo(state) {
+        //     state.allData.forEach(data => {
+        //         if (data.curve_info.channel === state.featureChannel && data.points_info.frequency_domain_feature_extract_result && data.points_info.time_domain_feature_extract_result) {
+        //             state.frequencyDomainData = data.points_info.frequency_domain_feature_extract_result
+        //             state.timeDomainData = data.points_info.time_domain_feature_extract_result
+        //         }
+        //     })
+        // },
         changeFeatureInfo(state) {
-            state.allData.forEach(data => {
+            state.featurePointData.forEach(data => {
                 if (data.curve_info.channel === state.featureChannel && data.points_info.frequency_domain_feature_extract_result && data.points_info.time_domain_feature_extract_result) {
                     state.frequencyDomainData = data.points_info.frequency_domain_feature_extract_result
                     state.timeDomainData = data.points_info.time_domain_feature_extract_result
@@ -315,14 +356,35 @@ const store = createStore<GlobalDataProps>({
             state.querydata = newConditions
         },
         fetchWorkData(state, data) {
-            state.allData = deepMergeFun(state.allData, data.res)
+            state.allData = []
+            const newData = deepMergeFun(state.allData, data.res)
+            state.allData = newData
             // state.allData = Object.values(data.res)
             if (state.allData.length > 0 && Reflect.has(state.allData[0], 'curve_info')) {
                 state.ptime = (Date.parse(state.allData[0].curve_info.p_start_time) / 1000).toString()
                 state.stime = (Date.parse(state.allData[0].curve_info.s_start_time || '') / 1000).toString()
             }
+            const nowData = state.allData
 
-            console.log('state.allData更新啦！ ', state.allData)
+            console.log('state.allData更新啦！ ', nowData)
+        },
+        fetchTimePointData(state, data) {
+            state.timePointData = Object.values(data.res)
+            // state.allData = Object.values(data.res)
+            if (state.timePointData.length > 0 && Reflect.has(state.timePointData[0], 'curve_info')) {
+                state.ptime = (Date.parse(state.timePointData[0].curve_info.p_start_time) / 1000).toString()
+                state.stime = (Date.parse(state.timePointData[0].curve_info.s_start_time || '') / 1000).toString()
+            }
+            // const nowData = state.allData
+            console.log('state.timePointData更新啦！ ', state.timePointData)
+        },
+        fetchFrequencyPointData(state, data) {
+            state.frequencyPointData = Object.values(data.res)
+            console.log('state.frequencyPointData更新啦！ ', state.frequencyPointData)
+        },
+        fetchFeaturePointData(state, data) {
+            state.featurePointData = Object.values(data.res)
+            console.log('state.featurePointData更新啦！ ', state.featurePointData)
         },
         fetchViewChartData(state, data) {
             state.viewChartData = Object.values(data.res)
@@ -364,7 +426,7 @@ const store = createStore<GlobalDataProps>({
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('请求时域图数据', data)
-            context.commit('fetchWorkData', data)
+            context.commit('fetchTimePointData', data)
         },
         // 请求频域图数据
         async fetchFrequencyDomainInfo(context) {
@@ -372,7 +434,7 @@ const store = createStore<GlobalDataProps>({
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('请求频域图数据', data)
-            context.commit('fetchWorkData', data)
+            context.commit('fetchFrequencyPointData', data)
         },
         // 请求频谱图地址
         async fetchTimeFrequencyInfo(context) {
@@ -388,7 +450,7 @@ const store = createStore<GlobalDataProps>({
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('请求预处理和特征提取数据', data)
-            context.commit('fetchWorkData', data)
+            context.commit('fetchFeaturePointData', data)
         },
         // 请求曲线数据表格信息（传入条件查询参数）
         async fetchCurveData(context) {
@@ -548,7 +610,7 @@ const store = createStore<GlobalDataProps>({
         },
         getDataY(state) {
             const res: YDataProps[] = []
-            state.allData.forEach(
+            state.timePointData.forEach(
                 x => {
                     if (state.chooseChannel.includes(x.curve_info.channel)) {
                         const obj: YDataProps = {
@@ -568,14 +630,14 @@ const store = createStore<GlobalDataProps>({
             return res
         },
         getDataX(state) {
-            if (state.allData.length) {
-                return state.allData[0].points_info.ts
+            if (state.timePointData.length) {
+                return state.timePointData[0].points_info.ts
             }
             return []
         },
         getAmpY(state) {
             const res: YDataProps[] = []
-            state.allData.forEach(
+            state.frequencyPointData.forEach(
                 x => {
                     if (state.chooseChannel.includes(x.curve_info.channel)) {
                         const obj: YDataProps = {
@@ -595,8 +657,8 @@ const store = createStore<GlobalDataProps>({
             return res
         },
         getFreX(state) {
-            if (state.allData.length) {
-                return state.allData[0].points_info.point_fre_list
+            if (state.frequencyPointData.length) {
+                return state.frequencyPointData[0].points_info.point_fre_list
             }
             return []
         },

@@ -106,15 +106,15 @@ const seeDetail = (row: any) => {
     router.push('/offline/DetailedChart')
     store.commit('changeChooseData', row.curve_info)
     store.commit('changeChannel', [row.curve_info.channel])
-    store.dispatch('fetchTimeDomainInfo')
-        .then(
-            () => store.dispatch('fetchFrequencyDomainInfo'))
-        .then(
-            () => store.dispatch('fetchTimeFrequencyInfo')
-        )
-        .then(
-            () => store.dispatch('fetchFeatureExtractionInfo')
-        )
+    // store.dispatch('fetchTimeDomainInfo')
+    //     .then(
+    //         () => store.dispatch('fetchFrequencyDomainInfo'))
+    //     .then(
+    //         () => store.dispatch('fetchTimeFrequencyInfo')
+    //     )
+    //     .then(
+    //         () => store.dispatch('fetchFeatureExtractionInfo')
+    //     )
 }
 
 const seeChannelChange = (row: any) => {
