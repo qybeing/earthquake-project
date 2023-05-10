@@ -28,11 +28,7 @@ const onSubmit = () => {
         .get(url)
         .then((res) => {
             const obj = JSON.parse(res.data.curve_info)
-            console.log(typeof res.data.curve_info)
-            console.log('=====')
-            console.log(obj)
             initChart(obj.curve_data)
-            // console.log('curve_data: ', obj.curve_data)
         })
         .catch(function (error) { // 请求失败处理
             console.log(error)

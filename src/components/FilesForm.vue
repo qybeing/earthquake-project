@@ -42,35 +42,19 @@ interface FileForm {
     selectFiles: string[]
 }
 const state = reactive<FileForm>({ selectFiles: [] })
-watch(tableData, (newVal) => {
-    console.log(newVal)
-}, { immediate: true, deep: true })
+
 const handleClick = () => {
     console.log('click')
 }
 // 选择项
 const handleSelectionChange = (val: string[]) => {
     state.selectFiles = val
-    console.log('当前所选文件：', state.selectFiles)
 }
 // 批量删除
 const handleDelete = () => {
-    console.log('批量删除文件：', state.selectFiles)
     state.selectFiles.forEach((name) => {
         store.commit('deleteFile', name)
     })
-    // if (!state.multipleSelection.length) {
-    //     ElMessage.error('请选择项')
-    //     return
-    // }
-    // axios.delete('/categories', {
-    //     data: {
-    //         ids: state.multipleSelection.map(i => i.categoryId)
-    //     }
-    // }).then(() => {
-    //     ElMessage.success('删除成功')
-    //     getCategory()
-    // })
 }
 // 单个删除
 const handleDeleteOne = (id: string) => {
@@ -78,13 +62,6 @@ const handleDeleteOne = (id: string) => {
     state.selectFiles.forEach((name) => {
         store.commit('deleteFile', name)
     })
-    //   axios.delete('/categories', {
-    //     data: {
-    //       ids: [id]
-    //     }
-    //   }).then(() => {
-    //     ElMessage.success('删除成功')
-    //   })
 }
 </script>
 

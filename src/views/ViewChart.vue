@@ -201,7 +201,6 @@ const checkLocation = (rule: any, value: any, callback: any) => {
 
         if (input !== '') {
             const reg = /^[0-9]+$/
-            // console.log('!reg.test(value)') !Number.isInteger(input) ||
             if (!reg.test(input)) {
                 callback(new Error('请输入非负整数'))
             } else {

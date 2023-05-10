@@ -85,17 +85,8 @@ watch(() => store.state.stime, () => {
 })
 let chart: any = null
 onMounted(
-    // async () => {
-    //     chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
-    //     const data = await store.dispatch('fetchTimeDomainInfo')
-    //     console.log('await store.dispatch(fetchTimeDomainInf) 的返回值', getDataY.value)
-    //     initChart(getDataY.value, getDataX.value)
-    // }
     () => {
         chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
-        // const data = await store.dispatch('fetchTimeDomainInfo')
-        // console.log('await store.dispatch(fetchTimeDomainInf) 的返回值', getDataY.value)
-        // initChart(store.getters.getDataY, store.getters.xData, ptime.value, stime.value)
     }
 )
 
@@ -225,7 +216,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>, pPoint: string, s
         }
         markData.x = params.name
         markData.y = params.value.toString()
-        console.log(data)
+
         dialogFormVisible.value = true
         // alert(JSON.stringify(data))
     })

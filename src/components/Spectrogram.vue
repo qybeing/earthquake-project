@@ -22,12 +22,9 @@ function errorImg(e:any) {
     console.log('image load failed')
     console.log(e.srcElement
         .id)
-    // const url = '../assets/home/img/' + e.srcElement.id + '_Error.png'
-    e.srcElement.src = require('../assets/home/img/BHN_Error.png')
+    e.srcElement.src = require('../assets/home/img/loadError.png')
     // 这一句没用，如果默认图片的路径错了还是会一直闪屏，在方法的前面加个.once只让它执行一次也没用
     e.srcElement.onerror = null // 防止闪图
-
-    // console.log(image)
 }
 
 </script>

@@ -387,8 +387,6 @@ const store = createStore<GlobalDataProps>({
                 state.stime = (Date.parse(state.allData[0].curve_info.s_start_time || '') / 1000).toString()
             }
             const nowData = state.allData
-
-            console.log('state.allData更新啦！ ', nowData)
         },
         fetchTimePointData(state, data) {
             state.timePointData = Object.values(data.res)
@@ -397,7 +395,6 @@ const store = createStore<GlobalDataProps>({
                 state.ptime = (Date.parse(state.timePointData[0].curve_info.p_start_time) / 1000).toString()
                 state.stime = (Date.parse(state.timePointData[0].curve_info.s_start_time || '') / 1000).toString()
             }
-            // const nowData = state.allData
             console.log('state.timePointData更新啦！ ', state.timePointData)
         },
         fetchFrequencyPointData(state, data) {
@@ -448,7 +445,6 @@ const store = createStore<GlobalDataProps>({
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
-            console.log('请求时域图数据', data)
             context.commit('setLoad_TimeDomainInfo', false)
             context.commit('fetchTimePointData', data)
         },
@@ -458,7 +454,6 @@ const store = createStore<GlobalDataProps>({
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_frequency_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
-            console.log('请求频域图数据', data)
             context.commit('setLoad_FrequencyDomainInfo', false)
             context.commit('fetchFrequencyPointData', data)
         },
@@ -478,7 +473,6 @@ const store = createStore<GlobalDataProps>({
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_feature_extraction_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
-            console.log('请求预处理和特征提取数据', data)
             context.commit('setLoad_FeatureExtractionInfo', false)
             context.commit('fetchFeaturePointData', data)
         },
@@ -658,7 +652,6 @@ const store = createStore<GlobalDataProps>({
                 }
             )
 
-            // console.log('在getDataY: ', res)
             return res
         },
         getDataX(state) {
@@ -685,7 +678,6 @@ const store = createStore<GlobalDataProps>({
                 }
             )
 
-            // console.log('在getDataY: ', res)
             return res
         },
         getFreX(state) {

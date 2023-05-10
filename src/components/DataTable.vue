@@ -24,37 +24,22 @@ interface CurveInfo {
 const multipleSelection = ref<CurveInfo[]>([])
 
 const tableData = computed(() => store.state.data)
-// const tableData = reactive(() => store.state.data)
 const loading = computed(() => store.state.loading)
-watch(loading, (newVal) => {
-    console.log(newVal)
-})
-// const tableData2 = reactive(tableData)
-// const multipleTableRef = ref()
+
 const multipleTableRef = ref()
 watch(tableData, (newVal) => {
-    console.log('tableData watch啦', newVal)
     setTimeout(() => {
         multipleTableRef.value.toggleAllSelection()
       }, 0)
 }, { immediate: true, deep: true })
 
-// nextTick(() => {
-//     console.log('加载完成 nexttick')
-//     setTimeout(() => {
-//         multipleTableRef.value.toggleAllSelection()
-//       }, 0)
-// })
 const handleSelectionChange = (val: CurveInfo[]) => {
     multipleSelection.value = val
-    console.log('multipleSelection: ', multipleSelection.value)
     const temp: string[] = []
     multipleSelection.value.forEach((x) => {
         temp.push(getId(x.curve_info))
     })
 
-    // arr = temp
-    console.log('arr: ', arr)
     store.commit('getChooese', temp)
 }
 

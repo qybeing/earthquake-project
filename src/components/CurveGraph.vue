@@ -50,7 +50,6 @@ const chart:any = null
 const datax = props.ts_list.map(x => timestampToTimeHMS(x))
 const date = timestampToTimeYMD(props.ts_list[0])
 const title = props.network + '/' + props.station + '/' + props.location + '/' + props.channel + '  ' + date
-console.log('props.p_start_time', props.p_start_time)
 onMounted(() => {
     const ptime = props.p_start_time.split(' ')[1]
     initChart(props.curveData, datax, title, ptime)
@@ -59,7 +58,6 @@ watch(props.curveData, () => {
     const ptime = props.p_start_time.split(' ')[1]
     initChart(props.curveData, datax, title, ptime)
 })
-watch(() => props.p_start_time, () => console.log('props.p_start_time', props.p_start_time))
 
 // 时间戳转时间
 function timestampToTimeHMS(timestamp: number) {
@@ -84,8 +82,6 @@ onBeforeUnmount(() => {
     chart && chart.clear()
 })
 function initChart(listy: Array<number>, listx: Array<string>, title: string, ptime: string) {
-    console.log('props.rowId: ', props.rowId)
-    console.log('props.curveData: ', props.curveData)
     const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     // 把配置和数据放这里
     chart.setOption({
