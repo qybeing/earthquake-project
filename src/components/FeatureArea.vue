@@ -87,8 +87,10 @@ import { useStore } from 'vuex'
 import { GlobalDataProps, WorkProps } from '../store'
 import { computed } from '@vue/reactivity'
 const store = useStore<GlobalDataProps>()
-const timeDomain = reactive(computed(() => store.state.timeDomainData))
-const frequencyDomain = reactive(computed(() => store.state.frequencyDomainData))
+// const timeDomain = reactive(computed(() => store.state.timeDomainData))
+const timeDomain = reactive(computed(() => store.getters.getCurTimeFeature))
+// const frequencyDomain = reactive(computed(() => store.state.frequencyDomainData))
+const frequencyDomain = reactive(computed(() => store.getters.getCurFrequencyFeature))
 const loading = computed(() => store.state.load_FeatureExtractionInfo)
 
 </script>

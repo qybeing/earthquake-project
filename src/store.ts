@@ -329,7 +329,7 @@ const store = createStore<GlobalDataProps>({
         // },
         changeFeatureInfo(state) {
             state.featurePointData.forEach(data => {
-                if (data.curve_info.channel === state.featureChannel && data.points_info.frequency_domain_feature_extract_result && data.points_info.time_domain_feature_extract_result) {
+                if (data.curve_info.channel === state.featureChannel) {
                     state.frequencyDomainData = data.points_info.frequency_domain_feature_extract_result
                     state.timeDomainData = data.points_info.time_domain_feature_extract_result
                 }
@@ -527,6 +527,51 @@ const store = createStore<GlobalDataProps>({
         }
     },
     getters: {
+        // 获取当前所选频道的特征信息
+        getCurTimeFeature(state) {
+            let timeInfo: TimeDomainProps = {
+                max_value: 0.0000,
+                peak_value: 0.0000,
+                min_value: 0.0000,
+                mean: 0.0000,
+                p_p_value: 0.0000,
+                abs_mean: 0.0000,
+                rms: 0.0000,
+                square_root_amplitude: 0.0000,
+                std: 0.0000,
+                kurtosis: 0.0000,
+                skewness: 0.0000,
+                clearance_factor: 0.0000,
+                shape_factor: 0.0000,
+                impulse_factor: 0.0000,
+                crest_factor: 0.0000,
+                first_autocorrelation: 0.0000,
+                second_autocorrelation: 0.0000,
+                waveform_complexity: 0.0000
+            }
+            state.featurePointData.forEach(data => {
+                if (data.curve_info.channel === state.featureChannel) {
+                    timeInfo = data.points_info.time_domain_feature_extract_result
+                }
+            })
+            return timeInfo
+        },
+        getCurFrequencyFeature(state) {
+            let FrequencyInfo: FrequencyDomainProps = {
+                fc: 0.0000,
+                mf: 0.0000,
+                rmsf: 0.0000,
+                vf: 0.0000,
+                ftm: 0.0000,
+                ffm: 0.0000
+            }
+            state.featurePointData.forEach(data => {
+                if (data.curve_info.channel === state.featureChannel) {
+                    FrequencyInfo = data.points_info.frequency_domain_feature_extract_result
+                }
+            })
+            return FrequencyInfo
+        },
         getWorkDataBeforeArgs(state) {
             const formData = new FormData()
             const obj: WorkToSend = {}

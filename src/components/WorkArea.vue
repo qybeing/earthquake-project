@@ -13,7 +13,7 @@
     <div class="query_button"><el-button @click="sendWork">查看</el-button></div>
     <div class="select">
         <div>特征提取频道选择:</div>
-        <el-select v-model="value" placeholder="Select" size="small">
+        <el-select v-model="curChannel" placeholder="Select" size="small">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
     </div>
@@ -148,6 +148,9 @@ watch(choosedchannels, (choosedchannels) => {
             label: x
         })
     })
+    if (options.length > 0) {
+       curChannel.value = options[0].value
+    }
 }, { deep: true })
 
 interface Curve {
@@ -157,8 +160,13 @@ interface Curve {
 }
 
 // const value = reactive(computed(() => choosedchannels.value.length > 0 ? choosedchannels.value[0] : ''))
-const value = ref('')
-watch(value, (value) => {
+const curChannel = ref('')
+// onMounted(
+//     () => {
+//         curChannel.value = options[0].value
+//     }
+// )
+watch(() => curChannel.value, (value) => {
     store.commit('changeFeatureChannel', value)
     store.commit('changeFeatureInfo')
 })
