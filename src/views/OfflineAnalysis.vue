@@ -182,6 +182,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 <style scoped>
 .box-card {
     width: 100%;
+    /* overflow: auto; */
     overflow: hidden;
 }
 
