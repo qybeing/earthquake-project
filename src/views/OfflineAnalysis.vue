@@ -99,7 +99,9 @@ const checkNetwork = (rule: any, value: any, callback: any) => {
             } else {
                 callback()
             }
-        }
+        } else {
+                callback()
+            }
     }, 100)
 }
 const checkStation = (rule: any, value: any, callback: any) => {
@@ -112,7 +114,9 @@ const checkStation = (rule: any, value: any, callback: any) => {
             } else {
                 callback()
             }
-        }
+        } else {
+                callback()
+            }
     }, 100)
 }
 const checkChannel = (rule: any, value: any, callback: any) => {
@@ -125,7 +129,9 @@ const checkChannel = (rule: any, value: any, callback: any) => {
             } else {
                 callback()
             }
-        }
+        } else {
+                callback()
+            }
     }, 100)
 }
 const checkLocation = (rule: any, value: any, callback: any) => {
@@ -139,7 +145,9 @@ const checkLocation = (rule: any, value: any, callback: any) => {
             } else {
                 callback()
             }
-        }
+        } else {
+                callback()
+            }
     }, 100)
 }
 
@@ -151,11 +159,13 @@ const rules = reactive<FormRules>({
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
+    console.log('formEl', formEl)
     if (!formEl) {
         console.log('!formEl')
        return
     }
     formEl.validate((valid) => {
+        console.log('valid', valid)
         if (valid) {
             onQuery()
             console.log('submit!')
