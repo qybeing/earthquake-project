@@ -183,6 +183,12 @@ export interface GlobalDataProps {
     frequencyPointData: FrequencyPointProps[]
     featurePointData: FeaturePointProps[]
 
+    // 分段加载状态
+    load_TimeDomainInfo: boolean
+    load_FrequencyDomainInfo: boolean
+    load_TimeFrequencyInfo: boolean
+    load_FeatureExtractionInfo: boolean
+
 }
 
 const store = createStore<GlobalDataProps>({
@@ -279,9 +285,25 @@ const store = createStore<GlobalDataProps>({
         png_name: '',
         timePointData: [],
         frequencyPointData: [],
-        featurePointData: []
+        featurePointData: [],
+        load_TimeDomainInfo: false,
+        load_FrequencyDomainInfo: false,
+        load_TimeFrequencyInfo: false,
+        load_FeatureExtractionInfo: false
     },
     mutations: {
+        setLoad_TimeDomainInfo(state, loading) {
+            state.load_TimeDomainInfo = loading
+        },
+        setLoad_FrequencyDomainInfo(state, loading) {
+            state.load_FrequencyDomainInfo = loading
+        },
+        setLoad_TimeFrequencyInfo(state, loading) {
+            state.load_TimeFrequencyInfo = loading
+        },
+        setLoad_FeatureExtractionInfo(state, loading) {
+            state.load_FeatureExtractionInfo = loading
+        },
         setPng_name(state, png) {
             state.png_name = png
         },
@@ -422,34 +444,42 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求时域图数据
         async fetchTimeDomainInfo(context) {
+            context.commit('setLoad_TimeDomainInfo', true)
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('请求时域图数据', data)
+            context.commit('setLoad_TimeDomainInfo', false)
             context.commit('fetchTimePointData', data)
         },
         // 请求频域图数据
         async fetchFrequencyDomainInfo(context) {
+            context.commit('setLoad_FrequencyDomainInfo', true)
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_frequency_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('请求频域图数据', data)
+            context.commit('setLoad_FrequencyDomainInfo', false)
             context.commit('fetchFrequencyPointData', data)
         },
         // 请求频谱图地址
         async fetchTimeFrequencyInfo(context) {
+            context.commit('setLoad_TimeFrequencyInfo', true)
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_frequency_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('频谱图地址 ', data)
+            context.commit('setLoad_TimeFrequencyInfo', false)
             context.commit('setPng_name', data.t_f_png_name)
         },
         // 请求预处理和特征提取数据
         async fetchFeatureExtractionInfo(context) {
+            context.commit('setLoad_FeatureExtractionInfo', true)
             const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_feature_extraction_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             console.log('请求预处理和特征提取数据', data)
+            context.commit('setLoad_FeatureExtractionInfo', false)
             context.commit('fetchFeaturePointData', data)
         },
         // 请求曲线数据表格信息（传入条件查询参数）

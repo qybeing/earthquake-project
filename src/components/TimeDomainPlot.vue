@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
-    <div class="echarts-box">
-        <div :id="rowId" style=" width: 1082px;height: 220px;"></div>
+    <div class="echarts-box" >
+        <div :id="rowId" style=" width: 1082px;height: 220px;" v-loading="loading"></div>
     </div>
     <el-dialog v-model="dialogFormVisible" title="标记更新" width="20%">
         <div> 所选点位： x: {{ markData.x }} , y: {{ markData.y }}</div>
@@ -37,6 +37,7 @@ const yData = reactive(store.getters.getDataY)
 // const ptime = ref(store.state.ptime)
 const ptime = computed(() => store.state.ptime)
 const stime = computed(() => store.state.stime)
+const loading = computed(() => store.state.load_TimeDomainInfo)
 // const stime = ref(store.state.stime)
 // type arrProp = number[]
 const markData = reactive({ x: '0', y: '0' })

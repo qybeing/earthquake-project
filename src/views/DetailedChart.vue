@@ -15,7 +15,7 @@
             </el-card>
         </div>
         <div class="main_wrapper">
-            <div class="chart_body" :key="itemKey" v-loading="loading">
+            <div class="chart_body" :key="itemKey">
                 <TimeDomainPlot :rowId=changeID()></TimeDomainPlot>
                 <FrequencyGraph :rowId=changeID()></FrequencyGraph>
                 <Spectrogram></Spectrogram>
@@ -40,14 +40,14 @@ import { useStore } from 'vuex'
 import TimeDomainPlot from '@/components/TimeDomainPlot.vue'
 import FrequencyGraph from '@/components/FrequencyGraph.vue'
 const store = useStore<GlobalDataProps>()
-const loading = computed(() => store.state.loading)
+// const loading = computed(() => store.state.loading)
 const itemKey = ref()
 let title = reactive<{ id: string, time: string }>({ id: 'xxx', time: 'xxx-xx-xx' })
 title = store.getters.getTitle
 itemKey.value = Math.random()
-watch(loading, (newVal) => {
-    console.log(newVal)
-})
+// watch(loading, (newVal) => {
+//     console.log(newVal)
+// })
 const changeID = () => {
     const id: string = Math.random() + ''
     console.log('rowId: ', id)

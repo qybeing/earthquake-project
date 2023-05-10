@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" style=" width: 1082px;height: 220px;"></div>
+        <div :id="rowId" style=" width: 1082px;height: 220px;" v-loading="loading"></div>
     </div>
 </template>
 
@@ -15,6 +15,7 @@ const store = useStore<GlobalDataProps>()
 let channels = reactive(store.state.chooseChannel)
 const xData = reactive(computed(() => store.getters.getFreX))
 const yData = reactive(computed(() => store.getters.getAmpY))
+const loading = computed(() => store.state.load_FrequencyDomainInfo)
 // type arrProp = number[]
 // store.dispatch('fetchTimeFrequencyInfo')
 type series = {

@@ -89,7 +89,7 @@ import { computed } from '@vue/reactivity'
 const store = useStore<GlobalDataProps>()
 const timeDomain = reactive(computed(() => store.state.timeDomainData))
 const frequencyDomain = reactive(computed(() => store.state.frequencyDomainData))
-const loading = computed(() => store.state.loading)
+const loading = computed(() => store.state.load_FeatureExtractionInfo)
 
 </script>
 

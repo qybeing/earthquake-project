@@ -1,5 +1,5 @@
 <template>
-    <div class="div1" v-if="choosedchannels.includes('BHE')">
+    <div class="div1" v-if="choosedchannels.includes('BHE')" v-loading="loading">
         <!-- <img :src="imgFun('test_png.png')" /> -->
         <!-- <img src="../assets/home/img/response.png" /> -->
         <!-- <img src="https://p1.ssl.qhimg.com/t0118332e529a5c2001.jpg" alt="BHE"> -->
@@ -16,6 +16,7 @@ const pre = 'http://202.199.13.154:5100/offline_curve_analysis/tf_pngs?png_name=
 const store = useStore<GlobalDataProps>()
 const choosedchannels = reactive(computed(() => store.state.chooseChannel))
 const pngName = ref(computed(() => pre + store.state.png_name))
+const loading = computed(() => store.state.load_TimeFrequencyInfo)
 
 function errorImg(e:any) {
     console.log('image load failed')
