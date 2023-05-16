@@ -307,6 +307,8 @@ onMounted(() => {
     font-size: 14px;
     display: grid;
     grid-template-columns: 2fr 1fr;
+    margin: 5px 0;
+    padding: 10px 0;
 }
 
 .query_button {
@@ -314,7 +316,7 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     margin: 5px;
-    padding: 2px;
+    padding: 5px;
     border-bottom: 1px solid #909399;
 }
 

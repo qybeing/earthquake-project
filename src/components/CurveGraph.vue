@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
     <div class="echarts-box">
-        <div :id="rowId" :style="{ width: '1400px', height: '150px' }"></div>
+        <div :id="rowId" :style="{ width: '1470px', height: '120px' }"></div>
         <!-- <div :id="rowId"></div> -->
     </div>
 </template>
@@ -52,7 +52,10 @@ const date = timestampToTimeYMD(props.ts_list[0])
 const title = props.network + '/' + props.station + '/' + props.location + '/' + props.channel + '  ' + date
 onMounted(() => {
     const ptime = props.p_start_time.split(' ')[1]
-    initChart(props.curveData, datax, title, ptime)
+    setTimeout(() => {
+        initChart(props.curveData, datax, title, ptime)
+    }, 0)
+    // initChart(props.curveData, datax, title, ptime)
 })
 watch(props.curveData, () => {
     const ptime = props.p_start_time.split(' ')[1]

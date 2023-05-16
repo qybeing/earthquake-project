@@ -13,10 +13,11 @@
         <el-table-column label="结束时间" prop="end_time" />
     </el-table>
     <el-pagination
+    style="float: right"
                   @current-change="handleCurrentChange"
                  :current-page="current_page"
                   layout="total, prev, pager, next"
-                  :page-size="10"
+                  :page-size="12"
                  :total="curve_total">
     </el-pagination>
     </div>
@@ -37,7 +38,7 @@ const tableData = computed(() => store.state.data)
 const loading = computed(() => store.state.loading)
 const curve_total = computed(() => store.state.curve_total)
 const curve_page_total = computed(() => store.state.curve_page_total)
-const current_page = ref(1)
+const current_page = ref(0)
 const tableHeight = ref()
 const multipleTableRef = ref()
 

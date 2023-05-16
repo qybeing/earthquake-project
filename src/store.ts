@@ -147,6 +147,8 @@ export interface GlobalDataProps {
     curve_total: number,
     curve_page_total: number,
     viewChartData: PointProps[];
+    plot_total: number,
+    plot_page_total: number,
     detailedChartData: PointProps[];
     files: FileProps[];
     chooses: string[];
@@ -210,6 +212,8 @@ const store = createStore<GlobalDataProps>({
         data: [],
         curve_total: 0,
         curve_page_total: 0,
+        plot_total: 0,
+        plot_page_total: 0,
         files: [],
         chooses: [],
         viewChartData: [],
@@ -410,6 +414,10 @@ const store = createStore<GlobalDataProps>({
             console.log('state.featurePointData更新啦！ ', state.featurePointData)
         },
         fetchViewChartData(state, data) {
+            console.log('fetchViewChartData', data)
+            // state.plot_page_total = data.page_total
+            // state.plot_total = data.curve_total
+            console.log(Object.values(data.res))
             state.viewChartData = Object.values(data.res)
         },
         fetchCurveData(state, data) {
@@ -519,13 +527,13 @@ const store = createStore<GlobalDataProps>({
         //     const { data } = await axios.post(url, formData)
         //     context.commit('fetchViewChartData', data)
         // },
-        async fetchViewChartData(context) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
+        async fetchViewChartData(context, payload = 1) {
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const obj = {
-                pagesize: 3,
-                page: 1,
+                pagesize: 4,
+                page: payload,
                 curve_ids: context.state.chooses,
                 conditions_dict: context.state.filter
             }

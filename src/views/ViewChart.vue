@@ -63,8 +63,8 @@
                 </div>
             </template>
             <div class="chart_body" :key="itemKey">
-                <el-table :data="tableData" style="width: 100%" :show-header=false v-loading="loading"
-                    @row-dblclick="seeDetail">
+                <el-table style="width: 100%" ref='multipleTableRef' :data="tableData" :height="tableHeight"
+                    :show-header=false v-loading="loading" @row-dblclick="seeDetail">
                     <el-table-column>
                         <template #default="scope">
                             <!-- <el-button @click="change(scope.row)">看一看</el-button> -->
@@ -76,20 +76,16 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                  @current-change="handleCurrentChange"
-                 :current-page="current_page"
-                  layout="total, prev, pager, next"
-                  :page-size="10"
-                 :total="curve_total">
-    </el-pagination>
+                <el-pagination style="float: right" @current-change="handleCurrentChange" :current-page="current_page"
+                    layout="total, prev, pager, next" :page-size="4" :total="plot_total">
+                </el-pagination>
             </div>
         </el-card>
     </el-container>
 </template>
 <script setup lang="ts">
 
-import { computed, watch, reactive, ref } from 'vue'
+import { computed, watch, reactive, ref, onMounted } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
 import { GlobalDataProps, WindowProp, DataProps } from '../store'
@@ -100,8 +96,21 @@ const store = useStore<GlobalDataProps>()
 const tableData = reactive(computed(() => store.getters.getViewChartData))
 const numID = ref()
 const itemKey = ref()
+const tableHeight = ref()
+const multipleTableRef = ref()
+const value = ref(false)
 numID.value = 0
 itemKey.value = Math.random()
+const current_page = ref(0)
+const plot_total = computed(() => store.state.curve_total)
+
+const handleCurrentChange = (val: number) => {
+    current_page.value = val
+    pagination_query()
+}
+const pagination_query = () => {
+    store.dispatch('fetchViewChartData', current_page.value)
+}
 const querydataform = reactive(computed(() => store.state.filter))
 const formInline = reactive(computed(() => store.state.window))
 const onReturn = () => {
@@ -123,6 +132,15 @@ const seeDetail = (row: any) => {
     //         () => store.dispatch('fetchFeatureExtractionInfo')
     //     )
 }
+onMounted(() => {
+    // 设置表格初始高度为innerHeight-offsetTop-表格底部与浏览器底部距离10
+    tableHeight.value = window.innerHeight - multipleTableRef.value.$el.offsetTop - 37
+    // 监听浏览器高度变化
+    window.onresize = () => {
+        tableHeight.value = window.innerHeight - multipleTableRef.value.$el.offsetTop - 37
+    }
+}
+)
 
 const seeChannelChange = (row: any) => {
     console.log('频道选择', row)
@@ -187,8 +205,8 @@ const checkNetwork = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 const checkStation = (rule: any, value: any, callback: any) => {
@@ -202,8 +220,8 @@ const checkStation = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 const checkLocation = (rule: any, value: any, callback: any) => {
@@ -218,8 +236,8 @@ const checkLocation = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 const rules = reactive<FormRules>({
@@ -291,7 +309,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
 .box-card {
     width: 100%;
-    overflow: hidden scroll;
+    overflow: hidden;
 }
 
 .filter_style {
