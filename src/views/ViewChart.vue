@@ -76,6 +76,13 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                 :current-page="current_page"
+                  layout="total, prev, pager, next"
+                  :page-size="10"
+                 :total="curve_total">
+    </el-pagination>
             </div>
         </el-card>
     </el-container>

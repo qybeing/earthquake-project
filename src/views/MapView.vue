@@ -242,30 +242,23 @@ const getAMap = () => {
     },
     // 加载 amap 组件
     amap: {
-      // 英文版地图
+      // 中文版地图
       lang: 'cn',
-      // 3D模式，无论你使用的是1.x版本还是2.x版本，都建议开启此项以获得更好的渲染体验
+      // 3D模式，开启此项以获得更好的渲染体验
       viewMode: '3D',
       // 高德地图中心经纬度
       center: [104.114129, 37.550339],
-      // layers: [new AMap.TileLayer.Satellite()],
       // 地图缩放
       zoom: 4,
       // 开启鼠标缩放和平移漫游
       roam: true,
       // 启用resize
       resizeEnable: true,
-      // 自定义地图风格，详情见https://lbs.amap.com/dev/mapstyle/index（注意，这个配置在英文版下的地图无效！！！若想生效请将lang属性注释）
       mapStyle: 'amap://styles/white',
       // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
       renderOnMoving: true,
       // ECharts 图层的 zIndex 默认 2022
       echartsLayerZIndex: 2022
-
-      // layers: [new AMap.TileLayer.Satellite()]
-      // 说明：如果想要添加卫星、路网等图层
-      // 暂时先不要使用layers配置，因为存在Bug
-      // 建议使用amap.add的方式，使用方式参见最下方代码
     },
     series: [
       {

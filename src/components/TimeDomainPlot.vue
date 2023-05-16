@@ -66,21 +66,16 @@ const props = defineProps({
 })
 watch(() => store.state.chooseChannel, () => {
     channels = store.state.chooseChannel
-    console.log('1.更新 yData', ptime.value, stime.value)
-    console.log('1.更新 yData getDataX', store.getters.getDataX)
     initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
 })
 watch(() => store.state.timePointData, () => {
     channels = store.state.chooseChannel
-    console.log('2.时域图更新 timePointData', ptime.value, stime.value)
     initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
 }, { deep: true })
 watch(() => store.state.ptime, () => {
-    console.log('3.更新ptime', store.state.ptime, ptime.value)
     initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
 })
 watch(() => store.state.stime, () => {
-    console.log('4.更新stime', store.state.stime, stime.value)
     initChart(store.getters.getDataY, store.getters.getDataX, ptime.value + '', stime.value + '')
 })
 let chart: any = null
@@ -147,8 +142,7 @@ function initChart(ySerise: ySeriseProp, xData: Array<number>, pPoint: string, s
                 },
                 data: [{
                     name: 'P',
-                    xAxis: pPoint, // 这里设置false是隐藏不了的，可以设置为-1
-                    // xAxis: store.state.ptime, // 这里设置false是隐藏不了的，可以设置为-1
+                    xAxis: pPoint,
                     lineStyle: {
                         color: 'red'
                     },

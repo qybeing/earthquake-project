@@ -154,7 +154,6 @@ const checkLocation = (rule: any, value: any, callback: any) => {
 const rules = reactive<FormRules>({
     network: [{ validator: checkNetwork, trigger: 'blur' }],
     station: [{ validator: checkStation, trigger: 'blur' }],
-    // channel: [{ validator: checkChannel, trigger: 'blur' }],
     location: [{ validator: checkLocation, trigger: 'blur' }]
 })
 

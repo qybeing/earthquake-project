@@ -144,6 +144,8 @@ export interface GlobalDataProps {
     error: GlobalErrorProps;
     querydata: Conditions
     data: DataProps[];
+    curve_total: number,
+    curve_page_total: number,
     viewChartData: PointProps[];
     detailedChartData: PointProps[];
     files: FileProps[];
@@ -206,6 +208,8 @@ const store = createStore<GlobalDataProps>({
             conjunction: ''
         },
         data: [],
+        curve_total: 0,
+        curve_page_total: 0,
         files: [],
         chooses: [],
         viewChartData: [],
@@ -409,7 +413,11 @@ const store = createStore<GlobalDataProps>({
             state.viewChartData = Object.values(data.res)
         },
         fetchCurveData(state, data) {
-            state.data = Object.values(data.res)
+            state.curve_total = data.curve_total
+            state.curve_page_total = data.page_total
+            console.log(data.curve_total)
+            state.data = Object.values(data.data)
+            console.log('state.data', state.data)
         },
         addFile(state, name: string) {
             const file: FileProps = {
@@ -477,21 +485,49 @@ const store = createStore<GlobalDataProps>({
             context.commit('fetchFeaturePointData', data)
         },
         // 请求曲线数据表格信息（传入条件查询参数）
-        async fetchCurveData(context) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
+        // async fetchCurveData(context) {
+        //     const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
+        //     const formData = new FormData()
+        //     formData.append('args', JSON.stringify(context.state.querydata))
+        //     const { data } = await axios.post(url, formData)
+        //     context.commit('fetchCurveData', data)
+        // },
+        // 请求曲线数据表格信息（传入条件查询参数）
+        async fetchCurveData(context, payload = 1) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curve_page'
             const formData = new FormData()
-            formData.append('args', JSON.stringify(context.state.querydata))
+            const obj = {
+                pagesize: 12,
+                page: payload,
+                conditions_dict: context.state.querydata.conditions
+            }
+            formData.append('args', JSON.stringify(obj))
             const { data } = await axios.post(url, formData)
+            console.log('fetchCurveData', data)
             context.commit('fetchCurveData', data)
         },
         // 请求批量查看曲线图
+        // async fetchViewChartData(context) {
+        //     const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+        //     const formData = new FormData()
+        //     const obj = {
+        //         curve_ids: context.state.chooses,
+        //         window: context.state.window,
+        //         filters: context.state.filter
+        //     }
+        //     formData.append('args', JSON.stringify(obj))
+        //     const { data } = await axios.post(url, formData)
+        //     context.commit('fetchViewChartData', data)
+        // },
         async fetchViewChartData(context) {
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const obj = {
+                pagesize: 3,
+                page: 1,
                 curve_ids: context.state.chooses,
-                window: context.state.window,
-                filters: context.state.filter
+                conditions_dict: context.state.filter
             }
             formData.append('args', JSON.stringify(obj))
             const { data } = await axios.post(url, formData)
@@ -617,7 +653,6 @@ const store = createStore<GlobalDataProps>({
                     case 'Normalization':
                         obj.normalization = state.workChoose.Normalization
                         break
-                    // 在这里写滤波逻辑
                     case 'Filtering':
                         filter.filter_name = state.workChoose.filter
                 }
