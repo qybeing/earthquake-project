@@ -24,6 +24,9 @@
                             <el-form-item>
                                 <el-button type="primary" :icon="Search" @click="submitForm(ruleFormRef)">查询</el-button>
                             </el-form-item>
+                            <!-- <el-form-item>
+                                <el-button @click="resetForm(ruleFormRef)">重置</el-button>
+                            </el-form-item> -->
                         </div>
                         <el-form-item>
                             <el-button class="btn-seal" @click="exportExcel" type="primary" plain>导出Excel</el-button>
@@ -100,8 +103,8 @@ const checkNetwork = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 const checkStation = (rule: any, value: any, callback: any) => {
@@ -115,8 +118,8 @@ const checkStation = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 const checkChannel = (rule: any, value: any, callback: any) => {
@@ -130,8 +133,8 @@ const checkChannel = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 const checkLocation = (rule: any, value: any, callback: any) => {
@@ -146,8 +149,8 @@ const checkLocation = (rule: any, value: any, callback: any) => {
                 callback()
             }
         } else {
-                callback()
-            }
+            callback()
+        }
     }, 100)
 }
 
@@ -161,7 +164,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     console.log('formEl', formEl)
     if (!formEl) {
         console.log('!formEl')
-       return
+        return
     }
     formEl.validate((valid) => {
         console.log('valid', valid)
@@ -174,6 +177,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
             return false
         }
     })
+}
+
+const resetForm = (formEl: FormInstance | undefined) => {
+    alert('进入重置')
+    if (!formEl) return
+    formEl.resetFields()
 }
 
 </script>

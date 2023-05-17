@@ -37,6 +37,9 @@
                                 <el-form-item>
                                     <el-button type="success" @click="submitForm(queryRuleFormRef)">过滤</el-button>
                                 </el-form-item>
+                                <el-form-item>
+                                    <el-button @click="resetForm(queryRuleFormRef)">重置</el-button>
+                                </el-form-item>
                             </div>
                         </el-form>
                     </div>
@@ -208,6 +211,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
         }
     })
 }
+const resetForm = (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    formEl.resetFields()
+}
 
 </script>
 <style scoped>
@@ -274,7 +281,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(4, 140px);
+    grid-template-columns: repeat(5, 140px);
     /*  声明行间距和列间距  */
     /* grid-gap: 10px; */
     /*  声明行的高度  */
