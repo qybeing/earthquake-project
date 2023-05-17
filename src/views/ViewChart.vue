@@ -15,7 +15,7 @@
                     </div>
                     <div class="channelChoose">
                         <div class="text_middle">频道：</div>
-                        <el-checkbox-group v-model="querydataform.channel" class="boxgroup" @change="seeChannelChange">
+                        <el-checkbox-group v-model="querydataform.channel" class="boxgroup">
                             <el-checkbox label="BHE" />
                             <el-checkbox label="BHN" />
                             <el-checkbox label="BHZ" />
@@ -85,7 +85,7 @@ const value = ref(false)
 numID.value = 0
 itemKey.value = Math.random()
 const current_page = ref(0)
-const plot_total = computed(() => store.state.curve_total)
+const plot_total = computed(() => store.state.plot_total)
 
 const handleCurrentChange = (val: number) => {
     current_page.value = val
@@ -125,10 +125,10 @@ onMounted(() => {
 )
 
 // 看看是否需要监听change事件才能修改值
-const seeChannelChange = (row: any) => {
-    console.log('频道选择', row)
-    store.commit('changeSeeChannel', row)
-}
+// const seeChannelChange = (row: any) => {
+//     console.log('频道选择', row)
+//     store.commit('changeSeeChannel', row)
+// }
 
 const loading = computed(() => store.state.loading)
 
@@ -145,7 +145,8 @@ const changeID = () => {
 const onFilter = () => {
     console.log('过滤')
     store.commit('changeFilter', querydataform.value)
-    store.dispatch('fetchViewChartData')
+    current_page.value = 1
+    store.dispatch('fetchViewChartData', current_page.value)
 }
 const checkNetwork = (rule: any, value: any, callback: any) => {
     setTimeout(() => {

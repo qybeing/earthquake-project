@@ -5,6 +5,7 @@
     </a-row>
     <!-- <div id="tip" class="input-card">地图上右击鼠标，弹出右键菜单</div> -->
   </a-card>
+  <LegendBox></LegendBox>
   <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
     <div class="domain_title2">台站信息</div>
     <el-form label-position="left" size="default" label-width="80px" :model="curveData"
@@ -37,6 +38,7 @@
 
 <script setup lang="ts">
 // import AMap from 'AMap'
+import LegendBox from '@/components/LegendBox.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
 // ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化

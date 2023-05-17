@@ -422,14 +422,14 @@ const store = createStore<GlobalDataProps>({
         fetchViewChartData(state, data) {
             console.log('fetchViewChartData', data)
             // state.plot_page_total = data.page_total
-            // state.plot_total = data.curve_total
+            state.plot_total = data.curve_total
             console.log(Object.values(data.res))
             state.viewChartData = Object.values(data.res)
         },
         fetchCurveData(state, data) {
             state.curve_total = data.curve_total
             state.curve_page_total = data.page_total
-            console.log(data.curve_total)
+            console.log('data.curve_total', data.curve_total)
             state.data = Object.values(data.data)
             console.log('state.data', state.data)
         },
@@ -534,8 +534,8 @@ const store = createStore<GlobalDataProps>({
         //     context.commit('fetchViewChartData', data)
         // },
         async fetchViewChartData(context, payload = 1) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const obj = {
                 pagesize: 4,
