@@ -69,6 +69,12 @@ export interface QueryProps {
     location: string
     channel: string
 }
+export interface FilterProps {
+    network: string
+    station: string
+    location: string
+    channel: string[]
+}
 export interface Conditions {
     conditions: QueryProps
     conjunction: string
@@ -153,7 +159,7 @@ export interface GlobalDataProps {
     files: FileProps[];
     chooses: string[];
     window: WindowProp;
-    filter: QueryProps;
+    filter: FilterProps;
     loading: boolean;
 
     allData: allPointProps[];
@@ -247,7 +253,7 @@ const store = createStore<GlobalDataProps>({
             network: '',
             station: '',
             location: '',
-            channel: ''
+            channel: ['BHE', 'BHN', 'BHZ']
         },
         loading: false,
         timeDomainData: {
@@ -373,7 +379,7 @@ const store = createStore<GlobalDataProps>({
         changeChannel(state, newChannels: Array<string>) {
             state.chooseChannel = newChannels
         },
-        changeFilter(state, newFilter: QueryProps) {
+        changeFilter(state, newFilter: FilterProps) {
             state.filter = newFilter
         },
         getChooese(state, val) {

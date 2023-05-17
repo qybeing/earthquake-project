@@ -15,7 +15,7 @@
                     </div>
                     <div class="channelChoose">
                         <div class="text_middle">频道：</div>
-                        <el-checkbox-group v-model="seeChannel" class="boxgroup" @change="seeChannelChange">
+                        <el-checkbox-group v-model="querydataform.channel" class="boxgroup" @change="seeChannelChange">
                             <el-checkbox label="BHE" />
                             <el-checkbox label="BHN" />
                             <el-checkbox label="BHZ" />
@@ -142,6 +142,7 @@ onMounted(() => {
 }
 )
 
+// 看看是否需要监听change事件才能修改值
 const seeChannelChange = (row: any) => {
     console.log('频道选择', row)
     store.commit('changeSeeChannel', row)
