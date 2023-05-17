@@ -36,8 +36,8 @@ import { GlobalDataProps, FileProps } from '../store'
 import { computed, watch, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 const store = useStore<GlobalDataProps>()
-const tableData0 = computed(() => store.state.files)
-const tableData = reactive(tableData0)
+// const tableData0 = computed(() => store.state.files)
+const tableData = computed(() => store.state.files)
 interface FileForm {
     selectFiles: string[]
 }
@@ -52,16 +52,22 @@ const handleSelectionChange = (val: string[]) => {
 }
 // 批量删除
 const handleDelete = () => {
-    state.selectFiles.forEach((name) => {
-        store.commit('deleteFile', name)
-    })
+    store.dispatch('fetchDeleteFiles', state.selectFiles).then(
+        () => ElMessage({
+            message: '删除成功！',
+            type: 'success'
+        })
+    )
 }
 // 单个删除
 const handleDeleteOne = (id: string) => {
     console.log('单个删除： ', id)
-    state.selectFiles.forEach((name) => {
-        store.commit('deleteFile', name)
-    })
+    store.dispatch('fetchDeleteFiles', [id]).then(
+        () => ElMessage({
+            message: '删除成功！',
+            type: 'success'
+        })
+    )
 }
 </script>
 

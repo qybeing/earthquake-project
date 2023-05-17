@@ -5,7 +5,7 @@
     </a-row>
     <!-- <div id="tip" class="input-card">地图上右击鼠标，弹出右键菜单</div> -->
   </a-card>
-  <LegendBox></LegendBox>
+  <!-- <LegendBox></LegendBox> -->
   <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
     <div class="domain_title2">台站信息</div>
     <el-form label-position="left" size="default" label-width="80px" :model="curveData"

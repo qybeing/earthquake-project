@@ -29,9 +29,15 @@
                             </el-form-item> -->
                         </div>
                         <el-form-item>
+                            <el-popconfirm title="确定删除吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="handleDelete">
+                            <template #reference>
+                                <el-button type="danger" :icon="Delete">批量删除</el-button>
+                            </template>
+                        </el-popconfirm>
                             <el-button class="btn-seal" @click="exportExcel" type="primary" plain>导出Excel</el-button>
                             <el-button type="success" @click="onViewChart" :icon="DataAnalysis">批量查看</el-button>
                         </el-form-item>
+
                     </el-form>
                 </div>
             </template>
@@ -43,7 +49,8 @@
 <script setup lang="ts">
 import {
     Search,
-    DataAnalysis
+    DataAnalysis,
+    Delete
 } from '@element-plus/icons-vue'
 import htmlToExcel from '@/utils/htmlToExcel'
 import type { FormInstance, FormRules } from 'element-plus'
@@ -77,6 +84,15 @@ const options: { value: string; label: string }[] = [
 ]
 
 onMounted(() => store.dispatch('fetchCurveData'))
+// 批量删除
+const handleDelete = () => {
+    store.dispatch('fetchDeleteCurves', store.state.chooses).then(
+        () => ElMessage({
+            message: '删除成功！',
+            type: 'success'
+        })
+    )
+}
 const onQuery = () => {
     store.commit('changeConditions', formInline.value)
     store.dispatch('fetchCurveData')

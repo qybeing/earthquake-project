@@ -440,13 +440,41 @@ const store = createStore<GlobalDataProps>({
             state.files.push(file)
         },
         deleteFile(state, name: string) {
-            state.files.filter(x => x.fileName !== name)
+            console.log('要删除的filename', name)
+            console.log('删除前的state.files', state.files)
+            state.files = state.files.filter(x => x.fileName !== name)
+            console.log('state.files', state.files)
+        },
+        deleteCurve(state, name: string) {
+            state.data = state.data.filter(x => x.curve_id !== name)
         },
         setLoading(state, status) {
             state.loading = status
         }
     },
     actions: {
+        // 请求批量删除数据
+        async fetchDeleteCurves(context, payload: string[]) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/delete_curve_by_id'
+            const args = {
+                curve_ids: payload
+            }
+            const { data } = await axios.post(url, args)
+            payload.forEach((name) => {
+                store.commit('deletCurve', name)
+            })
+        },
+        // 请求批量删除文件
+        async fetchDeleteFiles(context, payload: string[]) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/delete_curve_by_file'
+            const args = {
+                file_list: payload
+            }
+            const { data } = await axios.post(url, args)
+            payload.forEach((name) => {
+                store.commit('deleteFile', name)
+            })
+        },
         // 请求初始详细分析页面的所有频道数据
         async fetchWorkDataBefore(context) {
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'

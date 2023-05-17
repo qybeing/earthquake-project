@@ -13,7 +13,8 @@
                             </svg>
                         </el-button>
                     </div>
-                    <div class="channelChoose">
+                    <div class="filter_style">
+                        <div class="channelChoose">
                         <div class="text_middle">频道：</div>
                         <el-checkbox-group v-model="querydataform.channel" class="boxgroup">
                             <el-checkbox label="BHE" />
@@ -21,7 +22,6 @@
                             <el-checkbox label="BHZ" />
                         </el-checkbox-group>
                     </div>
-                    <div class="filter_style">
                         <el-form :inline="true" :model="querydataform" ref="queryRuleFormRef" :rules="rules"
                             class="demo-form-inline">
                             <div class="wrapper">
@@ -225,9 +225,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 .channelChoose {
-    margin-left: 30px;
+    /* margin-left: 30px; */
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 60px 200px;
     grid-template-rows: 1fr;
     justify-content: center;
     align-items: center;
@@ -236,7 +236,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 .boxgroup {
     /* margin-left: 40px; */
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 70px);
     justify-content: center;
     align-items: center;
     /* background-color: rgb(227, 226, 226); */
@@ -271,10 +271,13 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 .filter_style {
-    margin-left: 30px;
+    float: right;
+    /* margin-left: 130px; */
+    width: 65%;
     margin-right: 10px;
+    right: 30em;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 3fr;
     grid-template-rows: 1fr;
 }
 
@@ -282,7 +285,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(5, 140px);
+    /* grid-template-columns: repeat(5, 130px); */
+    grid-template-columns: 3fr 3fr 3fr 2fr 2fr;
+    grid-template-rows: 1fr;
     /*  声明行间距和列间距  */
     /* grid-gap: 10px; */
     /*  声明行的高度  */
