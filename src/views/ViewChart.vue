@@ -39,26 +39,6 @@
                                 </el-form-item>
                             </div>
                         </el-form>
-                        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                            <div class="wrapper">
-                                <el-form-item label="开窗条件">
-                                    <el-input v-model="formInline.window_len" />
-                                </el-form-item>
-                                <el-form-item label="开窗范围">
-                                    <!-- <el-input v-model="formInline.fn" /> -->
-                                    <el-select v-model="formInline.fn" class="m-2" placeholder="Select">
-                                        <el-option v-for="item in options" :key="item.value" :label="item.label"
-                                            :value="item.value" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="success" @click="onDetailedChart">查看</el-button>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="success" @click="onFullChart">查看所有点位</el-button>
-                                </el-form-item>
-                            </div>
-                        </el-form>
                     </div>
                 </div>
             </template>
@@ -112,7 +92,6 @@ const pagination_query = () => {
     store.dispatch('fetchViewChartData', current_page.value)
 }
 const querydataform = reactive(computed(() => store.state.filter))
-const formInline = reactive(computed(() => store.state.window))
 const onReturn = () => {
     router.push('/offline/offlineAnalysis')
 }
@@ -146,36 +125,6 @@ onMounted(() => {
 const seeChannelChange = (row: any) => {
     console.log('频道选择', row)
     store.commit('changeSeeChannel', row)
-}
-
-const options = [
-    {
-        value: 'max',
-        label: 'max'
-    },
-    {
-        value: 'mean',
-        label: 'mean'
-    },
-    {
-        value: 'min',
-        label: 'min'
-    }
-]
-
-const onDetailedChart = () => {
-    console.log('formInline', formInline.value)
-    store.commit('getWindow', formInline.value)
-    store.dispatch('fetchViewChartData')
-}
-
-const onFullChart = () => {
-    const defaultWindow: WindowProp = {
-        window_len: '',
-        fn: ''
-    }
-    store.commit('getWindow', defaultWindow)
-    store.dispatch('fetchViewChartData')
 }
 
 const loading = computed(() => store.state.loading)

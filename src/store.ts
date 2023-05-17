@@ -534,8 +534,8 @@ const store = createStore<GlobalDataProps>({
         //     context.commit('fetchViewChartData', data)
         // },
         async fetchViewChartData(context, payload = 1) {
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const obj = {
                 pagesize: 4,
