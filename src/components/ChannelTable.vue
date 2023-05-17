@@ -4,7 +4,7 @@
             <el-table-column type="selection" width="55" />
             <el-table-column property="channel" label="频道" width="120" />
         </el-table>
-</div>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -28,6 +28,12 @@ const handleSelectionChange = (val: Curve[]) => {
     channelArr = []
     val.forEach(x => channelArr.push(x.channel))
     store.commit('changeChannel', channelArr)
+    store.dispatch('fetchTimeDomainInfo')
+        .then(
+            () => store.dispatch('fetchFrequencyDomainInfo'))
+        .then(
+            () => store.dispatch('fetchTimeFrequencyInfo')
+        )
 }
 const toggleSelection = (rows?: Curve[]) => {
     if (rows) {
