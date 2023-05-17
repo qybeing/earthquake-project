@@ -17,7 +17,7 @@
                   @current-change="handleCurrentChange"
                  :current-page="current_page"
                   layout="total, prev, pager, next"
-                  :page-size="12"
+                  :page-size="99"
                  :total="curve_total">
     </el-pagination>
     </div>

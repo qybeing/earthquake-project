@@ -511,7 +511,7 @@ const store = createStore<GlobalDataProps>({
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curve_page'
             const formData = new FormData()
             const obj = {
-                pagesize: 12,
+                pagesize: 99,
                 page: payload,
                 conditions_dict: context.state.querydata.conditions
             }

@@ -1,5 +1,5 @@
 <template>
-    <div class="div1" v-if="choosedchannels.includes('BHE')" v-loading="loading">
+    <div class="div1" v-loading="loading">
         <!-- <img :src="imgFun('test_png.png')" /> -->
         <!-- <img src="../assets/home/img/response.png" /> -->
         <!-- <img src="https://p1.ssl.qhimg.com/t0118332e529a5c2001.jpg" alt="BHE"> -->
