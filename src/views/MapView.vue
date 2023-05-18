@@ -83,7 +83,7 @@ function changeSerise(option: any, zoom: any, myChart: any) {
           show: false
         },
         itemStyle: {
-          color: 'yellow'
+          color: '#d1cfd4'
         },
         emphasis: {
           label: {
@@ -136,14 +136,14 @@ function changeSerise(option: any, zoom: any, myChart: any) {
         coordinateSystem: 'amap',
         data: siteData,
         symbol: 'triangle',
-        symbolSize: 10,
+        symbolSize: 20,
         label: {
           formatter: '{b}',
           position: 'right',
           show: false
         },
         itemStyle: {
-          color: 'yellow'
+          color: '#d1cfd4'
         },
         emphasis: {
           label: {
@@ -256,7 +256,7 @@ const getAMap = () => {
       roam: true,
       // 启用resize
       resizeEnable: true,
-      mapStyle: 'amap://styles/white',
+      mapStyle: 'amap://styles/blue',
       // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
       renderOnMoving: true,
       // ECharts 图层的 zIndex 默认 2022
@@ -303,10 +303,7 @@ const getAMap = () => {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
     changeSerise(option, zoom, myChart)
-    // option && myChart.setOption(option)
   })
-  // map.addControl(new window.AMap.Scale())
-  // map.addControl(new window.AMap.ToolBar())
 
   myChart.off('click')
   myChart.on('click', function (params) {
