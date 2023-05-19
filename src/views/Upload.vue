@@ -37,16 +37,16 @@ const onAnalysis = () => {
     width: 800px !important;
     padding: 20px;
     /* overflow: auto; */
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
 }
 
 .uploader {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
 }
 
 .uploader_top {
     height: 470px;
-    background-color: #f6f8fa;
+    /* background-color: #f6f8fa; */
     overflow: hidden;
 }
 
@@ -56,6 +56,7 @@ const onAnalysis = () => {
 
 .uploader_buttom {
     display: flex;
+    margin-top: 20px;
     justify-content: center;
     /*水平方向的居中*/
     align-items: center;
