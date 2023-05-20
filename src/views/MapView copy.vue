@@ -57,15 +57,9 @@ onMounted(() => {
   myChart = echarts.init(echartsMap.value)
   getAMap()
   drawSiteData()
-  setInterval(() => {
-    drawSignalStation()
-    drawAlarmStation()
-  }, 5000)
-  // setInterval(() => {
-  //   drawAlarmStation()
-  // }, 4000)
-
-  // drawEpicenter()
+  drawSignalStation()
+  drawAlarmStation()
+  drawEpicenter()
 })
 
 const option = {
@@ -123,6 +117,83 @@ const option = {
           show: true
         }
       }
+    },
+    {
+      name: 'SignalStation',
+      type: 'scatter',
+      coordinateSystem: 'amap',
+      // data: siteData,
+      data: [],
+      symbol: 'triangle',
+      symbolSize: 20,
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: false
+      },
+      itemStyle: {
+        color: '#00D2DE'
+      },
+      emphasis: {
+        label: {
+          show: true
+        }
+      }
+    },
+    {
+      name: 'AlarmStation',
+      type: 'effectScatter',
+      coordinateSystem: 'amap',
+      // data: siteData,
+      data: [],
+      symbol: 'triangle',
+      symbolSize: 20,
+      // rippleEffect: {
+      //       // 波纹的绘制方式，可选 'stroke' 和 'fill'
+      //       brushType: 'stroke',
+      //       scale: 2,
+      //       period: 1,
+      //       number: 2
+      //     },
+      rippleEffect: {
+        brushType: 'fill',
+        scale: 2,
+        number: 3,
+        color: 'rgba(224, 31, 31, 1)'
+      },
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: false
+      },
+      itemStyle: {
+        color: '#00D2DE'
+      },
+      zlevel: 1
+    },
+    {
+      name: 'Epicenter',
+      type: 'effectScatter',
+      coordinateSystem: 'amap',
+      // data: siteData,
+      data: [],
+      symbol: 'circle',
+      symbolSize: 20,
+      rippleEffect: {
+        brushType: 'fill',
+        scale: 3,
+        number: 4,
+        color: 'rgba(224, 31, 31, 1)'
+      },
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: false
+      },
+      itemStyle: {
+        color: 'red'
+      },
+      zlevel: 1
     }
   ],
   animation: true
@@ -191,86 +262,26 @@ const getAMap = () => {
 // 获取所有台站点位数据
 const drawSiteData = () => {
   option.series[0].data = siteData
-  myChart?.setOption({ series: option.series })
+  myChart?.setOption(option)
 }
 // 获取信号台站点位数据
 const drawSignalStation = () => {
   const signalData = siteData.slice(0, 6)
-  signalData.forEach((x) => signalStation(x.name))
-  // option.series[1].data = signalData
-  // myChart?.setOption(option)
+  option.series[1].data = signalData
+  myChart?.setOption(option)
 }
 // 获取报警台站点位数据
 const drawAlarmStation = () => {
   const alarmData = siteData.slice(0, 3)
-  alarmData.forEach((x) => alarmStation(x.name))
-  // option.series[2].data = alarmData
-  // myChart?.setOption(option)
-}
-// 收到信号的台站变蓝
-const signalStation = (stationId: string) => {
-  interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
-  const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
-  if (stationData) {
-    // 将该点位的图标颜色改为蓝色
-    stationData.itemStyle = { color: '#00D2DE' }
-    // 更新Echarts的option
-    // myChart?.setOption(option)
-    myChart?.setOption({ series: option.series })
-    // 三秒后将该点位的图标颜色改回灰色
-    setTimeout(() => {
-      stationData.itemStyle = { color: '#9FA19F' }
-      // myChart?.setOption(option)
-      myChart?.setOption({ series: option.series })
-    }, 3000)
-  }
-}
-// 收到警报的台站添加红色闪烁
-const alarmStation = (stationId: string) => {
-  interface dataItem {
-    name: string; value: number[]; itemStyle?: {
-      color: string; borderColor?: string,
-      borderWidth?: number,
-      shadowBlur?: number,
-      shadowColor?: string
-    }; label?: any
-  }
-  const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
-  if (stationData) {
-    // 将该点位的图标颜色改为蓝色
-    stationData.itemStyle = {
-      color: '#00D2DE',
-      borderColor: 'rgba(224, 31, 31, 1)',
-      borderWidth: 2,
-      shadowBlur: 10,
-      shadowColor: 'rgba(224, 31, 31, 1)'
-    }
-    // 添加标注
-    // const label = {
-    //   show: true,
-    //   position: 'top',
-    //   formatter: stationId
-    // }
-    // stationData.label = label
-    // 更新Echarts的option
-    // myChart?.setOption(option)
-    myChart?.setOption({ series: option.series })
-    // 三秒后将该点位的图标颜色改回灰色
-    setTimeout(() => {
-      // stationData.itemStyle = null
-      stationData.itemStyle = { color: '#9FA19F' }
-      stationData.label = null
-      // myChart?.setOption(option)
-      myChart?.setOption({ series: option.series })
-    }, 3000)
-  }
+  option.series[2].data = alarmData
+  myChart?.setOption(option)
 }
 // 获取震源地点位数据
-// const drawEpicenter = () => {
-//   const epicenter = warnSite
-//   option.series[3].data = epicenter
-//   myChart?.setOption(option)
-// }
+const drawEpicenter = () => {
+  const epicenter = warnSite
+  option.series[3].data = epicenter
+  myChart?.setOption(option)
+}
 const warnSite = [
   {
     name: ' ',
