@@ -5,7 +5,7 @@
     </a-row>
     <!-- <div id="tip" class="input-card">地图上右击鼠标，弹出右键菜单</div> -->
   </a-card>
-  <!-- <LegendBox></LegendBox> -->
+  <LegendBox></LegendBox>
   <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
     <div class="domain_title2">台站信息</div>
     <el-form label-position="left" size="default" label-width="80px" :model="curveData"
@@ -53,13 +53,23 @@ require('echarts/theme/macarons')
 const echartsMap = ref()
 const isopen = ref(false)
 let myChart: echarts.ECharts | null = null
+
+const stationColor = '#067af6'
+const signalColor = '#28da6f'
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
   getAMap()
   drawSiteData()
   setInterval(() => {
     drawSignalStation()
-    drawAlarmStation()
+    setTimeout(() => {
+      drawAlarmStation()
+    }, 1000)
+    setTimeout(() => {
+      drawEpicenter()
+    }, 2000)
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    setTimeout(() => { }, 4000)
   }, 5000)
   // setInterval(() => {
   //   drawAlarmStation()
@@ -90,7 +100,7 @@ const option = {
     roam: true,
     // 启用resize
     resizeEnable: true,
-    mapStyle: 'amap://styles/blue',
+    mapStyle: 'amap://styles/white',
     // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
     renderOnMoving: true,
     // ECharts 图层的 zIndex 默认 2022
@@ -116,13 +126,37 @@ const option = {
       },
       itemStyle: {
         // color: '#d1cfd4'
-        color: '#9FA19F'
+        color: stationColor
       },
       emphasis: {
         label: {
           show: true
         }
       }
+    },
+    {
+      name: 'Epicenter',
+      type: 'effectScatter',
+      coordinateSystem: 'amap',
+      // data: siteData,
+      data: [],
+      symbol: 'circle',
+      symbolSize: 20,
+      rippleEffect: {
+        brushType: 'fill',
+        scale: 3,
+        number: 4,
+        color: 'rgba(224, 31, 31, 1)'
+      },
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: false
+      },
+      itemStyle: {
+        color: 'red'
+      },
+      zlevel: 1
     }
   ],
   animation: true
@@ -165,10 +199,10 @@ const getAMap = () => {
 
   const map = myChart?.getModel().getComponent('amap').getAMap()
   // 设置显示卫星图
-  // const Satellite = new window.AMap.TileLayer.Satellite({
-  //   zIndex: 10
-  // })
-  // map.add(Satellite)
+  const Satellite = new window.AMap.TileLayer.Satellite({
+    zIndex: 10
+  })
+  map.add(Satellite)
   map.on('zoomend', function () {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
@@ -213,13 +247,13 @@ const signalStation = (stationId: string) => {
   const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
   if (stationData) {
     // 将该点位的图标颜色改为蓝色
-    stationData.itemStyle = { color: '#00D2DE' }
+    stationData.itemStyle = { color: signalColor }
     // 更新Echarts的option
     // myChart?.setOption(option)
     myChart?.setOption({ series: option.series })
     // 三秒后将该点位的图标颜色改回灰色
     setTimeout(() => {
-      stationData.itemStyle = { color: '#9FA19F' }
+      stationData.itemStyle = { color: stationColor }
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
     }, 3000)
@@ -239,7 +273,7 @@ const alarmStation = (stationId: string) => {
   if (stationData) {
     // 将该点位的图标颜色改为蓝色
     stationData.itemStyle = {
-      color: '#00D2DE',
+      color: signalColor,
       borderColor: 'rgba(224, 31, 31, 1)',
       borderWidth: 2,
       shadowBlur: 10,
@@ -258,7 +292,7 @@ const alarmStation = (stationId: string) => {
     // 三秒后将该点位的图标颜色改回灰色
     setTimeout(() => {
       // stationData.itemStyle = null
-      stationData.itemStyle = { color: '#9FA19F' }
+      stationData.itemStyle = { color: stationColor }
       stationData.label = null
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
@@ -266,11 +300,17 @@ const alarmStation = (stationId: string) => {
   }
 }
 // 获取震源地点位数据
-// const drawEpicenter = () => {
-//   const epicenter = warnSite
-//   option.series[3].data = epicenter
-//   myChart?.setOption(option)
-// }
+const drawEpicenter = () => {
+  const epicenter = warnSite
+  option.series[1].data = epicenter
+  myChart?.setOption({ series: option.series })
+  // 三秒后将该点位的图标颜色改回灰色
+  setTimeout(() => {
+    // stationData.itemStyle = null
+    option.series[1].data = []
+    myChart?.setOption({ series: option.series })
+  }, 3000)
+}
 const warnSite = [
   {
     name: ' ',

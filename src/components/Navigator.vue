@@ -1,9 +1,12 @@
 <template>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect"
-        :router="true" style='height: 100%;'>
+        :router="true" style='height: 100%;'
+        background-color="#0b2648"
+    text-color="#fff"
+    active-text-color="#ffd04b">
         <el-menu-item>
             <span class="title">
-                地震大数据可视化分析平台
+                地震数据监测分析平台
             </span></el-menu-item>
         <div class="flex-grow" />
         <el-menu-item index="/test">测试</el-menu-item>
@@ -73,4 +76,5 @@ const onAnalysis = () => {
 .el-menu--popup {
     min-width: 100px !important;
 }
+
 </style>

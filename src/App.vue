@@ -48,7 +48,7 @@ onMounted(() => {
 
   // document.body.style.setProperty('--el-text-color-regular', '#fff') // 表头颜色
   // document.body.style.setProperty('--el-color-primary-light-9', '#fff') // 表头颜色
-  document.body.style.setProperty('--el-bg-color-overlay', '#3cbaff') // 下拉框颜色
+  // document.body.style.setProperty('--el-bg-color-overlay', '#3cbaff') // 下拉框颜色
 
   // document.body.style.setProperty('--el-color-primary', '#56AB2F')
   // document.body.style.setProperty('--el-color-primary-light-9', '#F5FBF0')

@@ -34,7 +34,7 @@
                                 <el-button type="danger" :icon="Delete">批量删除</el-button>
                             </template>
                         </el-popconfirm>
-                            <el-button class="btn-seal" @click="exportExcel" type="primary" plain>导出Excel</el-button>
+                            <el-button class="btn-seal" @click="exportExcel" type="primary" :icon="Document" plain>导出Excel</el-button>
                             <el-button type="success" @click="onViewChart" :icon="DataAnalysis">批量查看</el-button>
                         </el-form-item>
 
@@ -50,7 +50,8 @@
 import {
     Search,
     DataAnalysis,
-    Delete
+    Delete,
+    Document
 } from '@element-plus/icons-vue'
 import htmlToExcel from '@/utils/htmlToExcel'
 import type { FormInstance, FormRules } from 'element-plus'
