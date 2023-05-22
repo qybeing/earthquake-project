@@ -1,6 +1,5 @@
 <template>
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect"  background-color="#022a45" text-color="#fff"
-    active-text-color="#ffd04b"
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect"
         :router="true" style='height: 100%;'>
         <el-menu-item>
             <span class="title">
@@ -66,7 +65,7 @@ const onAnalysis = () => {
 .title {
     font-size: 18px;
     font-weight: 700;
-    color: hsl(0, 26%, 96%);
+    /* color: hsl(0, 26%, 96%); */
     /* color: #000000; */
 }
 
