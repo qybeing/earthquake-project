@@ -46,7 +46,7 @@ const uploadError = (_error: Error, uploadFile: UploadFile, uploadFiles: UploadF
     height: 90%;
 } */
 .el-upload-dragger {
-    height: 400px;
+    height: 90%;
     width: 90%;
     margin: 5%;
 }

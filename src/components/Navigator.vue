@@ -35,6 +35,7 @@ import {
 } from '@element-plus/icons-vue'
 import store from '@/store'
 import { ref, watch } from 'vue'
+// import screenfull from 'screenfull'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()

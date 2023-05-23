@@ -15,6 +15,7 @@
     "element-plus": "^2.2.23",
     "element-ui": "^2.15.12",
     "file-saver": "^2.0.5",
+    "screenfull": "^6.0.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.13",
     "vuex": "^4.0.2",

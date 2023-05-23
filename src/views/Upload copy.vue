@@ -4,16 +4,18 @@
             <FilesForm></FilesForm>
         </el-aside>
         <el-main class="uploader">
-            <div id="upload-area">
-                <div class="uploader_top">
-                    <Uploader></Uploader>
-                </div>
-                <div class="uploader_buttom">
-                    <div shadow="hover" @click.prevent="onAnalysis" class="btn_card"> 离线分析 </div>
-                </div>
-            </div>
-            <!-- <el-card id="upload-card" shadow="never">
-            </el-card> -->
+            <el-card id="box-card" shadow="never">
+                <el-containe class="box-containe">
+                    <el-header class="uploader_top">
+                        <Uploader class="uploader_item"></Uploader>
+                    </el-header>
+                    <el-footer class="uploader_buttom">
+                        <!-- <el-button size="medium" types="primary" @click.prevent="onAnalysis">离线分析</el-button> -->
+                        <!-- <el-button size="medium" type="success" @mousedown="onAnalysis">离线分析</el-button> -->
+                        <el-card shadow="hover" @click.prevent="onAnalysis" class="btn_card"> 离线分析 </el-card>
+                    </el-footer>
+                </el-containe>
+            </el-card>
         </el-main>
     </el-container>
 </template>
@@ -30,29 +32,15 @@ const onAnalysis = () => {
 </script>
 
 <style scoped>
-#upload-area {
-    /* padding: 30px; */
+.box-containe {
+    background-color: rgb(35, 234, 88);
+}
+#box-card {
     display: grid;
-    min-height: 99%;
-    grid-template-columns: 99%;
-    grid-template-rows: 70% 27%;
-    justify-content: center;
-    align-content: center;
-    grid-gap: 20px;
-    background-color: #ffffff;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background-color: #fff;
-    overflow: hidden;
-    color: #303133;
-    transition: 0.3s;
+    grid-template-columns: 70% 30%;
+    /* height: 100%; */
+    /* background-color: rgb(109, 79, 79); */
 }
-
-#upload-card {
-    min-height: 99%;
-    /* background-color: rgb(141, 84, 206); */
-}
-
 .file_form {
     /* width: 800px !important; */
     width: 800px !important;
@@ -66,28 +54,25 @@ const onAnalysis = () => {
 }
 
 .uploader_top {
-    /* height: 470px; */
-    height: 90%;
-    margin: 5%;
-    background-color: #f6f8fa;
+    height: 470px;
+    /* background-color: #f6f8fa; */
     overflow: hidden;
 }
 
 .uploader_item {
-    /* margin-top: 10px; */
+    margin-top: 10px;
 }
 
 .uploader_buttom {
     display: flex;
-    /* height: 100%; */
     /* margin-top: 20px; */
+    margin-bottom: 20px;
     justify-content: center;
     /*水平方向的居中*/
     align-items: center;
     overflow: hidden;
     padding: 0;
-    /* background-color: rgb(165, 143, 143); */
-    /* background-color: rgb(155, 48, 48); */
+    background-color: rgb(61, 42, 42);
     /*垂直方向的居中*/
 }
 
@@ -96,8 +81,8 @@ const onAnalysis = () => {
     /* height: 100px;
     width: 170px; */
     text-align: center;
-    line-height: 70px;
-    font-size: 25px;
+    line-height: 50px;
+    font-size: large;
     font-weight: 2px;
     color: white;
     background-color: rgb(155, 207, 223);
