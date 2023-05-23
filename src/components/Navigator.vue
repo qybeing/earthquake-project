@@ -1,14 +1,15 @@
 <template>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect"
-        :router="true" style='height: 100%;'
-        background-color="#0b2648"
-    text-color="#fff"
-    active-text-color="#ffd04b">
+        :router="true" style='height: 100%;' background-color="#0b2648" text-color="#fff" active-text-color="#ffd04b">
+        <!-- <FullScreen></FullScreen> -->
         <el-menu-item>
             <span class="title">
                 地震数据监测分析平台
             </span></el-menu-item>
         <div class="flex-grow" />
+        <span @click="onToggle">
+            全屏
+        </span>
         <el-menu-item index="/test">测试</el-menu-item>
         <el-menu-item index="/online/mapView">在线分析</el-menu-item>
         <el-menu-item index="/offline/upload">上传文件</el-menu-item>
@@ -31,16 +32,21 @@
 <script lang="ts" setup>
 import {
     Menu,
-    Location
+    Location,
+    FullScreen
 } from '@element-plus/icons-vue'
 import store from '@/store'
 import { ref, watch } from 'vue'
-// import screenfull from 'screenfull'
+import screenfull from 'screenfull'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const activeIndex = ref('/offline/upload')
-
+// 切换事件
+const onToggle = () => {
+  alert('点击 fullscreen')
+  screenfull.toggle()
+}
 watch(
     router.currentRoute,
     (newValue, oldValue) => {
@@ -77,5 +83,4 @@ const onAnalysis = () => {
 .el-menu--popup {
     min-width: 100px !important;
 }
-
 </style>

@@ -18,6 +18,7 @@ const change = () => {
 
 // 切换事件
 const onToggle = () => {
+  alert('点击 fullscreen')
   screenfull.toggle()
 }
 
