@@ -576,12 +576,19 @@ const store = createStore<GlobalDataProps>({
             context.commit('fetchViewChartData', data)
         },
         // 从地图发起请求查看曲线图
-        async fetchViewChartDataFromMap(context) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+        async fetchViewChartDataFromMap(context, clickId) {
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
+            // ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
+            const idArr = []
+            idArr.push(clickId + '.00.BHE')
+            idArr.push(clickId + '.00.BHN')
+            idArr.push(clickId + '.00.BHZ')
             const obj = {
-                curve_ids: ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
-                window: { window_len: '5s', fn: '' }
+                pagesize: 4,
+                page: 1,
+                curve_ids: idArr
             }
             formData.append('args', JSON.stringify(obj))
             const { data } = await axios.post(url, formData)

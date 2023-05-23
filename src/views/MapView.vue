@@ -43,7 +43,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
 // ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
 import 'echarts-extension-amap'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { siteData, networkData } from '../testData'
 import router from '@/router'
 import { GlobalDataProps } from '@/store'
@@ -64,10 +64,10 @@ onMounted(() => {
     drawSignalStation()
     setTimeout(() => {
       drawAlarmStation()
-    }, 1000)
+    }, 3000)
     setTimeout(() => {
       drawEpicenter()
-    }, 2000)
+    }, 3000)
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     setTimeout(() => { }, 4000)
   }, 5000)
@@ -213,12 +213,24 @@ const getAMap = () => {
   if (myChart) {
     myChart && myChart.off('click')
     myChart.on('click', function (params) {
-      router.push('/offline/ViewChart')
-      store.dispatch('fetchViewChartData')
+      console.log('左键点击点击了！', params.data)
+      const obj: any = params.data
+      const reg = /^\s+$/g
+      if (!reg.test(obj.name)) {
+        store.dispatch('fetchViewChartDataFromMap', obj.name)
+        router.push('/offline/ViewChart')
+      }
     })
     myChart.on('contextmenu', function (params) {
-      console.log('右键点击点击了！', params)
-      isopen.value = true
+      console.log('右键点击点击了！', params.data)
+      const obj: any = params.data
+      const reg = /^\s+$/g
+      if (!reg.test(obj.name)) {
+        curveData.id = obj.name
+        curveData.longitude = obj.value[0]
+        curveData.latitude = obj.value[1]
+        isopen.value = true
+      }
     })
   }
 }
@@ -320,11 +332,11 @@ const warnSite = [
     ]
   }
 ]
-const curveData = {
+const curveData = reactive({
   id: 'XJ.AHQ.00.BHN',
   longitude: 116.2164,
   latitude: 31.3986
-}
+})
 
 const amplitudeData = {
   time: '2022-10-16 08:58:17',

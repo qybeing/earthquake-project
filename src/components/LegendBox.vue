@@ -22,7 +22,7 @@
 <script setup lang="ts">
 
 </script>
-<style>
+<style scoped>
 .legend {
   position: fixed;
   top: 60px;
@@ -55,8 +55,8 @@
 
 .symbol {
   /* display: flex; */
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   margin-right: 0.5em;
   /* background-color: #fff; */
 }
