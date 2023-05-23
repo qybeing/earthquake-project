@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 // import AMap from 'AMap'
+import { io } from 'socket.io-client'
 import LegendBox from '@/components/LegendBox.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
@@ -48,34 +49,83 @@ import { siteData, networkData } from '../testData'
 import router from '@/router'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
+import { StringLiteral } from '@babel/types'
 const store = useStore<GlobalDataProps>()
 require('echarts/theme/macarons')
 const echartsMap = ref()
 const isopen = ref(false)
 let myChart: echarts.ECharts | null = null
+interface socketProp {
+  type: string;
+  channel: string;
+  location: string;
+  station: string;
+  network: string;
+  start_time: string;
+  end_time: string;
+}
+const socket = io('http://202.199.13.154:5100/realtime_info', {
+  autoConnect: true // 自动连接
+})
+const handleEmit = () => {
+  // 向后台发送信息， response：响应信息
+  socket.emit('chatMessage', 'test-value', (response: any) => {
+    console.log(response, '发送消息，接收发送成功响应信息')
+  })
+}
+socket.on('hello', (arg) => {
+  console.log(socket.id)
+  console.log(arg)
+})
+// 连接异常时，会触发
+socket.on('connect_error', (err) => {
+  console.log('websocket连接异常', err)
+  // 如果连接异常，修改transports传输方式
+  socket.io.opts.transports = ['websocket', 'polling']
+  // 鉴权失败的话，可以修改token，再进行重连
+  // if (err.message === "invalid credentials") {
+  //   socket.auth.token = "new abcd";
+  //   // 手动重连
+  //   socket.connect();
+  // }
+})
+// 实时接收后台返回的数据
+// socket.on('real_time_monitor', function (msg) {
+//   console.log('接收消息', msg)
+// })
 
-const stationColor = '#067af6'
+const stationColor = 'grey'
 const signalColor = '#28da6f'
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
+  // initWebSocket()
+  // handleEmit()
   getAMap()
   drawSiteData()
-  setInterval(() => {
-    drawSignalStation()
-    setTimeout(() => {
-      drawAlarmStation()
-    }, 3000)
-    setTimeout(() => {
-      drawEpicenter()
-    }, 3000)
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setTimeout(() => { }, 4000)
-  }, 5000)
+  // 实时接收消息
+  socket.on('real_time_monitor', function (msg) {
+    console.log('接收消息', msg)
+    const mesObj: socketProp = JSON.parse(msg)
+    console.log('mesObj', mesObj)
+    const name = mesObj.network + '.' + mesObj.station
+    if (mesObj.type === 'normal') {
+      console.log('信号台站名称', name)
+      signalStation(name)
+    }
+    // else if(mesObj.type === 'normal')
+  })
+  // drawSiteData()
   // setInterval(() => {
-  //   drawAlarmStation()
-  // }, 4000)
-
-  // drawEpicenter()
+  //   drawSignalStation()
+  //   setTimeout(() => {
+  //     drawAlarmStation()
+  //   }, 3000)
+  //   setTimeout(() => {
+  //     drawEpicenter()
+  //   }, 3000)
+  //   // eslint-disable-next-line @typescript-eslint/no-empty-function
+  //   setTimeout(() => { }, 4000)
+  // }, 5000)
 })
 
 const option = {
@@ -164,39 +214,7 @@ const option = {
 
 // 地图初始化配置
 const getAMap = () => {
-  // const option = {
-  //   tooltip: {
-  //     show: true, // 提示框
-  //     triggerOn: 'click', // 必须使用这种方式，因为tooltip需要有点击事件，同时移入effectScatter点区域联动
-  //     extraCssText: 'border:none;', // 清除tooltip自带颜色
-  //     // alwaysShowContent: true,//提示框不消失
-  //     hideDelay: 2000 // 提示框2秒后小时
-  //   },
-  //   // 加载 amap 组件
-  //   amap: {
-  //     // 中文版地图
-  //     lang: 'cn',
-  //     // 3D模式，开启此项以获得更好的渲染体验
-  //     viewMode: '3D',
-  //     // 高德地图中心经纬度
-  //     center: [104.114129, 37.550339],
-  //     // 地图缩放
-  //     zoom: 4,
-  //     // 开启鼠标缩放和平移漫游
-  //     roam: true,
-  //     // 启用resize
-  //     resizeEnable: true,
-  //     mapStyle: 'amap://styles/blue',
-  //     // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
-  //     renderOnMoving: true,
-  //     // ECharts 图层的 zIndex 默认 2022
-  //     echartsLayerZIndex: 2022
-  //   },
-  //   animation: true
-  // }
-
   myChart?.setOption(option)
-
   const map = myChart?.getModel().getComponent('amap').getAMap()
   // 设置显示卫星图
   const Satellite = new window.AMap.TileLayer.Satellite({
@@ -243,22 +261,18 @@ const drawSiteData = () => {
 const drawSignalStation = () => {
   const signalData = siteData.slice(0, 6)
   signalData.forEach((x) => signalStation(x.name))
-  // option.series[1].data = signalData
-  // myChart?.setOption(option)
 }
 // 获取报警台站点位数据
 const drawAlarmStation = () => {
   const alarmData = siteData.slice(0, 3)
   alarmData.forEach((x) => alarmStation(x.name))
-  // option.series[2].data = alarmData
-  // myChart?.setOption(option)
 }
 // 收到信号的台站变蓝
 const signalStation = (stationId: string) => {
   interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
   const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
+  console.log('stationData', stationData)
   if (stationData) {
-    // 将该点位的图标颜色改为蓝色
     stationData.itemStyle = { color: signalColor }
     // 更新Echarts的option
     // myChart?.setOption(option)
@@ -283,7 +297,6 @@ const alarmStation = (stationId: string) => {
   }
   const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
   if (stationData) {
-    // 将该点位的图标颜色改为蓝色
     stationData.itemStyle = {
       color: signalColor,
       borderColor: 'rgba(224, 31, 31, 1)',
@@ -303,7 +316,6 @@ const alarmStation = (stationId: string) => {
     myChart?.setOption({ series: option.series })
     // 三秒后将该点位的图标颜色改回灰色
     setTimeout(() => {
-      // stationData.itemStyle = null
       stationData.itemStyle = { color: stationColor }
       stationData.label = null
       // myChart?.setOption(option)
@@ -318,7 +330,6 @@ const drawEpicenter = () => {
   myChart?.setOption({ series: option.series })
   // 三秒后将该点位的图标颜色改回灰色
   setTimeout(() => {
-    // stationData.itemStyle = null
     option.series[1].data = []
     myChart?.setOption({ series: option.series })
   }, 3000)
@@ -343,6 +354,27 @@ const amplitudeData = {
   max_amplitude: 116.2164,
   level: 5
 }
+
+const initWebSocket = () => {
+  const socket = new WebSocket('ws://202.199.13.154:5100/realtime_info')
+  socket.onopen = function () {
+    console.log('通讯开始')
+    // 发送心跳防止ws协议自动断联
+    setInterval(() => {
+      socket.send('1')
+    }, 1000 * 60)
+  }
+  socket.onmessage = function (e) {
+    console.log('收到的数据：', e)
+  }
+  socket.onerror = function (e) {
+    console.log('通讯异常', e)
+  }
+  socket.close = function (e) {
+    console.log('连接已断开', e)
+  }
+}
+
 </script>
 
 <style scoped>

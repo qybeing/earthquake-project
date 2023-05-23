@@ -459,7 +459,9 @@ const store = createStore<GlobalDataProps>({
             const args = {
                 curve_ids: payload
             }
-            const { data } = await axios.post(url, args)
+            const formData = new FormData()
+            formData.append('args', JSON.stringify(args))
+            const { data } = await axios.post(url, formData)
             payload.forEach((name) => {
                 store.commit('deletCurve', name)
             })
@@ -470,7 +472,9 @@ const store = createStore<GlobalDataProps>({
             const args = {
                 file_list: payload
             }
-            const { data } = await axios.post(url, args)
+            const formData = new FormData()
+            formData.append('args', JSON.stringify(args))
+            const { data } = await axios.post(url, formData)
             payload.forEach((name) => {
                 store.commit('deleteFile', name)
             })
