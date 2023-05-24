@@ -1,0 +1,353 @@
+<template>
+  <a-card :bordered="false">
+    <a-row>
+      <div ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
+    </a-row>
+    <!-- <div id="tip" class="input-card">地图上右击鼠标，弹出右键菜单</div> -->
+  </a-card>
+  <!-- <LegendBox></LegendBox> -->
+  <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
+    <div class="domain_title2">台站信息</div>
+    <el-form label-position="left" size="default" label-width="80px" :model="curveData"
+      style="width: 100%;background-color: white;">
+      <el-form-item label="编号">
+        <el-input readonly :value="curveData.id" />
+      </el-form-item>
+      <el-form-item label="纬度">
+        <el-input readonly :value="curveData.latitude" />
+      </el-form-item>
+      <el-form-item label="经度">
+        <el-input readonly :value="curveData.longitude" />
+      </el-form-item>
+    </el-form>
+    <div class="domain_title2">振幅信息</div>
+    <el-form label-position="left" size="default" label-width="80px" :model="amplitudeData"
+      style="width: 100%;background-color: white;">
+      <el-form-item label="时间">
+        <el-input readonly :value="amplitudeData.time" />
+      </el-form-item>
+      <el-form-item label="最大振幅">
+        <el-input readonly :value="amplitudeData.max_amplitude" />
+      </el-form-item>
+      <el-form-item label="等级">
+        <el-input readonly :value="amplitudeData.level" />
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+</template>
+
+<script setup lang="ts">
+// import AMap from 'AMap'
+import LegendBox from '@/components/LegendBox.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import * as echarts from 'echarts' // echarts theme
+// ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
+import 'echarts-extension-amap'
+import { onMounted, ref } from 'vue'
+import { siteData, networkData } from '../testData'
+import router from '@/router'
+import { GlobalDataProps } from '@/store'
+import { useStore } from 'vuex'
+const store = useStore<GlobalDataProps>()
+require('echarts/theme/macarons')
+const echartsMap = ref()
+const isopen = ref(false)
+onMounted(() => getAMap())
+
+const warnSite = [
+  {
+    name: ' ',
+    value: [
+      116.9711,
+      32.2179
+    ]
+  }
+]
+function changeSerise(option: any, zoom: any, myChart: any) {
+  let input
+  if (zoom < 6) {
+    input = [
+      {
+        name: 'pm2.5',
+        type: 'scatter',
+        // 使用高德地图坐标系
+        coordinateSystem: 'amap',
+        data: networkData,
+        symbol: 'triangle',
+        symbolSize: function () {
+          return 25
+        },
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: false
+        },
+        itemStyle: {
+          color: 'yellow'
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
+        }
+      },
+      {
+        name: 'warnSite',
+        type: 'effectScatter',
+        coordinateSystem: 'amap',
+        data: warnSite,
+        symbol: 'circle',
+        symbolSize: 25,
+        // 配置绘制完成时显示特效
+        showEffectOn: 'render',
+        // 涟漪特效
+        rippleEffect: {
+          // 波纹的绘制方式，可选 'stroke' 和 'fill'
+          brushType: 'fill',
+          scale: 4,
+          period: 1,
+          number: 2
+        },
+        // 开启鼠标 hover 的提示动画效果
+        hoverAnimation: true,
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: true
+        },
+        itemStyle: {
+          color: 'red',
+          shadowBlur: 10,
+          shadowColor: '#333'
+        },
+        zlevel: 1,
+        tooltip: {
+          show: true, // 提示框
+          triggerOn: 'contextmenu'
+        }
+      }
+    ]
+  } else {
+    input = [
+      {
+        name: 'pm2.5',
+        type: 'scatter',
+        // 使用高德地图坐标系
+        coordinateSystem: 'amap',
+        data: siteData,
+        symbol: 'triangle',
+        symbolSize: 10,
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: false
+        },
+        itemStyle: {
+          color: 'yellow'
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
+        }
+      },
+      {
+        name: 'Top 5',
+        type: 'effectScatter',
+        coordinateSystem: 'amap',
+        data: siteData.slice(0, 6),
+        symbol: 'triangle',
+        symbolSize: 15,
+        // 配置绘制完成时显示特效
+        showEffectOn: 'render',
+        // 涟漪特效
+        // rippleEffect: {
+        //   // 波纹的绘制方式，可选 'stroke' 和 'fill'
+        //   brushType: 'fill',
+        //   scale: 4,
+        //   period: 1,
+        //   number: 2
+        // },
+        // 开启鼠标 hover 的提示动画效果
+        hoverAnimation: true,
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: true
+        },
+        itemStyle: {
+          color: 'red',
+          shadowBlur: 10,
+          shadowColor: '#333'
+        },
+        zlevel: 1,
+        tooltip: {
+          show: true, // 提示框
+          triggerOn: 'contextmenu'
+        }
+      },
+      {
+        name: 'warnSite',
+        type: 'effectScatter',
+        coordinateSystem: 'amap',
+        data: warnSite,
+        symbol: 'circle',
+        symbolSize: 20,
+        // 配置绘制完成时显示特效
+        showEffectOn: 'render',
+        // 涟漪特效
+        rippleEffect: {
+          // 波纹的绘制方式，可选 'stroke' 和 'fill'
+          brushType: 'fill',
+          scale: 4,
+          period: 1,
+          number: 2
+        },
+        // 开启鼠标 hover 的提示动画效果
+        hoverAnimation: true,
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: true
+        },
+        itemStyle: {
+          color: 'red',
+          shadowBlur: 10,
+          shadowColor: '#333'
+        },
+        zlevel: 1,
+        tooltip: {
+          show: true, // 提示框
+          triggerOn: 'contextmenu'
+        }
+      }
+
+    ]
+  }
+
+  myChart.setOption({ series: input })
+}
+
+const getAMap = () => {
+  const myChart = echarts.init(echartsMap.value)
+  let option: any
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  // const that = this
+  // eslint-disable-next-line prefer-const
+  option = {
+    tooltip: {
+      show: true, // 提示框
+      triggerOn: 'click', // 必须使用这种方式，因为tooltip需要有点击事件，同时移入effectScatter点区域联动
+      extraCssText: 'border:none;', // 清除tooltip自带颜色
+      // alwaysShowContent: true,//提示框不消失
+      hideDelay: 2000 // 提示框2秒后小时
+    },
+    // 加载 amap 组件
+    amap: {
+      // 中文版地图
+      lang: 'cn',
+      // 3D模式，开启此项以获得更好的渲染体验
+      viewMode: '3D',
+      // 高德地图中心经纬度
+      center: [104.114129, 37.550339],
+      // 地图缩放
+      zoom: 4,
+      // 开启鼠标缩放和平移漫游
+      roam: true,
+      // 启用resize
+      resizeEnable: true,
+      mapStyle: 'amap://styles/white',
+      // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
+      renderOnMoving: true,
+      // ECharts 图层的 zIndex 默认 2022
+      echartsLayerZIndex: 2022
+    },
+    series: [
+      {
+        name: 'pm2.5',
+        type: 'scatter',
+        // 使用高德地图坐标系
+        coordinateSystem: 'amap',
+        data: networkData,
+        symbol: 'triangle',
+        symbolSize: function () {
+          return 25
+        },
+        label: {
+          formatter: '{b}',
+          position: 'right',
+          show: false
+        },
+        itemStyle: {
+          color: 'yellow'
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
+        }
+      }
+    ],
+    animation: true
+  }
+
+  option && myChart.setOption(option)
+
+  const map = myChart.getModel().getComponent('amap').getAMap()
+  // 设置显示卫星图
+  const Satellite = new window.AMap.TileLayer.Satellite({
+    zIndex: 10
+  })
+  map.add(Satellite)
+  map.on('zoomend', function () {
+    const zoom = map.getZoom()
+    console.log('zoom', zoom)
+    changeSerise(option, zoom, myChart)
+    // option && myChart.setOption(option)
+  })
+  // map.addControl(new window.AMap.Scale())
+  // map.addControl(new window.AMap.ToolBar())
+
+  myChart.off('click')
+  myChart.on('click', function (params) {
+    router.push('/offline/ViewChart')
+    store.dispatch('fetchViewChartData')
+  })
+  myChart.on('contextmenu', function (params) {
+    console.log('右键点击点击了！', params)
+    isopen.value = true
+  })
+}
+
+const curveData = {
+  id: 'XJ.AHQ.00.BHN',
+  longitude: 116.2164,
+  latitude: 31.3986
+}
+
+const amplitudeData = {
+  time: '2022-10-16 08:58:17',
+  max_amplitude: 116.2164,
+  level: 5
+}
+</script>
+
+<style scoped>
+.domain_title2 {
+  font-size: 17px;
+  font-weight: bold;
+  border-bottom: 2px solid;
+  margin-bottom: 8px;
+  color: rgb(151, 151, 151);
+}
+
+.input-card {
+  width: 150px;
+  top: 40px;
+  right: 10px;
+  bottom: auto;
+  position: fixed;
+  z-index: 999;
+  background-color: #5a83c3;
+}
+</style>

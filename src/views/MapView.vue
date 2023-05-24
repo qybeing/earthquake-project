@@ -365,26 +365,6 @@ const amplitudeData = {
   level: 5
 }
 
-const initWebSocket = () => {
-  const socket = new WebSocket('ws://202.199.13.154:5100/realtime_info')
-  socket.onopen = function () {
-    console.log('通讯开始')
-    // 发送心跳防止ws协议自动断联
-    setInterval(() => {
-      socket.send('1')
-    }, 1000 * 60)
-  }
-  socket.onmessage = function (e) {
-    console.log('收到的数据：', e)
-  }
-  socket.onerror = function (e) {
-    console.log('通讯异常', e)
-  }
-  socket.close = function (e) {
-    console.log('连接已断开', e)
-  }
-}
-
 </script>
 
 <style scoped>

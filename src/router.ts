@@ -53,29 +53,29 @@ const router = createRouter({
 })
 
 // 路由守卫
-// router.beforeEach((to, from, next) => {
-//     const { chooseData, chooses, viewChartData } = store.state
-//     if (chooseData.curve_id === '' && viewChartData.length === 0 && to.path === '/offline/DetailedChart') {
-//         ElMessage({
-//             message: '将跳转到文件数据页面，请先选择要分析的数据',
-//             type: 'warning'
-//         })
-//         next('/offline/offlineAnalysis')
-//     } else if (chooseData.curve_id === '' && viewChartData.length > 0 && to.path === '/offline/DetailedChart') {
-//         ElMessage({
-//             message: '将跳转到批量查看页面，请先选择要分析的数据',
-//             type: 'warning'
-//         })
-//         next('/offline/ViewChart')
-//     } else if (viewChartData.length === 0 && to.path === '/offline/ViewChart') {
-//         ElMessage({
-//             message: '将跳转到文件数据页面，请先选择要查看的数据',
-//             type: 'warning'
-//         })
-//         next('/offline/offlineAnalysis')
-//     } else {
-//         next()
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    const { chooseData, chooses, viewChartData } = store.state
+    if (chooseData.curve_id === '' && viewChartData.length === 0 && to.path === '/offline/DetailedChart') {
+        ElMessage({
+            message: '将跳转到文件数据页面，请先选择要分析的数据',
+            type: 'warning'
+        })
+        next('/offline/offlineAnalysis')
+    } else if (chooseData.curve_id === '' && viewChartData.length > 0 && to.path === '/offline/DetailedChart') {
+        ElMessage({
+            message: '将跳转到批量查看页面，请先选择要分析的数据',
+            type: 'warning'
+        })
+        next('/offline/ViewChart')
+    } else if (viewChartData.length === 0 && to.path === '/offline/ViewChart') {
+        ElMessage({
+            message: '将跳转到文件数据页面，请先选择要查看的数据',
+            type: 'warning'
+        })
+        next('/offline/offlineAnalysis')
+    } else {
+        next()
+    }
+})
 
 export default router
