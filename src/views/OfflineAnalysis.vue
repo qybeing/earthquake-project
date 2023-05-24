@@ -27,14 +27,19 @@
                             <!-- <el-form-item>
                                 <el-button @click="resetForm(ruleFormRef)">重置</el-button>
                             </el-form-item> -->
+                            <!-- <el-form-item>
+                                <el-button @click="resetForm(ruleFormRef)">重置</el-button>
+                            </el-form-item> -->
                         </div>
                         <el-form-item>
-                            <el-popconfirm title="确定删除吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="handleDelete">
-                            <template #reference>
-                                <el-button type="danger" :icon="Delete">批量删除</el-button>
-                            </template>
-                        </el-popconfirm>
-                            <el-button class="btn-seal" @click="exportExcel" type="primary" :icon="Document" plain>导出Excel</el-button>
+                            <el-popconfirm title="确定删除吗？" confirmButtonText='确定' cancelButtonText='取消'
+                                @confirm="handleDelete">
+                                <template #reference>
+                                    <el-button type="danger" :icon="Delete">批量删除</el-button>
+                                </template>
+                            </el-popconfirm>
+                            <el-button class="btn-seal" @click="exportExcel" type="primary" :icon="Document"
+                                plain>导出Excel</el-button>
                             <el-button type="success" @click="onViewChart" :icon="DataAnalysis">批量查看</el-button>
                         </el-form-item>
 
@@ -197,7 +202,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
 }
 
 const resetForm = (formEl: FormInstance | undefined) => {
-    alert('进入重置')
     if (!formEl) return
     formEl.resetFields()
 }

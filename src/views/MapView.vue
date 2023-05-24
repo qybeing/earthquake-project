@@ -80,7 +80,7 @@ socket.on('hello', (arg) => {
 // 连接异常时，会触发
 socket.on('connect_error', (err) => {
   console.log('websocket连接异常', err)
-  ElMessage.error('websocket连接异常')
+  // ElMessage.error('websocket连接异常')
   // 如果连接异常，修改transports传输方式
   socket.io.opts.transports = ['websocket', 'polling']
   // 鉴权失败的话，可以修改token，再进行重连

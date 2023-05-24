@@ -55,14 +55,14 @@ const changeID = () => {
 onMounted(
     () => {
         store.dispatch('fetchTimeDomainInfo')
-        .then(
-            () => store.dispatch('fetchFrequencyDomainInfo'))
-        .then(
-            () => store.dispatch('fetchTimeFrequencyInfo')
-        )
-        .then(
-            () => store.dispatch('fetchFeatureExtractionInfo')
-        )
+            .then(
+                () => store.dispatch('fetchFrequencyDomainInfo'))
+            .then(
+                () => store.dispatch('fetchTimeFrequencyInfo')
+            )
+            .then(
+                () => store.dispatch('fetchFeatureExtractionInfo')
+            )
     }
 )
 
@@ -95,6 +95,7 @@ onMounted(
     /*  声明行的高度  */
     grid-template-rows: 50px 170px 1fr;
 }
+
 .right_wrapper {
     display: grid;
     grid-template-rows: 1fr;
