@@ -67,11 +67,11 @@ onMounted(() => {
 }
 )
 
-watch(tableData, (newVal) => {
-    setTimeout(() => {
-        multipleTableRef.value.toggleAllSelection()
-      }, 0)
-}, { immediate: true, deep: true })
+// watch(tableData, (newVal) => {
+//     setTimeout(() => {
+//         multipleTableRef.value.toggleAllSelection()
+//       }, 0)
+// }, { immediate: true, deep: true })
 
 const handleSelectionChange = (val: DataProps[]) => {
     multipleSelection.value = val

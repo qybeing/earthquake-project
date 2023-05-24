@@ -3,7 +3,9 @@
         <!-- <img :src="imgFun('test_png.png')" /> -->
         <!-- <img src="../assets/home/img/response.png" /> -->
         <!-- <img src="https://p1.ssl.qhimg.com/t0118332e529a5c2001.jpg" alt="BHE"> -->
-        <img id="BHE" :src="pngName" alt="BHE" @error="errorImg($event)">
+
+        <img v-if="curPng" id="BHE" :src="pngName" alt="BHE" @error="errorImg($event)">
+        <img v-else id="BHE" src='../assets/home/img/loadError.png' alt="BHE" @error="errorImg($event)">
     </div>
 </template>
 
@@ -15,8 +17,10 @@ import { GlobalDataProps } from '../store'
 const pre = 'http://202.199.13.154:5100/offline_curve_analysis/tf_pngs?png_name='
 const store = useStore<GlobalDataProps>()
 const choosedchannels = reactive(computed(() => store.state.chooseChannel))
-const pngName = ref(computed(() => pre + store.state.png_name))
+const curPng = ref(computed(() => store.state.png_name))
+const pngName = ref(computed(() => pre + curPng.value))
 const loading = computed(() => store.state.load_TimeFrequencyInfo)
+const loadingPng = '../assets/home/img/loadError.png'
 
 function errorImg(e:any) {
     console.log('image load failed')

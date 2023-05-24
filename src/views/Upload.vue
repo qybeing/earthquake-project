@@ -67,7 +67,7 @@ const onAnalysis = () => {
 
 .uploader_top {
     /* height: 470px; */
-    height: 90%;
+    height: 100%;
     margin: 5%;
     background-color: #f6f8fa;
     overflow: hidden;

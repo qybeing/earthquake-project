@@ -446,7 +446,10 @@ const store = createStore<GlobalDataProps>({
             console.log('state.files', state.files)
         },
         deleteCurve(state, name: string) {
+            console.log('要删除的data', name)
+            console.log('删除前的state.data', state.files)
             state.data = state.data.filter(x => x.curve_id !== name)
+            console.log('state.files', state.data)
         },
         setLoading(state, status) {
             state.loading = status
@@ -463,7 +466,7 @@ const store = createStore<GlobalDataProps>({
             formData.append('args', JSON.stringify(args))
             const { data } = await axios.post(url, formData)
             payload.forEach((name) => {
-                store.commit('deletCurve', name)
+                store.commit('deleteCurve', name)
             })
         },
         // 请求批量删除文件

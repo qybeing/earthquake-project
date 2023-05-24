@@ -28,12 +28,13 @@ const handleSelectionChange = (val: Curve[]) => {
     channelArr = []
     val.forEach(x => channelArr.push(x.channel))
     store.commit('changeChannel', channelArr)
-    store.dispatch('fetchTimeDomainInfo')
-        .then(
-            () => store.dispatch('fetchFrequencyDomainInfo'))
-        .then(
-            () => store.dispatch('fetchTimeFrequencyInfo')
-        )
+    // alert('发送请求1')
+    // store.dispatch('fetchTimeDomainInfo')
+    //     .then(
+    //         () => store.dispatch('fetchFrequencyDomainInfo'))
+    //     .then(
+    //         () => store.dispatch('fetchTimeFrequencyInfo')
+    //     )
 }
 const toggleSelection = (rows?: Curve[]) => {
     if (rows) {

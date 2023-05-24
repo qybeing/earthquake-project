@@ -70,10 +70,17 @@ onMounted(() => {
   //   drawEpicenter()
   // })
   // setInterval(() => {
-    sleep(6000).then(() => drawSignalStation())
+
+        sleep(6000).then(() => drawSignalStation())
     sleep(8000).then(() => drawAlarmStation())
     sleep(8000).then(() => drawEpicenter())
-    sleep(8000)
+    sleep(8000).then(
+      () => {
+        sleep(6000).then(() => drawSignalStation())
+    sleep(8000).then(() => drawAlarmStation())
+    sleep(8000).then(() => drawEpicenter())
+      }
+    )
     // drawSignalStation()
     // sleep(1000)
     // sleep(drawAlarmStation, 1000)
