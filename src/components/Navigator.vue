@@ -7,9 +7,9 @@
                 地震数据监测分析平台
             </span></el-menu-item>
         <div class="flex-grow" />
-        <span @click="onToggle">
+        <!-- <span @click="onToggle">
             全屏
-        </span>
+        </span> -->
         <el-menu-item index="/test">测试</el-menu-item>
         <el-menu-item index="/online/mapView">在线分析</el-menu-item>
         <el-menu-item index="/offline/upload">上传文件</el-menu-item>
@@ -44,8 +44,8 @@ const router = useRouter()
 const activeIndex = ref('/offline/upload')
 // 切换事件
 const onToggle = () => {
-  alert('点击 fullscreen')
-  screenfull.toggle()
+    alert('点击 fullscreen')
+    screenfull.toggle()
 }
 watch(
     router.currentRoute,

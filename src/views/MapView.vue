@@ -44,7 +44,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
 // ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
 import 'echarts-extension-amap'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { siteData, networkData } from '../testData'
 import router from '@/router'
 import { GlobalDataProps } from '@/store'
@@ -80,6 +80,7 @@ socket.on('hello', (arg) => {
 // 连接异常时，会触发
 socket.on('connect_error', (err) => {
   console.log('websocket连接异常', err)
+  ElMessage.error('websocket连接异常')
   // 如果连接异常，修改transports传输方式
   socket.io.opts.transports = ['websocket', 'polling']
   // 鉴权失败的话，可以修改token，再进行重连
@@ -95,11 +96,12 @@ socket.on('connect_error', (err) => {
 // })
 
 const stationColor = 'grey'
-const signalColor = '#28da6f'
+const signalColor = '#00ffff'
+// const signalColor = '#28da6f'
+// const signalColor = '#0170ff'
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
-  // initWebSocket()
-  // handleEmit()
+
   getAMap()
   drawSiteData()
   // 实时接收消息
@@ -111,8 +113,10 @@ onMounted(() => {
     if (mesObj.type === 'normal') {
       console.log('信号台站名称', name)
       signalStation(name)
+    } else if (mesObj.type === 'danger') {
+      console.log('警报台站名称', name)
+      alarmStation(name)
     }
-    // else if(mesObj.type === 'normal')
   })
   // drawSiteData()
   // setInterval(() => {
@@ -127,7 +131,13 @@ onMounted(() => {
   //   setTimeout(() => { }, 4000)
   // }, 5000)
 })
-
+onUnmounted(() => {
+  setTimeout(function () {
+    // ElMessage.error('websocket开始断开')
+    socket.disconnect()
+    // ElMessage.error('websocket已断开')
+  })
+})
 const option = {
   tooltip: {
     show: true, // 提示框
@@ -267,7 +277,7 @@ const drawAlarmStation = () => {
   const alarmData = siteData.slice(0, 3)
   alarmData.forEach((x) => alarmStation(x.name))
 }
-// 收到信号的台站变蓝
+// 收到信号的台站变色
 const signalStation = (stationId: string) => {
   interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
   const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
@@ -282,7 +292,7 @@ const signalStation = (stationId: string) => {
       stationData.itemStyle = { color: stationColor }
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
-    }, 3000)
+    }, 5000)
   }
 }
 // 收到警报的台站添加红色闪烁
@@ -320,7 +330,7 @@ const alarmStation = (stationId: string) => {
       stationData.label = null
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
-    }, 3000)
+    }, 5000)
   }
 }
 // 获取震源地点位数据
@@ -332,7 +342,7 @@ const drawEpicenter = () => {
   setTimeout(() => {
     option.series[1].data = []
     myChart?.setOption({ series: option.series })
-  }, 3000)
+  }, 5000)
 }
 const warnSite = [
   {

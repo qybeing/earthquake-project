@@ -23,8 +23,8 @@
     <!-- 1.降采样  -->
     <el-dialog v-model="chooseDialog.isDownSampling" title="降采样" width="30%">
         <el-form :model="ruleForm">
-            <el-form-item label="间隔个数" :label-width="formLabelWidth">
-                <el-input v-model.number="workInput.DownSampling" autocomplete="off" style="width: 50px" />
+            <el-form-item label="间隔个数:" :label-width="formLabelWidth">
+                <el-input v-model.number="workInput.DownSampling" style="width: 50px" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -38,8 +38,8 @@
     </el-dialog>
     <!-- 2.仪器去响应 -->
     <el-dialog v-model="chooseDialog.isGoRespond" title="仪器去响应" width="30%">
-        <el-form-item label="仪器灵敏度" :label-width="formLabelWidth">
-            <el-input v-model.number="workInput.GoRespond" autocomplete="off" style="width: 50px" />
+        <el-form-item label="仪器灵敏度:" :label-width="formLabelWidth">
+            <el-input v-model.number="workInput.GoRespond" style="width: 50px" />
         </el-form-item>
         <template #footer>
             <span class="dialog-footer">
@@ -52,7 +52,7 @@
     </el-dialog>
     <!-- 3.归一化 -->
     <el-dialog v-model="chooseDialog.isNormalization" title="归一化" width="30%">
-        <el-form-item label="归一化方法" :label-width="formLabelWidth">
+        <el-form-item label="归一化方法:" :label-width="formLabelWidth">
             <el-select v-model="workInput.Normalization" placeholder="Please select a zone">
                 <el-option label="均值归一化" value="zero_center" />
                 <el-option label="标准化" value="zs_score" />
@@ -81,26 +81,26 @@
         <el-form-item label="参数设置： " :label-width="formLabelWidth2"></el-form-item>
         <div v-if="workInput.filter == 'bandpass'">
             <el-form-item label="通带低转角频率：" :label-width="formLabelWidth2">
-                <el-input v-model="workFilterProps.freqmin" autocomplete="off" style="width: 100px" />
+                <el-input readonly :value="workFilterProps.freqmin" style="width: 100px" />
             </el-form-item>
             <el-form-item label="通带高转角转角频率：" :label-width="formLabelWidth2">
-                <el-input v-model="workFilterProps.freqmax" autocomplete="off" style="width: 100px" />
+                <el-input readonly :value="workFilterProps.freqmax" style="width: 100px" />
             </el-form-item>
         </div>
         <div v-else>
             <el-form-item label="滤波器转角频率：" :label-width="formLabelWidth2">
-                <el-input v-model="workFilterProps.freq" autocomplete="off" style="width: 100px" />
+                <el-input readonly :value="workFilterProps.freq" style="width: 100px" />
             </el-form-item>
         </div>
 
         <el-form-item label="采样率(Hz)：" :label-width="formLabelWidth2">
-            <el-input v-model="workFilterProps.df" autocomplete="off" style="width: 100px" />
+            <el-input readonly :value="workFilterProps.df" style="width: 100px" />
         </el-form-item>
         <el-form-item label="过滤角点/顺序：" :label-width="formLabelWidth2">
-            <el-input v-model="workFilterProps.corners" autocomplete="off" style="width: 100px" />
+            <el-input readonly :value="workFilterProps.corners" style="width: 100px" />
         </el-form-item>
         <el-form-item label="zerophase：" :label-width="formLabelWidth2">
-            <el-input v-model="workFilterProps.zerophase" autocomplete="off" style="width: 100px" />
+            <el-input readonly :value="workFilterProps.zerophase" style="width: 100px" />
         </el-form-item>
         <template #footer>
             <span class="dialog-footer">
@@ -149,7 +149,7 @@ watch(choosedchannels, (choosedchannels) => {
         })
     })
     if (options.length > 0) {
-       curChannel.value = options[0].value
+        curChannel.value = options[0].value
     }
 }, { deep: true })
 
@@ -295,6 +295,10 @@ onMounted(() => {
 </script>
 
 <style>
+#filter_title {
+    border-bottom: solid 1px gainsboro;
+}
+
 .set_center {
     padding: 20px;
     display: flex;
