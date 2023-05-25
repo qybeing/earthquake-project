@@ -43,7 +43,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
 // ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
 import 'echarts-extension-amap'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { siteData, networkData } from '../testData'
 import router from '@/router'
 import { GlobalDataProps } from '@/store'
@@ -60,6 +60,17 @@ const signalColor = '#00ffff'
 const sleep = (time: number) => new Promise<void>((resolve) => {
   setTimeout(() => resolve(), time)
 })
+
+const SignaTime = 10000
+const AlarmTime = 8000
+const EpicenterTime = 5000
+
+const runState = () => {
+  sleep(1000).then(() => drawSignalStation())
+  sleep(3000).then(() => drawAlarmStation())
+  sleep(6000).then(() => drawEpicenter())
+  return sleep(15000)
+}
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
   getAMap()
@@ -70,21 +81,40 @@ onMounted(() => {
   //   drawEpicenter()
   // })
   // setInterval(() => {
-
-        sleep(6000).then(() => drawSignalStation())
-    sleep(8000).then(() => drawAlarmStation())
-    sleep(8000).then(() => drawEpicenter())
-    sleep(8000).then(
-      () => {
-        sleep(6000).then(() => drawSignalStation())
-    sleep(8000).then(() => drawAlarmStation())
-    sleep(8000).then(() => drawEpicenter())
-      }
+  runState()
+    .then(
+      runState
     )
-    // drawSignalStation()
-    // sleep(1000)
-    // sleep(drawAlarmStation, 1000)
-    // sleep(drawEpicenter, 1000)
+    .then(
+      runState
+    )
+    .then(
+      runState
+    )
+    .then(
+      runState
+    )
+    .then(
+      runState
+    )
+    .then(
+      runState
+    )
+
+  //     sleep(6000).then(() => drawSignalStation())
+  // sleep(8000).then(() => drawAlarmStation())
+  // sleep(8000).then(() => drawEpicenter())
+  // sleep(8000).then(
+  //   () => {
+  //     sleep(6000).then(() => drawSignalStation())
+  // sleep(8000).then(() => drawAlarmStation())
+  // sleep(8000).then(() => drawEpicenter())
+  //   }
+  // )
+  // drawSignalStation()
+  // sleep(1000)
+  // sleep(drawAlarmStation, 1000)
+  // sleep(drawEpicenter, 1000)
   // })
   // setInterval(() => {
   //   Promise.resolve()
@@ -125,7 +155,7 @@ const option = {
     roam: true,
     // 启用resize
     resizeEnable: true,
-    mapStyle: 'amap://styles/white',
+    mapStyle: 'amap://styles/blue',
     // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
     renderOnMoving: true,
     // ECharts 图层的 zIndex 默认 2022
@@ -193,10 +223,10 @@ const getAMap = () => {
 
   const map = myChart?.getModel().getComponent('amap').getAMap()
   // 设置显示卫星图
-  const Satellite = new window.AMap.TileLayer.Satellite({
-    zIndex: 10
-  })
-  map.add(Satellite)
+  // const Satellite = new window.AMap.TileLayer.Satellite({
+  //   zIndex: 10
+  // })
+  // map.add(Satellite)
   map.on('zoomend', function () {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
@@ -212,7 +242,14 @@ const getAMap = () => {
     })
     myChart.on('contextmenu', function (params) {
       console.log('右键点击点击了！', params)
-      isopen.value = true
+      const obj: any = params.data
+      const reg = /^\s+$/g
+      if (!reg.test(obj.name)) {
+        curveData.id = obj.name
+        curveData.longitude = obj.value[0]
+        curveData.latitude = obj.value[1]
+        isopen.value = true
+      }
     })
   }
 }
@@ -246,7 +283,7 @@ const signalStation = (stationId: string) => {
       stationData.itemStyle = { color: stationColor }
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
-    }, 3000)
+    }, SignaTime)
   }
 }
 // 收到警报的台站添加红色闪烁
@@ -284,7 +321,7 @@ const alarmStation = (stationId: string) => {
       stationData.label = null
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
-    }, 3000)
+    }, AlarmTime)
   }
 }
 // 获取震源地点位数据
@@ -296,7 +333,7 @@ const drawEpicenter = () => {
   setTimeout(() => {
     option.series[1].data = []
     myChart?.setOption({ series: option.series })
-  }, 3000)
+  }, EpicenterTime)
 }
 const warnSite = [
   {
@@ -307,11 +344,11 @@ const warnSite = [
     ]
   }
 ]
-const curveData = {
+const curveData = reactive({
   id: 'XJ.AHQ.00.BHN',
   longitude: 116.2164,
   latitude: 31.3986
-}
+})
 
 const amplitudeData = {
   time: '2022-10-16 08:58:17',

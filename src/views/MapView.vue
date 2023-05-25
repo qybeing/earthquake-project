@@ -97,11 +97,11 @@ socket.on('connect_error', (err) => {
 
 const stationColor = 'grey'
 const signalColor = '#00ffff'
+const delayTime = 10000
 // const signalColor = '#28da6f'
 // const signalColor = '#0170ff'
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
-
   getAMap()
   drawSiteData()
   // 实时接收消息
@@ -160,7 +160,7 @@ const option = {
     roam: true,
     // 启用resize
     resizeEnable: true,
-    mapStyle: 'amap://styles/white',
+    mapStyle: 'amap://styles/blue',
     // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
     renderOnMoving: true,
     // ECharts 图层的 zIndex 默认 2022
@@ -227,10 +227,10 @@ const getAMap = () => {
   myChart?.setOption(option)
   const map = myChart?.getModel().getComponent('amap').getAMap()
   // 设置显示卫星图
-  const Satellite = new window.AMap.TileLayer.Satellite({
-    zIndex: 10
-  })
-  map.add(Satellite)
+  // const Satellite = new window.AMap.TileLayer.Satellite({
+  //   zIndex: 10
+  // })
+  // map.add(Satellite)
   map.on('zoomend', function () {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
@@ -292,7 +292,7 @@ const signalStation = (stationId: string) => {
       stationData.itemStyle = { color: stationColor }
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
-    }, 5000)
+    }, delayTime)
   }
 }
 // 收到警报的台站添加红色闪烁
@@ -330,7 +330,7 @@ const alarmStation = (stationId: string) => {
       stationData.label = null
       // myChart?.setOption(option)
       myChart?.setOption({ series: option.series })
-    }, 5000)
+    }, delayTime)
   }
 }
 // 获取震源地点位数据
@@ -342,7 +342,7 @@ const drawEpicenter = () => {
   setTimeout(() => {
     option.series[1].data = []
     myChart?.setOption({ series: option.series })
-  }, 5000)
+  }, delayTime)
 }
 const warnSite = [
   {
