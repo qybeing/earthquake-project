@@ -22,7 +22,7 @@ const formInline = reactive({
 })
 
 const onSubmit = () => {
-    console.log(formInline.curve_id)
+    // console.log(formInline.curve_id)
     const url = 'http://8.130.32.230:1123/offline_mysql_curve/search?curve_id=' + formInline.curve_id
     axios
         .get(url)

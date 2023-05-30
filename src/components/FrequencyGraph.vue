@@ -38,12 +38,12 @@ onMounted(
 
 watch(() => store.state.chooseChannel, () => {
     channels = store.state.chooseChannel
-    console.log('更新 yData')
+    // console.log('更新 yData')
     initChart(yData.value, xData.value)
 })
 watch(() => store.state.frequencyPointData, () => {
     channels = store.state.chooseChannel
-    console.log('频域图 更新 frequencyPointData', store.state.frequencyPointData)
+    // console.log('频域图 更新 frequencyPointData', store.state.frequencyPointData)
     initChart(yData.value, xData.value)
 }, { deep: true })
 onMounted(() => initChart(yData.value, xData.value))

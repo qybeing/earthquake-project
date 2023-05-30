@@ -102,19 +102,25 @@ const delayTime = 10000
 // const signalColor = '#0170ff'
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
-  getAMap()
-  drawSiteData()
+  setTimeout(
+    () => getAMap()
+    , 0)
+  setTimeout(
+    () => drawSiteData()
+    , 0)
+  // getAMap()
+  // drawSiteData()
   // 实时接收消息
   socket.on('real_time_monitor', function (msg) {
-    console.log('接收消息', msg)
+    // console.log('接收消息', msg)
     const mesObj: socketProp = JSON.parse(msg)
-    console.log('mesObj', mesObj)
+    // console.log('mesObj', mesObj)
     const name = mesObj.network + '.' + mesObj.station
     if (mesObj.type === 'normal') {
-      console.log('信号台站名称', name)
+      // console.log('信号台站名称', name)
       signalStation(name)
     } else if (mesObj.type === 'danger') {
-      console.log('警报台站名称', name)
+      // console.log('警报台站名称', name)
       alarmStation(name)
     }
   })
@@ -227,10 +233,10 @@ const getAMap = () => {
   myChart?.setOption(option)
   const map = myChart?.getModel().getComponent('amap').getAMap()
   // 设置显示卫星图
-  // const Satellite = new window.AMap.TileLayer.Satellite({
-  //   zIndex: 10
-  // })
-  // map.add(Satellite)
+  const Satellite = new window.AMap.TileLayer.Satellite({
+    zIndex: 10
+  })
+  map.add(Satellite)
   map.on('zoomend', function () {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
@@ -265,7 +271,8 @@ const getAMap = () => {
 // 获取所有台站点位数据
 const drawSiteData = () => {
   option.series[0].data = siteData
-  myChart?.setOption({ series: option.series })
+  setTimeout(() => myChart?.setOption({ series: option.series }), 0)
+  // myChart?.setOption({ series: option.series })
 }
 // 获取信号台站点位数据
 const drawSignalStation = () => {
@@ -286,7 +293,8 @@ const signalStation = (stationId: string) => {
     stationData.itemStyle = { color: signalColor }
     // 更新Echarts的option
     // myChart?.setOption(option)
-    myChart?.setOption({ series: option.series })
+    setTimeout(() => myChart?.setOption({ series: option.series }), 0)
+    // myChart?.setOption({ series: option.series })
     // 三秒后将该点位的图标颜色改回灰色
     setTimeout(() => {
       stationData.itemStyle = { color: stationColor }
@@ -360,7 +368,7 @@ const curveData = reactive({
 })
 
 const amplitudeData = {
-  time: '2022-10-16 08:58:17',
+  time: '2023-5-25 14:20:17',
   max_amplitude: 116.2164,
   level: 5
 }

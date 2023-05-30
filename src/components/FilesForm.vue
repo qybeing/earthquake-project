@@ -44,7 +44,7 @@ interface FileForm {
 const state = reactive<FileForm>({ selectFiles: [] })
 
 const handleClick = () => {
-    console.log('click')
+    // console.log('click')
 }
 // 选择项
 const handleSelectionChange = (val: string[]) => {
@@ -61,7 +61,7 @@ const handleDelete = () => {
 }
 // 单个删除
 const handleDeleteOne = (id: string) => {
-    console.log('单个删除： ', id)
+    // console.log('单个删除： ', id)
     store.dispatch('fetchDeleteFiles', [id]).then(
         () => ElMessage({
             message: '删除成功！',

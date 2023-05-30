@@ -133,17 +133,17 @@ onMounted(() => {
 const loading = computed(() => store.state.loading)
 
 watch(tableData, (newVal) => {
-    console.log(newVal)
+    // console.log(newVal)
     itemKey.value = Math.random()
 }, { immediate: true, deep: true })
 
 const changeID = () => {
     const id: string = Math.random() + ''
-    console.log('rowId: ', id)
+    // console.log('rowId: ', id)
     return id
 }
 const onFilter = () => {
-    console.log('过滤')
+    // console.log('过滤')
     store.commit('changeFilter', querydataform.value)
     current_page.value = 1
     store.dispatch('fetchViewChartData', current_page.value)
@@ -204,10 +204,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
     formEl.validate((valid) => {
         if (valid) {
             onFilter()
-            console.log('submit!')
+            // console.log('submit!')
         } else {
             ElMessage.error('查询输入错误！')
-            console.log('error submit!')
+            // console.log('error submit!')
             return false
         }
     })

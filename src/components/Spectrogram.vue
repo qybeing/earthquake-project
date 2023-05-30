@@ -23,7 +23,7 @@ const loading = computed(() => store.state.load_TimeFrequencyInfo)
 const loadingPng = '../assets/home/img/loadError.png'
 
 function errorImg(e:any) {
-    console.log('image load failed')
+    // console.log('image load failed')
     console.log(e.srcElement
         .id)
     e.srcElement.src = require('../assets/home/img/loadError.png')

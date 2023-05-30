@@ -223,10 +223,10 @@ const getAMap = () => {
 
   const map = myChart?.getModel().getComponent('amap').getAMap()
   // 设置显示卫星图
-  // const Satellite = new window.AMap.TileLayer.Satellite({
-  //   zIndex: 10
-  // })
-  // map.add(Satellite)
+  const Satellite = new window.AMap.TileLayer.Satellite({
+    zIndex: 10
+  })
+  map.add(Satellite)
   map.on('zoomend', function () {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
