@@ -200,6 +200,9 @@ export interface GlobalDataProps {
     load_TimeFrequencyInfo: boolean
     load_FeatureExtractionInfo: boolean
 
+    // 需要进入地图界面的台站
+    mapStations: string[]
+
 }
 
 const store = createStore<GlobalDataProps>({
@@ -304,9 +307,13 @@ const store = createStore<GlobalDataProps>({
         load_TimeDomainInfo: false,
         load_FrequencyDomainInfo: false,
         load_TimeFrequencyInfo: false,
-        load_FeatureExtractionInfo: false
+        load_FeatureExtractionInfo: false,
+        mapStations: []
     },
     mutations: {
+        setMapStations(state, arr:string[]) {
+            state.mapStations = arr
+        },
         setLoad_TimeDomainInfo(state, loading) {
             state.load_TimeDomainInfo = loading
         },
@@ -459,7 +466,7 @@ const store = createStore<GlobalDataProps>({
     actions: {
         // 请求批量删除数据
         async fetchDeleteCurves(context, payload: string[]) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/delete_curve_by_id'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/delete_curve_by_id'
             const args = {
                 curve_ids: payload
             }
@@ -472,7 +479,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求批量删除文件
         async fetchDeleteFiles(context, payload: string[]) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/delete_curve_by_file'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/delete_curve_by_file'
             const args = {
                 file_list: payload
             }
@@ -485,14 +492,14 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求初始详细分析页面的所有频道数据
         async fetchWorkDataBefore(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
             const args = context.getters.getWorkDataBeforeArgs
             const { data } = await axios.post(url, args)
             context.commit('fetchWorkData', data)
         },
         // 请求工作区操作后的数据
         async fetchWorkData(context) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_points_and_transform'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('fetchWorkData', data)
@@ -500,7 +507,7 @@ const store = createStore<GlobalDataProps>({
         // 请求时域图数据
         async fetchTimeDomainInfo(context) {
             context.commit('setLoad_TimeDomainInfo', true)
-            const url = 'https://71y830321n.goho.co/offline_curve_analysis/get_time_domain_info'
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('setLoad_TimeDomainInfo', false)
@@ -509,7 +516,7 @@ const store = createStore<GlobalDataProps>({
         // 请求频域图数据
         async fetchFrequencyDomainInfo(context) {
             context.commit('setLoad_FrequencyDomainInfo', true)
-            const url = 'https://71y830321n.goho.co/offline_curve_analysis/get_frequency_domain_info'
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_frequency_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('setLoad_FrequencyDomainInfo', false)
@@ -518,7 +525,7 @@ const store = createStore<GlobalDataProps>({
         // 请求频谱图地址
         async fetchTimeFrequencyInfo(context) {
             context.commit('setLoad_TimeFrequencyInfo', true)
-            const url = 'https://71y830321n.goho.co/offline_curve_analysis/get_time_frequency_info'
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_frequency_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             // console.log('频谱图地址 ', data)
@@ -528,7 +535,7 @@ const store = createStore<GlobalDataProps>({
         // 请求预处理和特征提取数据
         async fetchFeatureExtractionInfo(context) {
             context.commit('setLoad_FeatureExtractionInfo', true)
-            const url = 'https://71y830321n.goho.co/offline_curve_analysis/get_feature_extraction_info'
+            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_feature_extraction_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('setLoad_FeatureExtractionInfo', false)
@@ -536,7 +543,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求曲线数据表格信息（传入条件查询参数）
         // async fetchCurveData(context) {
-        //     const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_with_condition'
+        //     const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
         //     const formData = new FormData()
         //     formData.append('args', JSON.stringify(context.state.querydata))
         //     const { data } = await axios.post(url, formData)
@@ -544,7 +551,7 @@ const store = createStore<GlobalDataProps>({
         // },
         // 请求曲线数据表格信息（传入条件查询参数）
         async fetchCurveData(context, payload = 1) {
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curve_page'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curve_page'
             const formData = new FormData()
             const obj = {
                 pagesize: 99,
@@ -558,7 +565,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求批量查看曲线图
         // async fetchViewChartData(context) {
-        //     const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
+        //     const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
         //     const formData = new FormData()
         //     const obj = {
         //         curve_ids: context.state.chooses,
@@ -570,11 +577,11 @@ const store = createStore<GlobalDataProps>({
         //     context.commit('fetchViewChartData', data)
         // },
         async fetchViewChartData(context, payload = 1) {
-            // const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_point_page'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const obj = {
-                pagesize: 4,
+                pagesize: 99,
                 page: payload,
                 curve_ids: context.state.chooses,
                 conditions_dict: context.state.filter
@@ -585,8 +592,8 @@ const store = createStore<GlobalDataProps>({
         },
         // 从地图发起请求查看曲线图
         async fetchViewChartDataFromMap(context, clickId) {
-            // const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_curves_and_points'
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/get_point_page'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             // ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
             const idArr = []
@@ -604,8 +611,8 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求更新p波s波
         async fetchPSStarTime(context, payload) {
-            // const url = 'https://71y830321n.goho.co/offline_mysql_curve/change_p_s_start_time'
-            const url = 'https://71y830321n.goho.co/offline_mysql_curve/change_p_s_start_time'
+            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
             const formData = new FormData()
             const args = {
                 curve_id: context.state.chooseData.curve_id,

@@ -114,9 +114,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
     chart && chart.clear()
 })
-// nextTick(() => {
-//     initChart(store.getters.getDataY, store.getters.xData, ptime.value, stime.value)
-// })
+
 function initChart(ySerise: ySeriseProp, xData: Array<number>, pPoint: string, sPoint: string) {
     // const chart = echarts.init(document.getElementById(props.rowId) as HTMLElement, 'white')
     ySerise.push(

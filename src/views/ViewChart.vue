@@ -15,13 +15,13 @@
                     </div>
                     <div class="filter_style">
                         <div class="channelChoose">
-                        <div class="text_middle">频道：</div>
-                        <el-checkbox-group v-model="querydataform.channel" class="boxgroup">
-                            <el-checkbox label="BHE" />
-                            <el-checkbox label="BHN" />
-                            <el-checkbox label="BHZ" />
-                        </el-checkbox-group>
-                    </div>
+                            <div class="text_middle">频道：</div>
+                            <el-checkbox-group v-model="querydataform.channel" class="boxgroup">
+                                <el-checkbox label="BHE" />
+                                <el-checkbox label="BHN" />
+                                <el-checkbox label="BHZ" />
+                            </el-checkbox-group>
+                        </div>
                         <el-form :inline="true" :model="querydataform" ref="queryRuleFormRef" :rules="rules"
                             class="demo-form-inline">
                             <div class="wrapper">
@@ -40,6 +40,9 @@
                                 <el-form-item>
                                     <el-button @click="resetForm(queryRuleFormRef)">重置</el-button>
                                 </el-form-item>
+                                <el-form-item>
+                                    <el-button  type="success" plain @click="getPosition">定位</el-button>
+                                </el-form-item>
                             </div>
                         </el-form>
                     </div>
@@ -47,7 +50,9 @@
             </template>
             <div class="chart_body" :key="itemKey">
                 <el-table style="width: 100%" ref='multipleTableRef' :data="tableData" :height="tableHeight"
-                    :show-header=false v-loading="loading" @row-dblclick="seeDetail">
+                    :show-header=false v-loading="loading" @row-dblclick="seeDetail"
+                    @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="40" />
                     <el-table-column>
                         <template #default="scope">
                             <!-- <el-button @click="change(scope.row)">看一看</el-button> -->
@@ -60,7 +65,7 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination style="float: right" @current-change="handleCurrentChange" :current-page="current_page"
-                    layout="total, prev, pager, next" :page-size="4" :total="plot_total">
+                    layout="total, prev, pager, next" :page-size="99" :total="plot_total">
                 </el-pagination>
             </div>
         </el-card>
@@ -71,7 +76,7 @@
 import { computed, watch, reactive, ref, onMounted } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
-import { GlobalDataProps, WindowProp, DataProps } from '../store'
+import { GlobalDataProps, PointProps } from '../store'
 import CurveGraph from '../components/CurveGraph.vue'
 import { ElMessage, FormInstance, FormRules } from 'element-plus'
 const queryRuleFormRef = ref<FormInstance>()
@@ -98,21 +103,23 @@ const querydataform = reactive(computed(() => store.state.filter))
 const onReturn = () => {
     router.push('/offline/offlineAnalysis')
 }
-const seeChannel = reactive(computed(() => store.state.seeChannel))
+const handleSelectionChange = (val: PointProps[]) => {
+    console.log('选择的', val)
+    const temp: string[] = []
+    val.forEach((x) => {
+        const str = x.curve_info.network + '.' + x.curve_info.station
+        if (!temp.includes(str)) {
+           temp.push(str)
+        }
+    })
+    store.commit('setMapStations', temp)
+}
+
 const seeDetail = (row: any) => {
     console.log('点击的data:', row.curve_info)
     router.push('/offline/DetailedChart')
     store.commit('changeChooseData', row.curve_info)
     store.commit('changeChannel', [row.curve_info.channel])
-    // store.dispatch('fetchTimeDomainInfo')
-    //     .then(
-    //         () => store.dispatch('fetchFrequencyDomainInfo'))
-    //     .then(
-    //         () => store.dispatch('fetchTimeFrequencyInfo')
-    //     )
-    //     .then(
-    //         () => store.dispatch('fetchFeatureExtractionInfo')
-    //     )
 }
 onMounted(() => {
     // 设置表格初始高度为innerHeight-offsetTop-表格底部与浏览器底部距离10
@@ -217,6 +224,10 @@ const resetForm = (formEl: FormInstance | undefined) => {
     formEl.resetFields()
 }
 
+const getPosition = () => {
+    router.push('/online/mapView')
+}
+
 </script>
 <style scoped>
 .text_middle {
@@ -273,7 +284,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 .filter_style {
     float: right;
     /* margin-left: 130px; */
-    width: 65%;
+    width: 75%;
     margin-right: 10px;
     right: 30em;
     display: grid;
@@ -285,13 +296,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    /* grid-template-columns: repeat(5, 130px); */
-    grid-template-columns: 3fr 3fr 3fr 2fr 2fr;
+    grid-template-columns: 3fr 3fr 3fr 1fr 1fr 1fr;
     grid-template-rows: 1fr;
-    /*  声明行间距和列间距  */
-    /* grid-gap: 10px; */
-    /*  声明行的高度  */
-    /* grid-template-rows: 100px 200px; */
 }
 
 .el-form-item {

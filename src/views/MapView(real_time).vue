@@ -37,37 +37,113 @@
 </template>
 
 <script setup lang="ts">
+// import AMap from 'AMap'
+import { io } from 'socket.io-client'
 import LegendBox from '@/components/LegendBox.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
 // ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
 import 'echarts-extension-amap'
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { siteData, networkData } from '../testData'
 import router from '@/router'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
+import { StringLiteral } from '@babel/types'
 const store = useStore<GlobalDataProps>()
 require('echarts/theme/macarons')
 const echartsMap = ref()
 const isopen = ref(false)
 let myChart: echarts.ECharts | null = null
-const mapStations = computed(() => store.state.mapStations)
+interface socketProp {
+  type: string;
+  channel: string;
+  location: string;
+  station: string;
+  network: string;
+  start_time: string;
+  end_time: string;
+}
+const socket = io('http://202.199.13.154:5100/realtime_info', {
+  autoConnect: true // 自动连接
+})
+const handleEmit = () => {
+  // 向后台发送信息， response：响应信息
+  socket.emit('chatMessage', 'test-value', (response: any) => {
+    console.log(response, '发送消息，接收发送成功响应信息')
+  })
+}
+socket.on('hello', (arg) => {
+  console.log(socket.id)
+  console.log(arg)
+})
+// 连接异常时，会触发
+socket.on('connect_error', (err) => {
+  console.log('websocket连接异常', err)
+  // ElMessage.error('websocket连接异常')
+  // 如果连接异常，修改transports传输方式
+  socket.io.opts.transports = ['websocket', 'polling']
+  // 鉴权失败的话，可以修改token，再进行重连
+  // if (err.message === "invalid credentials") {
+  //   socket.auth.token = "new abcd";
+  //   // 手动重连
+  //   socket.connect();
+  // }
+})
+// 实时接收后台返回的数据
+// socket.on('real_time_monitor', function (msg) {
+//   console.log('接收消息', msg)
+// })
 
 const stationColor = 'grey'
 const signalColor = '#00ffff'
 const delayTime = 10000
-
+// const signalColor = '#28da6f'
+// const signalColor = '#0170ff'
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
   setTimeout(
     () => getAMap()
     , 0)
   setTimeout(
-    () => drawMapStations()
+    () => drawSiteData()
     , 0)
+  // getAMap()
+  // drawSiteData()
+  // 实时接收消息
+  socket.on('real_time_monitor', function (msg) {
+    // console.log('接收消息', msg)
+    const mesObj: socketProp = JSON.parse(msg)
+    // console.log('mesObj', mesObj)
+    const name = mesObj.network + '.' + mesObj.station
+    if (mesObj.type === 'normal') {
+      // console.log('信号台站名称', name)
+      signalStation(name)
+    } else if (mesObj.type === 'danger') {
+      // console.log('警报台站名称', name)
+      alarmStation(name)
+    }
+  })
+  // drawSiteData()
+  // setInterval(() => {
+  //   drawSignalStation()
+  //   setTimeout(() => {
+  //     drawAlarmStation()
+  //   }, 3000)
+  //   setTimeout(() => {
+  //     drawEpicenter()
+  //   }, 3000)
+  //   // eslint-disable-next-line @typescript-eslint/no-empty-function
+  //   setTimeout(() => { }, 4000)
+  // }, 5000)
 })
-
+onUnmounted(() => {
+  setTimeout(function () {
+    // ElMessage.error('websocket开始断开')
+    socket.disconnect()
+    // ElMessage.error('websocket已断开')
+  })
+})
 const option = {
   tooltip: {
     show: true, // 提示框
@@ -90,7 +166,7 @@ const option = {
     roam: true,
     // 启用resize
     resizeEnable: true,
-    mapStyle: 'amap://styles/white',
+    mapStyle: 'amap://styles/blue',
     // 移动过程中实时渲染 默认为true 如数据量较大 建议置为false.
     renderOnMoving: true,
     // ECharts 图层的 zIndex 默认 2022
@@ -101,7 +177,12 @@ const option = {
       name: 'AllStation',
       type: 'scatter',
       coordinateSystem: 'amap',
-      data: siteData,
+      data: [
+        {
+          name: '',
+          value: [0, 0]
+        }
+      ],
       symbol: 'triangle',
       symbolSize: 20,
       label: {
@@ -160,6 +241,9 @@ const getAMap = () => {
     const zoom = map.getZoom()
     console.log('zoom', zoom)
   })
+  // map.addControl(new window.AMap.Scale())
+  // map.addControl(new window.AMap.ToolBar())
+
   if (myChart) {
     myChart && myChart.off('click')
     myChart.on('click', function (params) {
@@ -184,23 +268,99 @@ const getAMap = () => {
     })
   }
 }
-
-// 绘制所选台站
-const drawMapStations = () => {
-  mapStations.value.forEach((x) => signalStation(x))
+// 获取所有台站点位数据
+const drawSiteData = () => {
+  option.series[0].data = siteData
+  setTimeout(() => myChart?.setOption({ series: option.series }), 0)
+  // myChart?.setOption({ series: option.series })
 }
-
-// 绘制单个台站
+// 获取信号台站点位数据
+const drawSignalStation = () => {
+  const signalData = siteData.slice(0, 6)
+  signalData.forEach((x) => signalStation(x.name))
+}
+// 获取报警台站点位数据
+const drawAlarmStation = () => {
+  const alarmData = siteData.slice(0, 3)
+  alarmData.forEach((x) => alarmStation(x.name))
+}
+// 收到信号的台站变色
 const signalStation = (stationId: string) => {
   interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
   const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
   console.log('stationData', stationData)
   if (stationData) {
     stationData.itemStyle = { color: signalColor }
+    // 更新Echarts的option
+    // myChart?.setOption(option)
     setTimeout(() => myChart?.setOption({ series: option.series }), 0)
+    // myChart?.setOption({ series: option.series })
+    // 三秒后将该点位的图标颜色改回灰色
+    setTimeout(() => {
+      stationData.itemStyle = { color: stationColor }
+      // myChart?.setOption(option)
+      myChart?.setOption({ series: option.series })
+    }, delayTime)
   }
 }
-
+// 收到警报的台站添加红色闪烁
+const alarmStation = (stationId: string) => {
+  interface dataItem {
+    name: string; value: number[]; itemStyle?: {
+      color: string; borderColor?: string,
+      borderWidth?: number,
+      shadowBlur?: number,
+      shadowColor?: string
+    }; label?: any
+  }
+  const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
+  if (stationData) {
+    stationData.itemStyle = {
+      color: signalColor,
+      borderColor: 'rgba(224, 31, 31, 1)',
+      borderWidth: 2,
+      shadowBlur: 10,
+      shadowColor: 'rgba(224, 31, 31, 1)'
+    }
+    // 添加标注
+    // const label = {
+    //   show: true,
+    //   position: 'top',
+    //   formatter: stationId
+    // }
+    // stationData.label = label
+    // 更新Echarts的option
+    // myChart?.setOption(option)
+    myChart?.setOption({ series: option.series })
+    // 三秒后将该点位的图标颜色改回灰色
+    setTimeout(() => {
+      stationData.itemStyle = { color: stationColor }
+      stationData.label = null
+      // myChart?.setOption(option)
+      myChart?.setOption({ series: option.series })
+    }, delayTime)
+  }
+}
+// 获取震源地点位数据
+const drawEpicenter = () => {
+  const epicenter = warnSite
+  option.series[1].data = epicenter
+  myChart?.setOption({ series: option.series })
+  // 三秒后将该点位的图标颜色改回灰色
+  setTimeout(() => {
+    option.series[1].data = []
+    myChart?.setOption({ series: option.series })
+  }, delayTime)
+}
+const warnSite = [
+  {
+    name: ' ',
+    value: [
+      116.9711,
+      32.2179
+    ]
+  }
+]
 const curveData = reactive({
   id: 'XJ.AHQ.00.BHN',
   longitude: 116.2164,
