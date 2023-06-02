@@ -11,6 +11,11 @@ function deepMergeFun(obj1: any, obj2: any) {
     return obj1
 }
 
+export interface LocationProps {
+    latitude: number,
+    longitude: number
+}
+
 export interface GlobalErrorProps {
     status: boolean;
     message?: string;
@@ -202,7 +207,12 @@ export interface GlobalDataProps {
 
     // 需要进入地图界面的台站
     mapStations: string[]
-
+    // 待定位的台站
+    stationsTOBePositioned: string[]
+    // 震源地
+    location: LocationProps
+    // 有效点击台站
+    useful_curve_ids: string[]
 }
 
 const store = createStore<GlobalDataProps>({
@@ -308,10 +318,19 @@ const store = createStore<GlobalDataProps>({
         load_FrequencyDomainInfo: false,
         load_TimeFrequencyInfo: false,
         load_FeatureExtractionInfo: false,
-        mapStations: []
+        mapStations: [],
+        stationsTOBePositioned: [],
+        location: {
+            latitude: 0,
+            longitude: 0
+        },
+        useful_curve_ids: []
     },
     mutations: {
-        setMapStations(state, arr:string[]) {
+        setStationsTOBePositioned(state, arr: string[]) {
+            state.stationsTOBePositioned = arr
+        },
+        setMapStations(state, arr: string[]) {
             state.mapStations = arr
         },
         setLoad_TimeDomainInfo(state, loading) {
@@ -434,6 +453,22 @@ const store = createStore<GlobalDataProps>({
             // console.log(Object.values(data.res))
             state.viewChartData = Object.values(data.res)
         },
+        fetchMapInfo(state, data) {
+            const location = Object.values(data.location_res)
+            state.location.latitude = location[1] as number
+            state.location.longitude = location[2] as number
+            const ids = Object.values(data.useful_curve_ids)
+            const resIds: string[] = []
+            ids.forEach(x => {
+                if (typeof (x) === 'string') {
+                    const arr = x.split('.')
+                    resIds.push(arr[0] + '.' + arr[1])
+                }
+            })
+            state.useful_curve_ids = resIds as string[]
+            console.log('state.location', state.location)
+            console.log('state.useful_curve_ids', state.useful_curve_ids)
+        },
         fetchCurveData(state, data) {
             state.curve_total = data.curve_total
             state.curve_page_total = data.page_total
@@ -542,14 +577,6 @@ const store = createStore<GlobalDataProps>({
             context.commit('fetchFeaturePointData', data)
         },
         // 请求曲线数据表格信息（传入条件查询参数）
-        // async fetchCurveData(context) {
-        //     const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_with_condition'
-        //     const formData = new FormData()
-        //     formData.append('args', JSON.stringify(context.state.querydata))
-        //     const { data } = await axios.post(url, formData)
-        //     context.commit('fetchCurveData', data)
-        // },
-        // 请求曲线数据表格信息（传入条件查询参数）
         async fetchCurveData(context, payload = 1) {
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curve_page'
             const formData = new FormData()
@@ -563,19 +590,6 @@ const store = createStore<GlobalDataProps>({
             // console.log('fetchCurveData', data)
             context.commit('fetchCurveData', data)
         },
-        // 请求批量查看曲线图
-        // async fetchViewChartData(context) {
-        //     const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
-        //     const formData = new FormData()
-        //     const obj = {
-        //         curve_ids: context.state.chooses,
-        //         window: context.state.window,
-        //         filters: context.state.filter
-        //     }
-        //     formData.append('args', JSON.stringify(obj))
-        //     const { data } = await axios.post(url, formData)
-        //     context.commit('fetchViewChartData', data)
-        // },
         async fetchViewChartData(context, payload = 1) {
             // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
@@ -591,23 +605,38 @@ const store = createStore<GlobalDataProps>({
             context.commit('fetchViewChartData', data)
         },
         // 从地图发起请求查看曲线图
-        async fetchViewChartDataFromMap(context, clickId) {
+        async fetchViewChartDataFromMap(context) {
             // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             // ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
-            const idArr = []
-            idArr.push(clickId + '.00.BHE')
-            idArr.push(clickId + '.00.BHN')
-            idArr.push(clickId + '.00.BHZ')
+            const idArr: string[] = []
+            const curve_ids = context.state.mapStations.concat(context.state.stationsTOBePositioned)
+            curve_ids.forEach(x => {
+                idArr.push(x + '.00.BHE')
+                idArr.push(x + '.00.BHN')
+                idArr.push(x + '.00.BHZ')
+            })
             const obj = {
-                pagesize: 4,
+                pagesize: 99,
                 page: 1,
-                curve_ids: idArr
+                curve_ids: idArr,
+                conditions_dict: context.state.filter
             }
             formData.append('args', JSON.stringify(obj))
             const { data } = await axios.post(url, formData)
             context.commit('fetchViewChartData', data)
+        },
+        // 查看地图的计算信息
+        async fetchMapInfo(context) {
+            const url = 'http://202.199.13.154:5100/offline_mysql_curve/p_start_location'
+            const formData = new FormData()
+            const obj = {
+                curve_ids: context.state.mapStations
+            }
+            formData.append('args', JSON.stringify(obj))
+            const { data } = await axios.post(url, formData)
+            context.commit('fetchMapInfo', data)
         },
         // 请求更新p波s波
         async fetchPSStarTime(context, payload) {
@@ -768,6 +797,24 @@ const store = createStore<GlobalDataProps>({
             )
             return res
         },
+        getCheckedChartData(state) {
+            const res: PointProps[] = []
+            state.mapStations.forEach(
+                x => {
+                    state.viewChartData.forEach(
+                        curve_point => {
+                            const curve_id = curve_point.curve_info.network + '.' + curve_point.curve_info.station
+                            if (curve_id === x) {
+                                res.push(curve_point)
+                            }
+                        }
+                    )
+                }
+            )
+            console.log('mapStations', state.mapStations)
+            console.log('res', res)
+            return res
+        },
         getTitle(state) {
             const info = state.chooseData
             const id = info.network + '/' + info.station + '/' + info.location
@@ -839,8 +886,21 @@ const store = createStore<GlobalDataProps>({
                 })
             })
             return options
+        },
+        getAlarmSite(state) {
+            const obj = [{
+                name: ' ',
+                value: [
+                    state.location.latitude,
+                    state.location.longitude
+                ]
+            }]
+            return obj
         }
     }
 })
 
 export default store
+function x(x: any, arg1: (string: any) => void) {
+    throw new Error('Function not implemented.')
+}

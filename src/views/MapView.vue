@@ -40,9 +40,8 @@
 import LegendBox from '@/components/LegendBox.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts' // echarts theme
-// ECharts的高德地图扩展，可以在高德地图上展现点图，线图，热力图等可视化
 import 'echarts-extension-amap'
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { siteData, networkData } from '../testData'
 import router from '@/router'
 import { GlobalDataProps } from '@/store'
@@ -53,20 +52,29 @@ const echartsMap = ref()
 const isopen = ref(false)
 let myChart: echarts.ECharts | null = null
 const mapStations = computed(() => store.state.mapStations)
+const warnSite = reactive(store.getters.getAlarmSite)
+const usefulStations = reactive(store.state.useful_curve_ids)
 
 const stationColor = 'grey'
 const signalColor = '#00ffff'
+const usefulColor = '#1c7ed6'
 const delayTime = 10000
 
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
-  setTimeout(
-    () => getAMap()
-    , 0)
-  setTimeout(
-    () => drawMapStations()
-    , 0)
+  getAMap()
+  drawMapStations()
 })
+watch(() => store.state.useful_curve_ids, () => {
+  const stations = store.state.useful_curve_ids
+  drawUsefulStations(stations)
+  drawMapStations()
+}, { deep: true })
+watch(() => store.getters.getAlarmSite, () => {
+  const location = store.getters.getAlarmSite
+  drawEpicenter(location)
+  drawMapStations()
+}, { deep: true })
 
 const option = {
   tooltip: {
@@ -167,7 +175,8 @@ const getAMap = () => {
       const obj: any = params.data
       const reg = /^\s+$/g
       if (!reg.test(obj.name)) {
-        store.dispatch('fetchViewChartDataFromMap', obj.name)
+        store.commit('setStationsTOBePositioned', [obj.name])
+        store.dispatch('fetchViewChartDataFromMap')
         router.push('/offline/ViewChart')
       }
     })
@@ -187,18 +196,51 @@ const getAMap = () => {
 
 // 绘制所选台站
 const drawMapStations = () => {
-  mapStations.value.forEach((x) => signalStation(x))
+  // option.series[0].itemStyle = { color: stationColor }
+  // // 遍历所有点位数据，设置itemStyle
+  // option.series[0].data.forEach((item: any) => {
+  //   item.itemStyle = { color: stationColor } // 修改颜色值为你想要的颜色
+  // })
+  // // 更新图表
+  // myChart?.setOption({ series: option.series })
+  console.log('选中的台站', mapStations.value)
+  mapStations.value.forEach((x: any) => signalStation(x))
+}
+// 绘制有效台站
+const drawUsefulStations = (stations: string[]) => {
+  option.series[0].itemStyle = { color: stationColor }
+  // 遍历所有点位数据，设置itemStyle
+  option.series[0].data.forEach((item: any) => {
+    item.itemStyle = { color: stationColor } // 修改颜色值为你想要的颜色
+  })
+  // 更新图表
+  myChart?.setOption({ series: option.series })
+  console.log('选中的台站', stations)
+  stations.forEach((x: any) => usefulStation(x))
 }
 
 // 绘制单个台站
 const signalStation = (stationId: string) => {
   interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
   const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
-  console.log('stationData', stationData)
   if (stationData) {
     stationData.itemStyle = { color: signalColor }
     setTimeout(() => myChart?.setOption({ series: option.series }), 0)
   }
+}
+// 绘制单个有效台站
+const usefulStation = (stationId: string) => {
+  interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
+  const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
+  if (stationData) {
+    stationData.itemStyle = { color: usefulColor }
+    setTimeout(() => myChart?.setOption({ series: option.series }), 0)
+  }
+}
+const drawEpicenter = (location: { name: string; value: number[]; }[]) => {
+  const epicenter = location
+  option.series[1].data = epicenter
+  myChart?.setOption({ series: option.series })
 }
 
 const curveData = reactive({

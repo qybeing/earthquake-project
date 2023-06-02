@@ -218,7 +218,7 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
         left: 'left',
         bottom: 'bottom',
         style: {
-            text: '00-00-00',
+            text: 'Δ(震中距):00; α(方位角):00',
             width: 200,
             height: 50,
             fontSize: 14,

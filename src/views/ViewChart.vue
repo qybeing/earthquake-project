@@ -41,7 +41,7 @@
                                     <el-button @click="resetForm(queryRuleFormRef)">重置</el-button>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-button  type="success" plain @click="getPosition">定位</el-button>
+                                    <el-button type="success" plain @click="getPosition">定位</el-button>
                                 </el-form-item>
                             </div>
                         </el-form>
@@ -73,7 +73,7 @@
 </template>
 <script setup lang="ts">
 
-import { computed, watch, reactive, ref, onMounted } from 'vue'
+import { computed, watch, reactive, ref, onMounted, onUpdated } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
 import { GlobalDataProps, PointProps } from '../store'
@@ -91,10 +91,31 @@ numID.value = 0
 itemKey.value = Math.random()
 const current_page = ref(0)
 const plot_total = computed(() => store.state.plot_total)
+const checkSelections = computed(() => store.getters.getCheckedChartData)
 
 const handleCurrentChange = (val: number) => {
     current_page.value = val
     pagination_query()
+}
+onMounted(() => {
+    console.log('checkSelections1', checkSelections.value)
+    setTimeout(() => {
+        toggleSelection(checkSelections.value)
+    }, 0)
+})
+onUpdated(() => {
+    console.log('checkSelections2', checkSelections.value)
+    toggleSelection(checkSelections.value)
+})
+// tableData.value.slice(0,3)
+const toggleSelection = (rows: any) => {
+    if (Array.isArray(rows)) {
+        rows.forEach((row: any) => {
+            multipleTableRef.value!.toggleRowSelection(row, undefined)
+        })
+    } else {
+        multipleTableRef.value!.clearSelection()
+    }
 }
 const pagination_query = () => {
     store.dispatch('fetchViewChartData', current_page.value)
@@ -104,12 +125,11 @@ const onReturn = () => {
     router.push('/offline/offlineAnalysis')
 }
 const handleSelectionChange = (val: PointProps[]) => {
-    console.log('选择的', val)
     const temp: string[] = []
     val.forEach((x) => {
         const str = x.curve_info.network + '.' + x.curve_info.station
         if (!temp.includes(str)) {
-           temp.push(str)
+            temp.push(str)
         }
     })
     store.commit('setMapStations', temp)
@@ -225,6 +245,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const getPosition = () => {
+    store.dispatch('fetchMapInfo')
     router.push('/online/mapView')
 }
 
