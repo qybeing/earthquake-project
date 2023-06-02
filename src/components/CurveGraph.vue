@@ -218,13 +218,13 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
         left: 'left',
         bottom: 'bottom',
         style: {
-            text: 'Δ(震中距):00; α(方位角):00',
+            text: 'Δ:00; α:00',
             width: 200,
             height: 50,
             fontSize: 14,
             fontWeight: 'bold',
             lineHeight: 50,
-            fill: '#666'
+            fill: '#be7a8a'
         }
     }
     }, true)

@@ -3,7 +3,6 @@
     <a-row>
       <div ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
     </a-row>
-    <!-- <div id="tip" class="input-card">地图上右击鼠标，弹出右键菜单</div> -->
   </a-card>
   <LegendBox></LegendBox>
   <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
@@ -38,8 +37,7 @@
 
 <script setup lang="ts">
 import LegendBox from '@/components/LegendBox.vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import * as echarts from 'echarts' // echarts theme
+import * as echarts from 'echarts'
 import 'echarts-extension-amap'
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { siteData, networkData } from '../testData'
@@ -52,13 +50,10 @@ const echartsMap = ref()
 const isopen = ref(false)
 let myChart: echarts.ECharts | null = null
 const mapStations = computed(() => store.state.mapStations)
-const warnSite = reactive(store.getters.getAlarmSite)
-const usefulStations = reactive(store.state.useful_curve_ids)
 
 const stationColor = 'grey'
 const signalColor = '#00ffff'
 const usefulColor = '#1c7ed6'
-const delayTime = 10000
 
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
@@ -150,6 +145,48 @@ const option = {
         color: 'red'
       },
       zlevel: 1
+    },
+    {
+      name: 'UsefulStation',
+      type: 'scatter',
+      coordinateSystem: 'amap',
+      data: [],
+      symbol: 'triangle',
+      symbolSize: 20,
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: false
+      },
+      itemStyle: {
+        color: usefulColor
+      },
+      emphasis: {
+        label: {
+          show: true
+        }
+      }
+    },
+    {
+      name: 'MapStations',
+      type: 'scatter',
+      coordinateSystem: 'amap',
+      data: [],
+      symbol: 'triangle',
+      symbolSize: 20,
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: false
+      },
+      itemStyle: {
+        color: signalColor
+      },
+      emphasis: {
+        label: {
+          show: true
+        }
+      }
     }
   ],
   animation: true
@@ -196,47 +233,28 @@ const getAMap = () => {
 
 // 绘制所选台站
 const drawMapStations = () => {
-  // option.series[0].itemStyle = { color: stationColor }
-  // // 遍历所有点位数据，设置itemStyle
-  // option.series[0].data.forEach((item: any) => {
-  //   item.itemStyle = { color: stationColor } // 修改颜色值为你想要的颜色
-  // })
-  // // 更新图表
-  // myChart?.setOption({ series: option.series })
-  console.log('选中的台站', mapStations.value)
-  mapStations.value.forEach((x: any) => signalStation(x))
+  const mapStationSeries: { name: string; value: number[] }[] = []
+  mapStations.value.forEach(
+    stationId => {
+      const item = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
+      mapStationSeries.push(item)
+    }
+  )
+  option.series[3].data = mapStationSeries
+  myChart?.setOption({ series: option.series })
 }
 // 绘制有效台站
 const drawUsefulStations = (stations: string[]) => {
-  option.series[0].itemStyle = { color: stationColor }
-  // 遍历所有点位数据，设置itemStyle
-  option.series[0].data.forEach((item: any) => {
-    item.itemStyle = { color: stationColor } // 修改颜色值为你想要的颜色
-  })
-  // 更新图表
-  myChart?.setOption({ series: option.series })
-  console.log('选中的台站', stations)
-  stations.forEach((x: any) => usefulStation(x))
+  const mapStationSeries: { name: string; value: number[] }[] = []
+  stations.forEach(
+    stationId => {
+      const item = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
+      mapStationSeries.push(item)
+    }
+  )
+  option.series[2].data = mapStationSeries
 }
-
-// 绘制单个台站
-const signalStation = (stationId: string) => {
-  interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
-  const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
-  if (stationData) {
-    stationData.itemStyle = { color: signalColor }
-    setTimeout(() => myChart?.setOption({ series: option.series }), 0)
-  }
-}
-// 绘制单个有效台站
-const usefulStation = (stationId: string) => {
-  interface dataItem { name: string; value: number[]; itemStyle?: { color: string } }
-  const stationData: dataItem = option.series[0].data.find(item => item.name === stationId) || { name: '', value: [0, 0] }
-  if (stationData) {
-    stationData.itemStyle = { color: usefulColor }
-    setTimeout(() => myChart?.setOption({ series: option.series }), 0)
-  }
-}
+// 绘制震源地
 const drawEpicenter = (location: { name: string; value: number[]; }[]) => {
   const epicenter = location
   option.series[1].data = epicenter
