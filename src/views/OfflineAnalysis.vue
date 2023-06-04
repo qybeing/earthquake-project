@@ -86,7 +86,7 @@ const options: { value: string; label: string }[] = [
         label: 'BHZ'
     }
 ]
-
+// 请求地震元数据信息
 onMounted(() => store.dispatch('fetchCurveData'))
 const handleDelete = () => {
     store.dispatch('fetchDeleteCurves', store.state.chooses).then(
@@ -96,9 +96,10 @@ const handleDelete = () => {
         })
     )
 }
+// 查询函数
 const onQuery = () => {
-    store.commit('changeConditions', formInline.value)
-    store.dispatch('fetchCurveData')
+    store.commit('changeConditions', formInline.value) // 更改查询信息
+    store.dispatch('fetchCurveData') // 发起查询请求
 }
 
 const onViewChart = () => {
@@ -180,7 +181,6 @@ const rules = reactive<FormRules>({
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
-    console.log('formEl', formEl)
     if (!formEl) {
         console.log('!formEl')
         return
@@ -188,7 +188,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     formEl.validate((valid) => {
         console.log('valid', valid)
         if (valid) {
-            onQuery()
+            onQuery() // 调用查询函数
             console.log('submit!')
         } else {
             ElMessage.error('查询输入错误！')

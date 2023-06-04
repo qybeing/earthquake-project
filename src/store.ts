@@ -1,8 +1,6 @@
 import { createStore, Commit } from 'vuex'
 import { seismicData } from './testData'
 import axios, { AxiosRequestConfig } from 'axios'
-import { ca } from 'element-plus/es/locale'
-import { Vue } from 'vue-demi'
 
 function deepMergeFun(obj1: any, obj2: any) {
     for (const key in obj2) {
@@ -68,11 +66,24 @@ export interface WorkToSend {
     divide_sensitivity?: number,
     normalization?: string
 }
+// 地震元数据查询字段
 export interface QueryProps {
     network: string
     station: string
     location: string
     channel: string
+}
+// 地震元数据信息
+export interface DataProps {
+    network: string
+    station: string
+    location: string
+    channel: string
+    start_time: string
+    curve_id: string
+    end_time: string
+    p_start_time: string
+    s_start_time?: string
 }
 export interface FilterProps {
     network: string
@@ -88,18 +99,7 @@ export interface WindowProp {
     window_len: string
     fn: string
 }
-export interface DataProps {
-    network: string
-    station: string
-    location: string
-    channel: string
-    start_time: string
-    curve_id: string
-    end_time: string
-    p_start_time: string
-    s_start_time?: string
-    num1?: string
-}
+
 export interface XYProps {
     raw_datas: Array<number>
     ts: Array<number>
@@ -153,11 +153,14 @@ export interface YDataProps {
     data: Array<number>
 }
 export interface GlobalDataProps {
-    error: GlobalErrorProps;
-    querydata: Conditions
-    data: DataProps[];
-    curve_total: number,
-    curve_page_total: number,
+    error: GlobalErrorProps; // 请求错误字段
+
+    // 地震元数据界面
+    data: DataProps[]; // 地震元数据信息
+    curve_total: number, // 地震元数据总条数
+    curve_page_total: number, // 地震元总页数
+    querydata: Conditions, // 地震元数据查询条件
+
     viewChartData: PointProps[];
     plot_total: number,
     plot_page_total: number,
@@ -407,8 +410,15 @@ const store = createStore<GlobalDataProps>({
         getWindow(state, newWindow: WindowProp) {
             state.window = newWindow
         },
+        // 更改地震元数据查询信息
         changeConditions(state, newConditions) {
             state.querydata = newConditions
+        },
+        // 更改地震元数据
+        fetchCurveData(state, data) {
+            state.curve_total = data.curve_total
+            state.curve_page_total = data.page_total
+            state.data = Object.values(data.data)
         },
         fetchWorkData(state, data) {
             state.allData = []
@@ -453,11 +463,6 @@ const store = createStore<GlobalDataProps>({
             state.useful_curve_ids = resIds as string[]
             console.log('state.location', state.location)
             console.log('state.useful_curve_ids', state.useful_curve_ids)
-        },
-        fetchCurveData(state, data) {
-            state.curve_total = data.curve_total
-            state.curve_page_total = data.page_total
-            state.data = Object.values(data.data)
         },
         addFile(state, name: string) {
             const file: FileProps = {
@@ -553,7 +558,7 @@ const store = createStore<GlobalDataProps>({
             context.commit('setLoad_FeatureExtractionInfo', false)
             context.commit('fetchFeaturePointData', data)
         },
-        // 请求曲线数据表格信息（传入条件查询参数）
+        // 请求地震元数据表格信息（传入条件查询参数）
         async fetchCurveData(context, payload = 1) {
             const url = '/offline_mysql_curve/get_curve_page'
             const formData = new FormData()

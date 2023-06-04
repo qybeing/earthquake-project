@@ -5,10 +5,10 @@
             v-loading="loading" empty-text="暂无数据" :cell-style="{ textAlign: 'center' }"
             :header-cell-style="{ textAlign: 'center' }" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="40" />
-            <el-table-column label="台网" width="120" prop="network" />
-            <el-table-column label="台站" width="120" prop="station" />
-            <el-table-column label="位置" width="120" prop="location" />
-            <el-table-column label="频道" width="120" prop="channel" />
+            <el-table-column label="台网" width="115" prop="network" />
+            <el-table-column label="台站" width="115" prop="station" />
+            <el-table-column label="位置" width="115" prop="location" />
+            <el-table-column label="频道" width="115" prop="channel" />
             <el-table-column label="开始时间" prop="start_time" />
             <el-table-column label="结束时间" prop="end_time" />
             <el-table-column label="信噪比" prop="data1" />

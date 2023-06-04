@@ -55,7 +55,6 @@
                     <el-table-column type="selection" width="40" />
                     <el-table-column>
                         <template #default="scope">
-                            <!-- <el-button @click="change(scope.row)">看一看</el-button> -->
                             <CurveGraph :curveData=scope.row.points_info.raw_datas :ts_list=scope.row.points_info.ts
                                 :network=scope.row.curve_info.network :station=scope.row.curve_info.station
                                 :location=scope.row.curve_info.location :channel=scope.row.curve_info.channel
@@ -142,7 +141,7 @@ const seeDetail = (row: any) => {
     store.commit('changeChannel', [row.curve_info.channel])
 }
 onMounted(() => {
-    // 设置表格初始高度为innerHeight-offsetTop-表格底部与浏览器底部距离10
+    // 设置表格初始高度为innerHeight-offsetTop-表格底部与浏览器底部距离37
     tableHeight.value = window.innerHeight - multipleTableRef.value.$el.offsetTop - 37
     // 监听浏览器高度变化
     window.onresize = () => {
@@ -271,7 +270,6 @@ const getPosition = () => {
     grid-template-columns: repeat(3, 70px);
     justify-content: center;
     align-items: center;
-    /* background-color: rgb(227, 226, 226); */
 }
 
 .chart_container {
