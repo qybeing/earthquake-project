@@ -478,7 +478,7 @@ const store = createStore<GlobalDataProps>({
     actions: {
         // 请求批量删除数据
         async fetchDeleteCurves(context, payload: string[]) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/delete_curve_by_id'
+            const url = '/offline_mysql_curve/delete_curve_by_id'
             const args = {
                 curve_ids: payload
             }
@@ -491,7 +491,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求批量删除文件
         async fetchDeleteFiles(context, payload: string[]) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/delete_curve_by_file'
+            const url = '/offline_mysql_curve/delete_curve_by_file'
             const args = {
                 file_list: payload
             }
@@ -504,14 +504,14 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求初始详细分析页面的所有频道数据
         async fetchWorkDataBefore(context) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            const url = '/offline_mysql_curve/get_points_and_transform'
             const args = context.getters.getWorkDataBeforeArgs
             const { data } = await axios.post(url, args)
             context.commit('fetchWorkData', data)
         },
         // 请求工作区操作后的数据
         async fetchWorkData(context) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_points_and_transform'
+            const url = '/offline_mysql_curve/get_points_and_transform'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('fetchWorkData', data)
@@ -519,7 +519,7 @@ const store = createStore<GlobalDataProps>({
         // 请求时域图数据
         async fetchTimeDomainInfo(context) {
             context.commit('setLoad_TimeDomainInfo', true)
-            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_domain_info'
+            const url = '/offline_curve_analysis/get_time_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('setLoad_TimeDomainInfo', false)
@@ -528,7 +528,7 @@ const store = createStore<GlobalDataProps>({
         // 请求频域图数据
         async fetchFrequencyDomainInfo(context) {
             context.commit('setLoad_FrequencyDomainInfo', true)
-            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_frequency_domain_info'
+            const url = '/offline_curve_analysis/get_frequency_domain_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('setLoad_FrequencyDomainInfo', false)
@@ -537,7 +537,7 @@ const store = createStore<GlobalDataProps>({
         // 请求频谱图地址
         async fetchTimeFrequencyInfo(context) {
             context.commit('setLoad_TimeFrequencyInfo', true)
-            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_time_frequency_info'
+            const url = '/offline_curve_analysis/get_time_frequency_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             // console.log('频谱图地址 ', data)
@@ -547,7 +547,7 @@ const store = createStore<GlobalDataProps>({
         // 请求预处理和特征提取数据
         async fetchFeatureExtractionInfo(context) {
             context.commit('setLoad_FeatureExtractionInfo', true)
-            const url = 'http://202.199.13.154:5100/offline_curve_analysis/get_feature_extraction_info'
+            const url = '/offline_curve_analysis/get_feature_extraction_info'
             const args = context.getters.getWorkDataArgs
             const { data } = await axios.post(url, args)
             context.commit('setLoad_FeatureExtractionInfo', false)
@@ -555,7 +555,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求曲线数据表格信息（传入条件查询参数）
         async fetchCurveData(context, payload = 1) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curve_page'
+            const url = '/offline_mysql_curve/get_curve_page'
             const formData = new FormData()
             const obj = {
                 pagesize: 99,
@@ -567,8 +567,8 @@ const store = createStore<GlobalDataProps>({
             context.commit('fetchCurveData', data)
         },
         async fetchViewChartData(context, payload = 1) {
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
+            // const url = '/offline_mysql_curve/get_curves_and_points'
+            const url = '/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const obj = {
                 pagesize: 99,
@@ -582,8 +582,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 从地图发起请求查看曲线图
         async fetchViewChartDataFromMap(context) {
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
+            const url = '/offline_mysql_curve/get_point_page'
             const formData = new FormData()
             const idArr: string[] = []
             const curve_ids = context.state.mapStations.concat(context.state.stationsTOBePositioned)
@@ -604,7 +603,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 查看地图的计算信息
         async fetchMapInfo(context) {
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/p_start_location'
+            const url = '/offline_mysql_curve/p_start_location'
             const formData = new FormData()
             const obj = {
                 curve_ids: context.state.mapStations
@@ -615,8 +614,7 @@ const store = createStore<GlobalDataProps>({
         },
         // 请求更新p波s波
         async fetchPSStarTime(context, payload) {
-            // const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
-            const url = 'http://202.199.13.154:5100/offline_mysql_curve/change_p_s_start_time'
+            const url = '/offline_mysql_curve/change_p_s_start_time'
             const formData = new FormData()
             const args = {
                 curve_id: context.state.chooseData.curve_id,
@@ -627,7 +625,6 @@ const store = createStore<GlobalDataProps>({
             const { data } = await axios.post(url, formData)
             store.commit('changePStartTime', payload.p_time)
             store.commit('changeSStartTime', payload.s_time)
-            // console.log('请求更新p波s波', data)
         }
     },
     getters: {

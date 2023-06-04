@@ -5,9 +5,8 @@ import 'element-plus/theme-chalk/index.css'
 import App from './App.vue'
 import store from './store'
 import axios from 'axios'
-// import './mock/index.js'
 
-// axios.defaults.baseURL = 'http://8.130.32.230:1123/'
+axios.defaults.baseURL = 'http://192.168.1.103:5100'
 axios.interceptors.request.use(config => {
     store.commit('setLoading', true)
     store.commit('setError', { status: false, message: '' })
