@@ -15,21 +15,20 @@
                                 <el-input v-model="formInline.conditions.location" />
                             </el-form-item>
                             <el-form-item label="频道:">
-                                <!-- <el-input v-model="formInline.conditions.channel" /> -->
                                 <el-select v-model="formInline.conditions.channel" placeholder="Select">
                                     <el-option v-for="item in options" :key="item.value" :label="item.label"
                                         :value="item.value" />
                                 </el-select>
                             </el-form-item>
+                            <el-form-item label="开始时间:">
+                                <el-input/>
+                            </el-form-item>
+                            <el-form-item label="结束时间:">
+                                <el-input/>
+                            </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" :icon="Search" @click="submitForm(ruleFormRef)">查询</el-button>
                             </el-form-item>
-                            <!-- <el-form-item>
-                                <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-                            </el-form-item> -->
-                            <!-- <el-form-item>
-                                <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-                            </el-form-item> -->
                         </div>
                         <el-form-item>
                             <el-popconfirm title="确定删除吗？" confirmButtonText='确定' cancelButtonText='取消'
@@ -42,7 +41,6 @@
                                 plain>导出Excel</el-button>
                             <el-button type="success" @click="onViewChart" :icon="DataAnalysis">批量查看</el-button>
                         </el-form-item>
-
                     </el-form>
                 </div>
             </template>
@@ -90,7 +88,6 @@ const options: { value: string; label: string }[] = [
 ]
 
 onMounted(() => store.dispatch('fetchCurveData'))
-// 批量删除
 const handleDelete = () => {
     store.dispatch('fetchDeleteCurves', store.state.chooses).then(
         () => ElMessage({
@@ -236,7 +233,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
     display: grid;
     place-items: center;
     /*  声明列的宽度  */
-    grid-template-columns: repeat(6, 150px);
+    grid-template-columns: repeat(4, 110px) 170px 170px 1fr;
+    /* grid-template-columns: repeat(8, 130px); */
     /*  声明行间距和列间距  */
     grid-gap: 5px;
     /*  声明行的高度  */

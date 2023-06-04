@@ -360,14 +360,6 @@ const store = createStore<GlobalDataProps>({
         changeSStartTime(state, st) {
             state.stime = st
         },
-        // changeFeatureInfo(state) {
-        //     state.allData.forEach(data => {
-        //         if (data.curve_info.channel === state.featureChannel && data.points_info.frequency_domain_feature_extract_result && data.points_info.time_domain_feature_extract_result) {
-        //             state.frequencyDomainData = data.points_info.frequency_domain_feature_extract_result
-        //             state.timeDomainData = data.points_info.time_domain_feature_extract_result
-        //         }
-        //     })
-        // },
         changeFeatureInfo(state) {
             state.featurePointData.forEach(data => {
                 if (data.curve_info.channel === state.featureChannel) {
@@ -431,26 +423,19 @@ const store = createStore<GlobalDataProps>({
         },
         fetchTimePointData(state, data) {
             state.timePointData = Object.values(data.res)
-            // state.allData = Object.values(data.res)
             if (state.timePointData.length > 0 && Reflect.has(state.timePointData[0], 'curve_info')) {
                 state.ptime = (Date.parse(state.timePointData[0].curve_info.p_start_time) / 1000).toString()
                 state.stime = (Date.parse(state.timePointData[0].curve_info.s_start_time || '') / 1000).toString()
             }
-            // console.log('state.timePointData更新啦！ ', state.timePointData)
         },
         fetchFrequencyPointData(state, data) {
             state.frequencyPointData = Object.values(data.res)
-            // console.log('state.frequencyPointData更新啦！ ', state.frequencyPointData)
         },
         fetchFeaturePointData(state, data) {
             state.featurePointData = Object.values(data.res)
-            // console.log('state.featurePointData更新啦！ ', state.featurePointData)
         },
         fetchViewChartData(state, data) {
-            // console.log('fetchViewChartData', data)
-            // state.plot_page_total = data.page_total
             state.plot_total = data.curve_total
-            // console.log(Object.values(data.res))
             state.viewChartData = Object.values(data.res)
         },
         fetchMapInfo(state, data) {
@@ -472,9 +457,7 @@ const store = createStore<GlobalDataProps>({
         fetchCurveData(state, data) {
             state.curve_total = data.curve_total
             state.curve_page_total = data.page_total
-            // console.log('data.curve_total', data.curve_total)
             state.data = Object.values(data.data)
-            // console.log('state.data', state.data)
         },
         addFile(state, name: string) {
             const file: FileProps = {
@@ -483,16 +466,10 @@ const store = createStore<GlobalDataProps>({
             state.files.push(file)
         },
         deleteFile(state, name: string) {
-            // console.log('要删除的filename', name)
-            // console.log('删除前的state.files', state.files)
             state.files = state.files.filter(x => x.fileName !== name)
-            // console.log('state.files', state.files)
         },
         deleteCurve(state, name: string) {
-            // console.log('要删除的data', name)
-            // console.log('删除前的state.data', state.files)
             state.data = state.data.filter(x => x.curve_id !== name)
-            // console.log('state.files', state.data)
         },
         setLoading(state, status) {
             state.loading = status
@@ -587,7 +564,6 @@ const store = createStore<GlobalDataProps>({
             }
             formData.append('args', JSON.stringify(obj))
             const { data } = await axios.post(url, formData)
-            // console.log('fetchCurveData', data)
             context.commit('fetchCurveData', data)
         },
         async fetchViewChartData(context, payload = 1) {
@@ -609,7 +585,6 @@ const store = createStore<GlobalDataProps>({
             // const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_curves_and_points'
             const url = 'http://202.199.13.154:5100/offline_mysql_curve/get_point_page'
             const formData = new FormData()
-            // ['XJ.AHQ.00.BHE', 'XJ.AHQ.00.BHN', 'XJ.AHQ.00.BHZ'],
             const idArr: string[] = []
             const curve_ids = context.state.mapStations.concat(context.state.stationsTOBePositioned)
             curve_ids.forEach(x => {
@@ -656,7 +631,7 @@ const store = createStore<GlobalDataProps>({
         }
     },
     getters: {
-        // 获取当前所选频道的特征信息
+        // 获取当前所选频道的时域特征信息
         getCurTimeFeature(state) {
             let timeInfo: TimeDomainProps = {
                 max_value: 0.0000,
@@ -685,6 +660,7 @@ const store = createStore<GlobalDataProps>({
             })
             return timeInfo
         },
+        // 获取当前所选频道的频域特征信息
         getCurFrequencyFeature(state) {
             let FrequencyInfo: FrequencyDomainProps = {
                 fc: 0.0000,
@@ -901,6 +877,3 @@ const store = createStore<GlobalDataProps>({
 })
 
 export default store
-function x(x: any, arg1: (string: any) => void) {
-    throw new Error('Function not implemented.')
-}

@@ -32,11 +32,10 @@ import {
     Delete
 } from '@element-plus/icons-vue'
 import { useStore } from 'vuex'
-import { GlobalDataProps, FileProps } from '../store'
-import { computed, watch, reactive, ref } from 'vue'
+import { GlobalDataProps } from '../store'
+import { computed, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 const store = useStore<GlobalDataProps>()
-// const tableData0 = computed(() => store.state.files)
 const tableData = computed(() => store.state.files)
 interface FileForm {
     selectFiles: string[]
@@ -61,7 +60,6 @@ const handleDelete = () => {
 }
 // 单个删除
 const handleDeleteOne = (id: string) => {
-    // console.log('单个删除： ', id)
     store.dispatch('fetchDeleteFiles', [id]).then(
         () => ElMessage({
             message: '删除成功！',

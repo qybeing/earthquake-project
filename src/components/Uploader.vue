@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { UploadFilled } from '@element-plus/icons-vue'
-import type { UploadRawFile, UploadFile, FormInstance, Action, UploadFiles } from 'element-plus'
+import type { UploadFile, UploadFiles } from 'element-plus'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
 const store = useStore<GlobalDataProps>()
@@ -23,12 +23,8 @@ interface Response {
     status: string
 }
 const uploadSuccess = (response: Response) => {
-    console.log('response: ', response)
     const filename = response.msg.trim().split(' ')[2]
-    console.log('filename :', filename)
     store.commit('addFile', filename)
-
-    // return true
 }
 const uploadError = (_error: Error, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
     console.log('_error: ', _error)
@@ -36,15 +32,9 @@ const uploadError = (_error: Error, uploadFile: UploadFile, uploadFiles: UploadF
     console.log('uploadFiles: ', uploadFiles)
 }
 
-// const beforeUpload =
-
 </script>
 
 <style>
-/* .upload-demo {
-    width: 90%;
-    height: 90%;
-} */
 .el-upload-dragger {
     height: 90%;
     width: 90%;
