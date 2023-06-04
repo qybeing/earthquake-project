@@ -216,6 +216,8 @@ export interface GlobalDataProps {
     location: LocationProps
     // 有效点击台站
     useful_curve_ids: string[]
+    // 时频图左下角信息
+    timeDomainInfo: string
 }
 
 const store = createStore<GlobalDataProps>({
@@ -327,9 +329,13 @@ const store = createStore<GlobalDataProps>({
             latitude: 0,
             longitude: 0
         },
-        useful_curve_ids: []
+        useful_curve_ids: [],
+        timeDomainInfo: 'Δ:00; α:00'
     },
     mutations: {
+        settimeDomainInfo(state, str: string) {
+            state.timeDomainInfo = str
+        },
         setStationsTOBePositioned(state, arr: string[]) {
             state.stationsTOBePositioned = arr
         },

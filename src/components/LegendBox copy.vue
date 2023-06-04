@@ -7,11 +7,11 @@
     </div>
     <div class="entry">
       <div class="symbol"> <img class="symbol_img" src="../assets/legend/singal.png" alt=""></div>
-      <div class="label">带信号(已选中)</div>
+      <div class="label">带信号台站</div>
     </div>
     <div class="entry">
-      <div class="symbol"> <img class="symbol_img" src="../assets/legend/useful_station.png" alt=""></div>
-      <div class="label">带信号(未选中)</div>
+      <div class="symbol"> <img class="symbol_img" src="../assets/legend/warning_station.png" alt=""></div>
+      <div class="label">报警台站</div>
     </div>
     <div class="entry">
       <div class="symbol"> <img class="symbol_img" src="../assets/legend/warning_place.png" alt=""></div>
@@ -27,7 +27,7 @@
   position: fixed;
   top: 50px;
   right: 20px;
-  width: 150px;
+  width: 130px;
   height: 200px;
   font-size: 16px;
   line-height: 2;

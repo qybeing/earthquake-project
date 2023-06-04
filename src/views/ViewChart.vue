@@ -43,6 +43,9 @@
                                 <el-form-item>
                                     <el-button type="success" plain @click="getPosition">定位</el-button>
                                 </el-form-item>
+                                <el-form-item>
+                                    <el-button type="success" plain @click="getParam">定位参数</el-button>
+                                </el-form-item>
                             </div>
                         </el-form>
                     </div>
@@ -69,10 +72,39 @@
             </div>
         </el-card>
     </el-container>
+    <el-dialog v-model="isopen" title="详细信息" width="40%" top="210px" modal=false>
+        <el-form>
+            <el-form-item label="速度模型：" label-width=150px>
+                <el-select v-model="speedModal">
+                    <el-option label="模型1" value="modal1" />
+                    <el-option label="模型2" value="modal2" />
+                    <el-option label="模型3" value="modal3" />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="最少选中台站：" label-width=150px>
+                <el-select v-model="minimum">
+                    <el-option label="1" value="1" />
+                    <el-option label="2" value="2" />
+                    <el-option label="3" value="3" />
+                    <el-option label="4" value="4" />
+                    <el-option label="5" value="5" />
+                    <el-option label="6" value="6" />
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="isopen = false">取消</el-button>
+                <el-button type="primary" @click="isopen = false">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 <script setup lang="ts">
 
-import { computed, watch, reactive, ref, onMounted, onUpdated } from 'vue'
+import { computed, watch, reactive, ref, onMounted, onUpdated, onBeforeUpdate, onBeforeUnmount, nextTick } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
 import { GlobalDataProps, PointProps } from '../store'
@@ -85,36 +117,61 @@ const numID = ref()
 const itemKey = ref()
 const tableHeight = ref()
 const multipleTableRef = ref()
-const value = ref(false)
+const isopen = ref(false)
+const speedModal = ref('modal1')
+const minimum = ref('1')
 numID.value = 0
 itemKey.value = Math.random()
 const current_page = ref(0)
 const plot_total = computed(() => store.state.plot_total)
 const checkSelections = computed(() => store.getters.getCheckedChartData)
+const chosedIds = computed(() => store.state.mapStations)
 
 const handleCurrentChange = (val: number) => {
     current_page.value = val
     pagination_query()
 }
 onMounted(() => {
-    console.log('checkSelections1', checkSelections.value)
-    setTimeout(() => {
-        toggleSelection(checkSelections.value)
-    }, 0)
+    console.log('checkSelections1 onMounted', chosedIds.value)
+    toggleSelection(chosedIds.value)
+})
+nextTick(() => {
+    console.log('checkSelections1 nextTick', chosedIds.value)
+    toggleSelection(chosedIds.value)
+})
+onBeforeUpdate(() => {
+    console.log('checkSelections1 onBeforeUpdate', chosedIds.value)
+    toggleSelection(chosedIds.value)
 })
 onUpdated(() => {
-    console.log('checkSelections2', checkSelections.value)
-    toggleSelection(checkSelections.value)
+    console.log('checkSelections2 onUpdated', checkSelections.value)
+    toggleSelection(chosedIds.value)
 })
 // tableData.value.slice(0,3)
-const toggleSelection = (rows: any) => {
-    if (Array.isArray(rows)) {
-        rows.forEach((row: any) => {
-            multipleTableRef.value!.toggleRowSelection(row, undefined)
-        })
-    } else {
-        multipleTableRef.value!.clearSelection()
-    }
+const toggleSelection = (chosedIds: string[]) => {
+    chosedIds.forEach(
+        x => {
+            tableData.value.forEach(
+                (curve_point: { curve_info: { network: string; station: string } }) => {
+                    const curve_id = curve_point.curve_info.network + '.' + curve_point.curve_info.station
+                    if (curve_id === x) {
+                        console.log('开始勾选')
+                        setTimeout(
+                            () => multipleTableRef.value.toggleRowSelection(curve_point, undefined)
+                        , 0)
+                        // multipleTableRef.value.toggleRowSelection(curve_point, undefined)
+                    }
+                }
+            )
+        }
+    )
+    // if (Array.isArray(rows)) {
+    //     rows.forEach((row: any) => {
+    //         multipleTableRef.value!.toggleRowSelection(row, undefined)
+    //     })
+    // } else {
+    //     multipleTableRef.value!.clearSelection()
+    // }
 }
 const pagination_query = () => {
     store.dispatch('fetchViewChartData', current_page.value)
@@ -248,6 +305,9 @@ const getPosition = () => {
     router.push('/online/mapView')
 }
 
+const getParam = () => {
+    isopen.value = true
+}
 </script>
 <style scoped>
 .text_middle {
@@ -302,12 +362,11 @@ const getPosition = () => {
 
 .filter_style {
     float: right;
-    /* margin-left: 130px; */
-    width: 75%;
+    width: 85%;
     margin-right: 10px;
     right: 30em;
     display: grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr;
 }
 
@@ -315,12 +374,12 @@ const getPosition = () => {
     /* 声明一个容器 */
     display: grid;
     /*  声明列的宽度  */
-    grid-template-columns: 3fr 3fr 3fr 1fr 1fr 1fr;
+    grid-template-columns: 3fr 3fr 3fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr;
 }
 
 .el-form-item {
-    margin-bottom: 0px
+    margin-bottom: 10px
 }
 
 .demo-form-inline {

@@ -213,6 +213,7 @@ const getAMap = () => {
       const reg = /^\s+$/g
       if (!reg.test(obj.name)) {
         store.commit('setStationsTOBePositioned', [obj.name])
+        store.commit('settimeDomainInfo', 'Δ:84; α:65')
         store.dispatch('fetchViewChartDataFromMap')
         router.push('/offline/ViewChart')
       }

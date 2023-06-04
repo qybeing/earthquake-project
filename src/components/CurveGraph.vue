@@ -23,12 +23,15 @@
 
 import { defineProps, onMounted, PropType, watch, ref, computed, ComputedRef, onBeforeUnmount, reactive } from 'vue'
 import * as echarts from 'echarts'
+import store from '@/store'
 type arrProp = number[]
 const markData = reactive({ x: '0', y: '0' })
 const dialogFormVisible = ref(false)
 const changeMark = () => {
     dialogFormVisible.value = false
 }
+const timeDomainInfo = computed(() => store.state.timeDomainInfo)
+// const dataInfo = ref('Δ:00; α:00')
 const props = defineProps({
     network: {
         type: String,
@@ -218,7 +221,7 @@ function initChart(listy: Array<number>, listx: Array<string>, title: string, pt
         left: 'left',
         bottom: 'bottom',
         style: {
-            text: 'Δ:00; α:00',
+            text: timeDomainInfo.value,
             width: 200,
             height: 50,
             fontSize: 14,
