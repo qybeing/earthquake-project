@@ -4,8 +4,8 @@ module.exports = {
     node: true
   },
   globals: {
-    AMap: false,
-    AMapUI: false
+    AMap: true,
+    AMapUI: true
   },
   extends: [
     'plugin:vue/vue3-essential',

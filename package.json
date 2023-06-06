@@ -15,6 +15,9 @@
     "element-plus": "^2.2.23",
     "element-ui": "^2.15.12",
     "file-saver": "^2.0.5",
+    "ol": "^7.4.0",
+    "ol-echarts": "^3.0.0",
+    "ol3-echarts": "^3.0.0",
     "screenfull": "^6.0.2",
     "socket.io-client": "^4.6.1",
     "vue": "^3.2.13",
@@ -23,6 +26,7 @@
     "xlsx": "^0.17.0"
   },
   "devDependencies": {
+    "@types/amap-js-api": "^1.4.11",
     "@types/file-saver": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
