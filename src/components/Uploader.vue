@@ -1,5 +1,5 @@
 <template>
-    <el-upload class="upload-demo" drag action="http://202.199.13.154:5100/offline_mysql_curve/upload_curve" multiple
+    <el-upload class="upload-demo" drag action="/prob-api/offline_mysql_curve/upload_curve" multiple
         :on-success="uploadSuccess" :on-error="uploadError" accept=".mseed" show-file-list=false>
         <el-icon class="el-icon--upload">
             <upload-filled />

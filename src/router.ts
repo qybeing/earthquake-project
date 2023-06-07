@@ -6,6 +6,7 @@ import OfflineAnalysis from './views/OfflineAnalysis.vue'
 import DetailedChart from './views/DetailedChart.vue'
 import ViewChart from './views/ViewChart.vue'
 import MapView from './views/MapView.vue'
+import MapView2 from './views/MapView copy.vue'
 import TestChart from './views/TestChart.vue'
 import store from './store'
 import { ElMessage } from 'element-plus'
@@ -41,8 +42,8 @@ const router = createRouter({
         },
         {
             path: '/online/mapView',
-            name: 'mapView',
-            component: MapView
+            name: 'mapView2',
+            component: MapView2
         },
         {
             path: '/test',

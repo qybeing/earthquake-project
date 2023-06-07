@@ -6,8 +6,10 @@ import App from './App.vue'
 import store from './store'
 import axios from 'axios'
 
-// axios.defaults.baseURL = 'http://192.168.1.103:5100'
-axios.defaults.baseURL = 'http://202.199.13.154:5100'
+// axios.defaults.baseURL = 'http://192.168.1.103:5100' 127.0.0.1
+// axios.defaults.baseURL = 'http://202.199.13.154:5100'
+// axios.defaults.baseURL = 'http://127.0.0.1:5100'
+axios.defaults.baseURL = '/prob-api'
 axios.interceptors.request.use(config => {
     store.commit('setLoading', true)
     store.commit('setError', { status: false, message: '' })

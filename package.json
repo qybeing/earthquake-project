@@ -12,6 +12,7 @@
     "axios": "^1.2.0",
     "echarts": "^5.4.0",
     "echarts-extension-amap": "^1.11.0",
+    "echarts-extension-leaflet": "^1.1.0",
     "element-plus": "^2.2.23",
     "element-ui": "^2.15.12",
     "file-saver": "^2.0.5",

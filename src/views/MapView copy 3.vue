@@ -57,7 +57,7 @@ const usefulColor = '#1c7ed6'
 
 onMounted(() => {
   myChart = echarts.init(echartsMap.value)
-  getAMap()
+  // getAMap()
   drawMapStations()
 })
 watch(() => store.state.useful_curve_ids, () => {
@@ -92,10 +92,9 @@ const option = {
     tiles: [
       {
         label: 'mapbox',
-        urlTemplate: 'http://172.22.72.55:8080',
+        urlTemplate: 'http://172.22.72.55:8082/{z}/{x}/{y}.jpg',
         options: {
-          minZoom: 3,
-          maxZoom: 7,
+          maxZoom: 18,
           id: 'mapbox/dark-v10',
           tileSize: 512,
           zoomOffset: -1
@@ -197,44 +196,44 @@ const option = {
 }
 
 // 地图初始化配置
-const getAMap = () => {
-  myChart?.setOption(option)
-  // const map = myChart?.getModel().getComponent('amap').getAMap()
-  // // 设置显示卫星图
-  // // const Satellite = new window.AMap.TileLayer.Satellite({
-  // //   zIndex: 10
-  // // })
-  // // map.add(Satellite)
-  // map.on('zoomend', function () {
-  //   const zoom = map.getZoom()
-  //   console.log('zoom', zoom)
-  // })
-  // if (myChart) {
-  //   myChart && myChart.off('click')
-  //   myChart.on('click', function (params) {
-  //     console.log('左键点击点击了！', params.data)
-  //     const obj: any = params.data
-  //     const reg = /^\s+$/g
-  //     if (!reg.test(obj.name)) {
-  //       store.commit('setStationsTOBePositioned', [obj.name])
-  //       store.commit('settimeDomainInfo', 'Δ:84; α:65')
-  //       store.dispatch('fetchViewChartDataFromMap')
-  //       router.push('/offline/ViewChart')
-  //     }
-  //   })
-  //   myChart.on('contextmenu', function (params) {
-  //     console.log('右键点击点击了！', params.data)
-  //     const obj: any = params.data
-  //     const reg = /^\s+$/g
-  //     if (!reg.test(obj.name)) {
-  //       curveData.id = obj.name
-  //       curveData.longitude = obj.value[0]
-  //       curveData.latitude = obj.value[1]
-  //       isopen.value = true
-  //     }
-  //   })
-  // }
-}
+// const getAMap = () => {
+//   myChart?.setOption(option)
+//   const map = myChart?.getModel().getComponent('lea').getAMap()
+//   // 设置显示卫星图
+//   // const Satellite = new window.AMap.TileLayer.Satellite({
+//   //   zIndex: 10
+//   // })
+//   // map.add(Satellite)
+//   map.on('zoomend', function () {
+//     const zoom = map.getZoom()
+//     console.log('zoom', zoom)
+//   })
+//   if (myChart) {
+//     myChart && myChart.off('click')
+//     myChart.on('click', function (params) {
+//       console.log('左键点击点击了！', params.data)
+//       const obj: any = params.data
+//       const reg = /^\s+$/g
+//       if (!reg.test(obj.name)) {
+//         store.commit('setStationsTOBePositioned', [obj.name])
+//         store.commit('settimeDomainInfo', 'Δ:84; α:65')
+//         store.dispatch('fetchViewChartDataFromMap')
+//         router.push('/offline/ViewChart')
+//       }
+//     })
+//     myChart.on('contextmenu', function (params) {
+//       console.log('右键点击点击了！', params.data)
+//       const obj: any = params.data
+//       const reg = /^\s+$/g
+//       if (!reg.test(obj.name)) {
+//         curveData.id = obj.name
+//         curveData.longitude = obj.value[0]
+//         curveData.latitude = obj.value[1]
+//         isopen.value = true
+//       }
+//     })
+//   }
+// }
 
 // 绘制所选台站
 const drawMapStations = () => {
@@ -281,10 +280,6 @@ const amplitudeData = {
 </script>
 
 <style scoped>
-.el-form-item {
-  margin-bottom: 2px
-}
-
 .domain_title2 {
   font-size: 17px;
   font-weight: bold;

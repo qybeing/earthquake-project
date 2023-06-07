@@ -1,9 +1,9 @@
 <!-- eslint-disable no-undef -->
 <template>
-    <div class="echarts-box" >
+    <div class="echarts-box">
         <div :id="rowId" style=" width: 1082px;height: 220px;" v-loading="loading"></div>
     </div>
-    <el-dialog v-model="dialogFormVisible" title="标记更新" width="20%">
+    <el-dialog v-model="dialogFormVisible" title="标记更新" width="20%" style="z-index: 999" :modal-append-to-body="false">
         <div> 所选点位： x: {{ markData.x }} , y: {{ markData.y }}</div>
         <div>标记为：
             <el-radio-group v-model="radio" class="ml-4">
