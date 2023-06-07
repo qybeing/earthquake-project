@@ -1,38 +1,6 @@
 <template>
-  <a-card :bordered="false">
-    <a-row>
-      <div ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
-    </a-row>
-  </a-card>
+  <div id='mapview' ref="echartsMap" style="height:100vh;margin:-10px;margin-top:-5px;"></div>
   <LegendBox></LegendBox>
-  <el-dialog v-model="isopen" title="详细信息" width="24%" draggable top="210px" modal=false>
-    <div class="domain_title2">台站信息</div>
-    <el-form label-position="left" size="default" label-width="80px" :model="curveData"
-      style="width: 100%;background-color: white;">
-      <el-form-item label="编号">
-        <el-input readonly :value="curveData.id" />
-      </el-form-item>
-      <el-form-item label="纬度">
-        <el-input readonly :value="curveData.latitude" />
-      </el-form-item>
-      <el-form-item label="经度">
-        <el-input readonly :value="curveData.longitude" />
-      </el-form-item>
-    </el-form>
-    <div class="domain_title2">振幅信息</div>
-    <el-form label-position="left" size="default" label-width="80px" :model="amplitudeData"
-      style="width: 100%;background-color: white;">
-      <el-form-item label="时间">
-        <el-input readonly :value="amplitudeData.time" />
-      </el-form-item>
-      <el-form-item label="最大振幅">
-        <el-input readonly :value="amplitudeData.max_amplitude" />
-      </el-form-item>
-      <el-form-item label="等级">
-        <el-input readonly :value="amplitudeData.level" />
-      </el-form-item>
-    </el-form>
-  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -41,7 +9,6 @@ import * as echarts from 'echarts'
 import 'echarts-extension-leaflet'
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { siteData, networkData } from '../testData'
-import router from '@/router'
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
 const store = useStore<GlobalDataProps>()
@@ -56,9 +23,9 @@ const signalColor = '#00ffff'
 const usefulColor = '#1c7ed6'
 
 onMounted(() => {
-  myChart = echarts.init(echartsMap.value)
+  myChart = echarts.init(document.getElementById('mapview'))
   getAMap()
-  drawMapStations()
+  // drawMapStations()
 })
 watch(() => store.state.useful_curve_ids, () => {
   const stations = store.state.useful_curve_ids
@@ -83,18 +50,16 @@ const option = {
   leaflet: {
     center: [104.114129, 37.550339],
     zoom: 4,
-    // 除了center和zoom以外的其他leaflet地图选项，都放在这里
-    // 具体的选项可以看leaflet官网：https://leafletjs.com/reference.html#map-option
-    leafletOption: {
-      zoomControl: false
-    },
     roam: true,
+    layerControl: {
+      position: 'topright'
+    },
     tiles: [
       {
         label: 'mapbox',
-        urlTemplate: 'http://172.22.72.55:8080',
+        urlTemplate: 'http://172.22.72.55:8080/{z}/{x}/{y}.jpg',
         options: {
-          minZoom: 3,
+          minZoom: 2,
           maxZoom: 7,
           id: 'mapbox/dark-v10',
           tileSize: 512,
@@ -107,7 +72,7 @@ const option = {
     {
       name: 'AllStation',
       type: 'scatter',
-      coordinateSystem: 'amap',
+      coordinateSystem: 'leaflet',
       data: siteData,
       symbol: 'triangle',
       symbolSize: 20,
@@ -125,72 +90,6 @@ const option = {
           show: true
         }
       }
-    },
-    {
-      name: 'Epicenter',
-      type: 'effectScatter',
-      coordinateSystem: 'amap',
-      // data: siteData,
-      data: [],
-      symbol: 'circle',
-      symbolSize: 20,
-      rippleEffect: {
-        brushType: 'fill',
-        scale: 3,
-        number: 4,
-        color: 'rgba(224, 31, 31, 1)'
-      },
-      label: {
-        formatter: '{b}',
-        position: 'right',
-        show: false
-      },
-      itemStyle: {
-        color: 'red'
-      },
-      zlevel: 1
-    },
-    {
-      name: 'UsefulStation',
-      type: 'scatter',
-      coordinateSystem: 'amap',
-      data: [],
-      symbol: 'triangle',
-      symbolSize: 20,
-      label: {
-        formatter: '{b}',
-        position: 'right',
-        show: false
-      },
-      itemStyle: {
-        color: usefulColor
-      },
-      emphasis: {
-        label: {
-          show: true
-        }
-      }
-    },
-    {
-      name: 'MapStations',
-      type: 'scatter',
-      coordinateSystem: 'amap',
-      data: [],
-      symbol: 'triangle',
-      symbolSize: 20,
-      label: {
-        formatter: '{b}',
-        position: 'right',
-        show: false
-      },
-      itemStyle: {
-        color: signalColor
-      },
-      emphasis: {
-        label: {
-          show: true
-        }
-      }
     }
   ],
   animation: true
@@ -198,7 +97,7 @@ const option = {
 
 // 地图初始化配置
 const getAMap = () => {
-  myChart?.setOption(option)
+  myChart.setOption(option)
   // const map = myChart?.getModel().getComponent('amap').getAMap()
   // // 设置显示卫星图
   // // const Satellite = new window.AMap.TileLayer.Satellite({

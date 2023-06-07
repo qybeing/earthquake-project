@@ -42,8 +42,8 @@ const router = createRouter({
         },
         {
             path: '/online/mapView',
-            name: 'mapView2',
-            component: MapView2
+            name: 'mapView',
+            component: MapView
         },
         {
             path: '/test',

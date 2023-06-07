@@ -38,7 +38,7 @@
 import CardPlot from '@/components/CardPlot.vue'
 import LegendBox from '@/components/LegendBox.vue'
 import * as echarts from 'echarts'
-
+import 'echarts-extension-leaflet'
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { siteData, networkData } from '../testData'
 import router from '@/router'
